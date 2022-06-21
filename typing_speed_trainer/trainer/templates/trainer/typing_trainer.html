@@ -1,1 +1,70 @@
 {% extends 'trainer/base_trainer.html' %}
+{% load static %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="{% static 'trainer/css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="py-4">
+        <div class="row g-4">
+
+            <div class="col-lg-9">
+                <div class="text-trainer fs-4">
+
+                    <!--Hidden user input-->
+                    <div class="input-text" contenteditable="true">
+                    </div>
+
+                    <!--Background text-->
+                    <div class="background-text text-blue-100">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet beatae eius exercitationem natus
+                        officiis pariatur perferendis quaerat quam repudiandae sed! At consequatur dicta molestias,
+                        praesentium quisquam quos repellendus saepe sequi!Lorem ipsum dolor sit amet, consectetur
+                        adipisicing elit. Ad aliquid cum eligendi enim, est facilis illum labore maxime molestiae
+                        molestias nam, nemo, optio placeat repellendus rerum similique suscipit ullam voluptates!
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet beatae eius exercitationem natus
+                        officiis pariatur perferendis quaerat quam repudiandae sed! At consequatur dicta molestias,
+                        praesentium quisquam quos repellendus saepe sequi!Lorem ipsum dolor sit amet, consectetur
+                        adipisicing elit. Ad aliquid cum eligendi enim, est facilis illum labore maxime molestiae
+                        molestias nam, nemo, optio placeat repellendus rerum similique suscipit ullam voluptates!
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-lg-3">
+                <div class="text-light rounded bg-blue-700 p-3">
+                    <div class="row g-2 row-cols-1">
+
+                        <div class="col">
+                            <div class="border-blue-200-bottom">
+                                <h5 class="fw-bold">Настройки</h5>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <label for="select-time" class="me-2">Время:</label>
+                                <select class="form-select form-select-sm custom-select bg-main-600 border-0" id="select-time">
+                                    <option value="1 selected">1:00</option>
+                                    <option value="2">2:00</option>
+                                    <option value="3">3:00</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}

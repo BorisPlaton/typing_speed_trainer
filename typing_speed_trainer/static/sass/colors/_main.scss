@@ -1,0 +1,14 @@
+@use "colors";
+@use "mixins";
+
+@mixin compile_color_styles {
+  @each $color, $values in colors.$colors {
+    @each $depth, $value in $values {
+      @include mixins.colored_link($color, $depth, $value);
+      @include mixins.colored_text($color, $depth, $value);
+      @include mixins.colored_background($color, $depth, $value);
+      @include mixins.colored_link($color, $depth, $value);
+      @include mixins.border_line($color, $depth, $value);
+    }
+  }
+}

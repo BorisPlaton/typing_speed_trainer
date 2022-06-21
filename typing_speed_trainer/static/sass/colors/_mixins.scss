@@ -1,0 +1,39 @@
+@mixin border_line($color, $depth, $value) {
+  .border-#{$color}-#{$depth} {
+    border: 1px solid $value;
+  }
+  .border-#{$color}-#{$depth}-top {
+    border-top: 1px solid $value;
+  }
+  .border-#{$color}-#{$depth}-bottom {
+    border-bottom: 1px solid $value;
+  }
+  .border-#{$color}-#{$depth}-start {
+    border-left: 1px solid $value;
+  }
+  .border-#{$color}-#{$depth}-end {
+    border-right: 1px solid $value;
+  }
+}
+
+@mixin colored_link($color, $depth, $value) {
+  a.link-#{$color}-#{$depth} {
+    color: $value;
+
+    &:hover {
+      color: lighten($value, 15%);
+    }
+  }
+}
+
+@mixin colored_text($color, $depth, $value) {
+  .text-#{$color}-#{$depth} {
+    color: $value;
+  }
+}
+
+@mixin colored_background($color, $depth, $value) {
+  .bg-#{$color}-#{$depth} {
+    background-color: $value;
+  }
+}
