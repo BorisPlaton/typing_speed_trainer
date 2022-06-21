@@ -1,0 +1,10 @@
+@use "../colors/colors";
+@use "mixins";
+
+@mixin compile_components_styles {
+  @each $color_name, $values in colors.$colors {
+    @each $depth, $value in $values {
+      @include mixins.colored_button($color_name, $depth, $value);
+    }
+  }
+}

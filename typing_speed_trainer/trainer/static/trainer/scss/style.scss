@@ -2,26 +2,24 @@
   position: relative;
 
   .background-text {
+    cursor: pointer;
     user-select: none;
     text-align: justify;
   }
 }
 
 .input-text {
-  height: 100%;
-  width: 100%;
   position: absolute;
   top: 0;
   opacity: 1;
   left: 0;
-  cursor: pointer;
-  caret-color: #b9d9eb;
+  caret-color: #a1aec4;
+  background: none;
+  border: none;
   color: rgba(0, 0, 0, 0);
   user-select: none;
-  word-wrap: break-word;
 
   &:focus {
     outline: 0 none;
-    user-select: none;
   }
 }

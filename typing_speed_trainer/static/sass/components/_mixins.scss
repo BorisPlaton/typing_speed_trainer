@@ -1,0 +1,31 @@
+@mixin colored_button($color_name, $depth, $value) {
+  .btn-#{$color_name}-#{$depth} {
+    padding: 6px 12px;
+    border: 1px solid $value;
+    background-color: $value;
+    border-radius: 0.25em;
+    font-size: 1em;
+    text-align: center;
+    vertical-align: middle;
+    transition: 0.1s all ease-in-out;
+
+    @if (lightness($value) < 50%) {
+      color: white;
+    } @else {
+      color: black;
+    }
+
+    &.btn-sm {
+      padding: 4px 8px;
+      font-size: 0.875em;
+    }
+    &:hover {
+      border-color: darken($value, 10);
+      background-color: darken($value, 10);
+    }
+    &:active {
+      border-color: darken($value, 3);
+      background-color: darken($value, 3);
+    }
+  }
+}
