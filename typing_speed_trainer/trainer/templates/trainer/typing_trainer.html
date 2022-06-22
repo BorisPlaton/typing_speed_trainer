@@ -10,7 +10,7 @@
     <div class="py-4">
         <div class="row g-4">
 
-            <div class="col-lg-9">
+            <div class="col-lg-9 text-field">
                 <div class="text-trainer fs-4">
 
                     <!--Hidden user input-->
@@ -35,8 +35,8 @@
                 </div>
             </div>
 
-            <!--Configuration bar-->
-            <div class="col-lg-3">
+            <!--Settings bar-->
+            <div class="col-lg-3 settings-bar">
                 <div class="text-light rounded bg-blue-700 p-3">
                     <div class="row g-2 row-cols-1">
 
@@ -61,7 +61,7 @@
 
                                 <div class="col">
                                     <div class="d-flex justify-content-center border-blue-200-top">
-                                        <button class="btn-green-400 btn-sm mt-2">Начать</button>
+                                        <button class="btn-green-400 btn-sm mt-2 start-typing-trainer">Начать</button>
                                     </div>
                                 </div>
                             </div>
@@ -72,9 +72,8 @@
                 </div>
             </div>
 
-            {% comment %}
             <!--Statistics bar-->
-            <div class="col-lg-3">
+            <div class="col-lg-3 statistics-bar">
                 <div class="text-light rounded bg-blue-700 p-3">
                     <div class="row g-2 row-cols-1">
 
@@ -89,17 +88,17 @@
 
                                 <div>
                                     Оставшиеся время:
-                                    <div class="fs-4 bg-blue-400 px-2 rounded">0:43</div>
+                                    <div class="fs-4 bg-blue-400 px-2 rounded left-time">0:43</div>
                                 </div>
 
                                 <div>
                                     Набрано слов:
-                                    <div class="fs-4 bg-blue-400 px-2 rounded text-green-300">34</div>
+                                    <div class="fs-4 bg-blue-400 px-2 rounded text-green-300 words-amount">34</div>
                                 </div>
 
                                 <div>
                                     Ошибок:
-                                    <div class="fs-4 bg-blue-400 px-2 rounded text-red-300">2</div>
+                                    <div class="fs-4 bg-blue-400 px-2 rounded text-red-300 typo-amount">2</div>
                                 </div>
 
                             </div>
@@ -107,7 +106,7 @@
 
                         <div class="col">
                             <div class="d-flex justify-content-center border-blue-200-top">
-                                <button class="btn-red-500 mt-2">Остановить</button>
+                                <button class="btn-red-500 mt-2 stop-typing-trainer">Остановить</button>
                             </div>
                         </div>
 
@@ -115,8 +114,6 @@
 
                 </div>
             </div>
-            {% endcomment %}
-
 
         </div>
     </div>
@@ -124,5 +121,5 @@
 {% endblock %}
 
 {% block script %}
-
+<script src="{% static 'trainer/js/typing_trainer.js' %}" type="module"></script>
 {% endblock %}
