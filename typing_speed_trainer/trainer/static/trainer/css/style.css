@@ -22,4 +22,8 @@
   outline: 0 none;
 }
 
+.statistics-bar {
+  display: none;
+}
+
 /*# sourceMappingURL=style.css.map */

@@ -1,12 +1,14 @@
-export default class EventListener {
+export default class Broker {
   constructor() {
     this.events = {
       typingTrainerStarted: [],
-      typingTrainerStoped: [],
+      typingTrainerStopped: [],
+      correctChar: [],
+      invalidChar: [],
     };
   }
 
-  addListener(event, callback) {
+  addBrokerListener(event, callback) {
     this.events[event].push(callback);
   }
 

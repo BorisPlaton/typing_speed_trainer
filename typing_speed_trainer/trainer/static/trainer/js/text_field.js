@@ -1,5 +1,3 @@
-import EventListener from "./broker";
-
 class TextField {
   constructor() {
     this.backGroundText = document.querySelector(".background-text");
@@ -8,9 +6,6 @@ class TextField {
 
   setup() {
     this.createEventListeners();
-  }
-
-  createEventListeners() {
     this.backGroundText.addEventListener("click", () => {
       this.hiddenInput.focus();
     });
