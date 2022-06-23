@@ -5,7 +5,6 @@ class TextField {
   }
 
   setup() {
-    this.createEventListeners();
     this.backGroundText.addEventListener("click", () => {
       this.hiddenInput.focus();
     });

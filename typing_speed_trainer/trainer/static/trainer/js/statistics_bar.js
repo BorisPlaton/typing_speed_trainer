@@ -1,7 +1,7 @@
 import Broker from "./broker.js";
 import storage from "./data_storage.js";
 
-export default class TypingTrainer extends Broker {
+export default class StatisticsBar extends Broker {
   constructor() {
     super();
 
@@ -12,11 +12,10 @@ export default class TypingTrainer extends Broker {
     this.wordsAmount = document.querySelector(".words-amount");
     this.typoAmount = document.querySelector(".typo-amount");
 
-    this.createEvents();
+    this.stopTypingButton.addEventListener("click", () => this.stopTimer());
   }
 
   setup() {
-    this.createEventListeners();
     this.configureStatisticsBar();
     this.showStatisticsBar();
     this.startTimer().then(() => {
@@ -25,8 +24,6 @@ export default class TypingTrainer extends Broker {
   }
 
   typingTrainerStopped() {
-    this.stopTimer();
-    this.removeEventListeners();
     this.hideStatisticsBar();
     this.notify("typingTrainerStopped");
   }
@@ -37,6 +34,7 @@ export default class TypingTrainer extends Broker {
         if (this.leftTime.innerHTML == 0) {
           this.stopTimer();
         }
+        storage.executionTime++;
         this.leftTime.innerHTML--;
       }, 1000);
 
@@ -44,12 +42,11 @@ export default class TypingTrainer extends Broker {
         clearInterval(this.timer);
         resolve();
       };
-      console.log("After interval");
     });
   }
 
   configureStatisticsBar() {
-    this.leftTime.innerHTML = storage.executionTime;
+    this.leftTime.innerHTML = storage.totalTime;
     this.wordsAmount.innerHTML = storage.correctWordsAmount;
     this.typoAmount.innerHTML = storage.typoAmount;
   }
@@ -60,26 +57,5 @@ export default class TypingTrainer extends Broker {
 
   hideStatisticsBar() {
     this.statisticsBar.style.display = "none";
-  }
-
-  createEvents() {
-    this.funcTypingTrainerStopped = () => {
-      this.stopTimer();
-      this.typingTrainerStopped.call(this);
-    };
-  }
-
-  createEventListeners() {
-    this.stopTypingButton.addEventListener(
-      "click",
-      this.funcTypingTrainerStopped
-    );
-  }
-
-  removeEventListeners() {
-    this.stopTypingButton.removeEventListener(
-      "click",
-      this.funcTypingTrainerStopped
-    );
   }
 }

@@ -4,6 +4,7 @@ class DataStorage {
   }
 
   setDefaultProperties() {
+    this._totalTime = 0;
     this._executionTime = 0;
     this._typoAmount = 0;
     this._correctWordsAmount = 0;
@@ -29,12 +30,12 @@ class DataStorage {
     this.setDefaultProperties();
   }
 
-  getAllData() {
-    return {
-      executionTime: this._executionTime,
-      typoAmount: this._typoAmount,
-      correctWordsAmount: this._correctWordsAmount,
-    };
+  get totalTime() {
+    return this._totalTime;
+  }
+
+  set totalTime(value) {
+    this._totalTime = value * 60;
   }
 
   get executionTime() {
@@ -42,7 +43,7 @@ class DataStorage {
   }
 
   set executionTime(value) {
-    this._executionTime = value * 60;
+    this._executionTime = value;
   }
 
   get typoAmount() {

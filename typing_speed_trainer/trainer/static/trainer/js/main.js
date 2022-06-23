@@ -1,13 +1,18 @@
-import StandardPage from "./settings_bar.js";
-import TypingTrainer from "./statistics_bar.js";
+import SettingsBar from "./settings_bar.js";
+import StatisticsBar from "./statistics_bar.js";
+import ResultModalWindow from "./result_modal_window.js";
 
-const standardPage = new StandardPage();
-const typingTrainer = new TypingTrainer();
+const settingsBar = new SettingsBar();
+const statisticsBar = new StatisticsBar();
+const resultModalWindow = new ResultModalWindow();
 
-standardPage.setup();
-standardPage.addBrokerListener("typingTrainerStarted", () =>
-  typingTrainer.setup()
+settingsBar.setup();
+
+settingsBar.addBrokerListener("typingTrainerStarted", () =>
+  statisticsBar.setup()
 );
-typingTrainer.addBrokerListener("typingTrainerStopped", () =>
-  standardPage.setup()
-);
+
+statisticsBar.addBrokerListener("typingTrainerStopped", () => {
+  resultModalWindow.show();
+  settingsBar.setup();
+});
