@@ -20,8 +20,8 @@
       font-size: 0.875em;
     }
     &:hover {
-      border-color: darken($value, 10);
-      background-color: darken($value, 10);
+      border-color: darken($value, 5);
+      background-color: darken($value, 5);
     }
     &:active {
       border-color: darken($value, 3);

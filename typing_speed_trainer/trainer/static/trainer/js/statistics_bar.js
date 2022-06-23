@@ -16,15 +16,36 @@ export default class TypingTrainer extends Broker {
   }
 
   setup() {
+    this.createEventListeners();
     this.configureStatisticsBar();
     this.showStatisticsBar();
-    this.createEventListeners();
+    this.startTimer().then(() => {
+      this.typingTrainerStopped();
+    });
   }
 
   typingTrainerStopped() {
+    this.stopTimer();
     this.removeEventListeners();
     this.hideStatisticsBar();
     this.notify("typingTrainerStopped");
+  }
+
+  startTimer() {
+    return new Promise((resolve, reject) => {
+      this.timer = setInterval(() => {
+        if (this.leftTime.innerHTML == 0) {
+          this.stopTimer();
+        }
+        this.leftTime.innerHTML--;
+      }, 1000);
+
+      this.stopTimer = () => {
+        clearInterval(this.timer);
+        resolve();
+      };
+      console.log("After interval");
+    });
   }
 
   configureStatisticsBar() {
@@ -32,8 +53,6 @@ export default class TypingTrainer extends Broker {
     this.wordsAmount.innerHTML = storage.correctWordsAmount;
     this.typoAmount.innerHTML = storage.typoAmount;
   }
-
-  analyzeInputChar() {}
 
   showStatisticsBar() {
     this.statisticsBar.style.display = "block";
@@ -44,8 +63,10 @@ export default class TypingTrainer extends Broker {
   }
 
   createEvents() {
-    this.funcTypingTrainerStopped = () => this.typingTrainerStopped.call(this);
-    this.funcAnalyzeInputChar = () => this.analyzeInputChar.call(this);
+    this.funcTypingTrainerStopped = () => {
+      this.stopTimer();
+      this.typingTrainerStopped.call(this);
+    };
   }
 
   createEventListeners() {
@@ -53,7 +74,6 @@ export default class TypingTrainer extends Broker {
       "click",
       this.funcTypingTrainerStopped
     );
-    this.hiddenInput.addEventListener("keyup", this.funcAnalyzeInputChar);
   }
 
   removeEventListeners() {

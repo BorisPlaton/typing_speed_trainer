@@ -42,7 +42,7 @@ class DataStorage {
   }
 
   set executionTime(value) {
-    this._executionTime = value * 60 * 1000;
+    this._executionTime = value * 60;
   }
 
   get typoAmount() {

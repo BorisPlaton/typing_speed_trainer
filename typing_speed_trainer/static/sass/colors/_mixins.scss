@@ -1,6 +1,6 @@
 @mixin border_line($color, $depth, $value) {
   .border-#{$color}-#{$depth} {
-    border: 1px solid $value;
+    border: 1px solid $value !important;
   }
   .border-#{$color}-#{$depth}-top {
     border-top: 1px solid $value;
