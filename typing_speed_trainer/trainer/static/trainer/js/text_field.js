@@ -9,59 +9,93 @@ export default class TextField {
     this.currentWordText;
     this.currentWordNum;
     this.currentCharIndex;
+    this.isWordCorrect;
   }
 
   setup() {
     this.backGroundText.addEventListener("click", () => {
       this.hiddenInput.focus();
     });
-    this.hiddenInput.addEventListener("keyup", (e) => {
-      this.analyzePressedKey(e);
-    });
     this.hiddenInput.addEventListener("input", () => this.analyzeInputChar());
 
     this.setTextFieldWords();
   }
 
-  analyzePressedKey(event) {
-    switch (event.key) {
-      case "Backspace":
-        this.removeLastChar();
-        break;
-      case " ":
-        this.skipWord();
-        break;
-    }
+  stopTyping() {
+    this.hiddenInput.blur();
+    this.setTextFieldWords();
   }
 
   analyzeInputChar() {
-    const userInput = this.getInputChar();
-
-    console.log(
-      userInput.slice(-1),
-      this.currentWordText[this.currentCharIndex]
-    );
-
-    if (
-      this.currentWordText[this.currentCharIndex] == userInput.slice(-1) &&
-      userInput.length <= this.currentWordText.length
-    ) {
-      this.setCurrentCharIsCorrect();
-    } else {
-      this.setCurrentCharIsInvalid();
+    switch (true) {
+      case this.isSpaceKeyPressed():
+        this.skipWord();
+        break;
+      case this.isCharRemoved():
+        this.removeLastChar();
+        break;
+      case this.isInputBiggerThenWord():
+        this.setCurrentWordIsInvalid();
+        break;
+      default:
+        this.setCurrentWordIsCorrect();
+        this.updateLastChar(
+          this.currentWordText[this.currentCharIndex] ==
+            this.getInputChar().slice(-1)
+        );
     }
+  }
 
-    this.currentCharIndex++;
+  isInputAndWordEqual() {
+    return this.getInputChar() == this.currentWordText;
+  }
+
+  isInputBiggerThenWord() {
+    return this.getInputChar().length > this.currentWordText.length;
+  }
+
+  isSpaceKeyPressed() {
+    return this.getInputChar().slice(-1) == " ";
+  }
+
+  isCharRemoved() {
+    return this.currentCharIndex > this.getInputChar().length;
   }
 
   skipWord() {
+    this.isWordCorrect = this.isInputAndWordEqual();
     this.clearHiddenInput();
     this.setCurrentWordProperties(++this.currentWordNum);
   }
 
   removeLastChar() {
-    this.currentCharIndex > 0 ? this.currentCharIndex-- : {};
-    this.setCurrentCharIsNormal();
+    if (!this.isInputBiggerThenWord()) {
+      this.currentCharIndex > 0 ? this.currentCharIndex-- : {};
+      this.setCurrentCharIsNormal();
+    }
+  }
+
+  setCurrentWordIsInvalid() {
+    this.isWordCorrect = false;
+    for (const span of this.currentWordSpan.querySelectorAll("span")) {
+      span.classList.add("invalid-word");
+    }
+  }
+
+  setCurrentWordIsCorrect() {
+    this.isWordCorrect = true;
+    for (const span of this.currentWordSpan.querySelectorAll("span")) {
+      span.classList.remove("invalid-word");
+    }
+  }
+
+  updateLastChar(isCorrect) {
+    if (isCorrect) {
+      this.setCurrentCharIsCorrect();
+    } else {
+      this.setCurrentCharIsInvalid();
+    }
+    this.currentCharIndex++;
   }
 
   getCurrentWordText() {
@@ -76,21 +110,21 @@ export default class TextField {
   setCurrentCharIsCorrect() {
     this.currentWordSpan
       .querySelector(`.chr-${this.currentCharIndex}`)
-      .classList.add("text-success");
+      .classList.add("correct-char");
   }
 
   setCurrentCharIsInvalid() {
     this.currentWordSpan
       .querySelector(`.chr-${this.currentCharIndex}`)
-      .classList.add("text-danger");
+      .classList.add("invalid-char");
   }
 
   setCurrentCharIsNormal() {
     const currentCharClassList = this.currentWordSpan.querySelector(
       `.chr-${this.currentCharIndex}`
     ).classList;
-    currentCharClassList.remove("text-success");
-    currentCharClassList.remove("text-danger");
+    currentCharClassList.remove("correct-char");
+    currentCharClassList.remove("invalid-char");
   }
 
   getInputChar() {

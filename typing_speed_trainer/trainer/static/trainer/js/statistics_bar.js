@@ -31,7 +31,7 @@ export default class StatisticsBar extends Broker {
   startTimer() {
     return new Promise((resolve, reject) => {
       this.timer = setInterval(() => {
-        if (this.leftTime.innerHTML == 0) {
+        if (this.leftTime.innerHTML == 1) {
           this.stopTimer();
         }
         storage.executionTime++;

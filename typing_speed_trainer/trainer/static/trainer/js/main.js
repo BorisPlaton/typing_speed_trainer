@@ -18,4 +18,5 @@ settingsBar.addBrokerListener("typingTrainerStarted", () =>
 statisticsBar.addBrokerListener("typingTrainerStopped", () => {
   resultModalWindow.show();
   settingsBar.setup();
+  textField.stopTyping();
 });

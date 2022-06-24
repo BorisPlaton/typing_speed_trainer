@@ -67,6 +67,36 @@
   }
 }
 
+.invalid-char {
+  animation: change-invalid-color 0.1s ease-out forwards;
+}
+
+.correct-char {
+  animation: change-correct-color 0.1s ease-out forwards;
+}
+
+.invalid-word {
+  color: rgb(255, 68, 54) !important;
+}
+
+@keyframes change-correct-color {
+  from {
+    color: white;
+  }
+  to {
+    color: #58bb43;
+  }
+}
+
+@keyframes change-invalid-color {
+  from {
+    color: white;
+  }
+  to {
+    color: rgb(255, 68, 54);
+  }
+}
+
 @keyframes move-result-modal {
   from {
     margin-bottom: 100px;
