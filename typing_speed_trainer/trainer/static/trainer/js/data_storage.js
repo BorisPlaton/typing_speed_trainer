@@ -8,6 +8,7 @@ class DataStorage {
     this._executionTime = 0;
     this._typoAmount = 0;
     this._correctWordsAmount = 0;
+    this._totalWordsAmount = 0;
   }
 
   increaseTypoAmount() {
@@ -24,6 +25,14 @@ class DataStorage {
 
   decreaseCorrectWordsAmount() {
     this._correctWordsAmount--;
+  }
+
+  increaseTotalWordsAmount() {
+    this._totalWordsAmount++;
+  }
+
+  decreaseTotalWordsAmount() {
+    this._totalWordsAmount--;
   }
 
   cleanUpStorage() {
@@ -60,6 +69,14 @@ class DataStorage {
 
   set correctWordsAmount(value) {
     this._correctWordsAmount = value;
+  }
+
+  get totaltWordsAmount() {
+    return this._totalWordsAmount;
+  }
+
+  set totaltWordsAmount(value) {
+    this._totalWordsAmount = value;
   }
 }
 

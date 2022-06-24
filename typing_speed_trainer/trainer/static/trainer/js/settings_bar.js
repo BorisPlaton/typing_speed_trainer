@@ -14,6 +14,7 @@ export default class SettingsBar extends Broker {
   }
 
   setup() {
+    this.hiddenInput.style.opacity = "1";
     this.setEventListeners();
     this.showSettingsBar();
   }

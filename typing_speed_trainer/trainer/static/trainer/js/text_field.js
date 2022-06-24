@@ -1,4 +1,5 @@
 import { faker } from "https://cdn.skypack.dev/@faker-js/faker";
+import storage from "./data_storage.js";
 
 export default class TextField {
   constructor() {
@@ -9,14 +10,16 @@ export default class TextField {
     this.currentWordText;
     this.currentWordNum;
     this.currentCharIndex;
-    this.isWordCorrect;
   }
 
   setup() {
     this.backGroundText.addEventListener("click", () => {
       this.hiddenInput.focus();
     });
-    this.hiddenInput.addEventListener("input", () => this.analyzeInputChar());
+    this.hiddenInput.addEventListener("input", () => {
+      this.analyzeInputChar();
+      this.analyzeWord();
+    });
 
     this.setTextFieldWords();
   }
@@ -29,20 +32,28 @@ export default class TextField {
   analyzeInputChar() {
     switch (true) {
       case this.isSpaceKeyPressed():
+        this.currentWordText += " ";
         this.skipWord();
         break;
       case this.isCharRemoved():
         this.removeLastChar();
         break;
-      case this.isInputBiggerThenWord():
-        this.setCurrentWordIsInvalid();
-        break;
-      default:
-        this.setCurrentWordIsCorrect();
+      case this.isCharAdded():
         this.updateLastChar(
           this.currentWordText[this.currentCharIndex] ==
             this.getInputChar().slice(-1)
         );
+    }
+  }
+
+  analyzeWord() {
+    switch (true) {
+      case this.isInputBiggerThenWord():
+        this.setInputIsLonger();
+        break;
+      case this.isInputAndWordSameLength():
+        this.removeInputIsLonger();
+        break;
     }
   }
 
@@ -62,28 +73,41 @@ export default class TextField {
     return this.currentCharIndex > this.getInputChar().length;
   }
 
+  isCharAdded() {
+    if (!this.isInputBiggerThenWord()) {
+      return this.currentCharIndex < this.getInputChar().length;
+    }
+  }
+
+  isInputAndWordSameLength() {
+    return this.currentCharIndex == this.getInputChar().length;
+  }
+
   skipWord() {
-    this.isWordCorrect = this.isInputAndWordEqual();
+    if (this.isInputAndWordEqual()) {
+      storage.increaseCorrectWordsAmount();
+    }
+    storage.increaseTotalWordsAmount();
     this.clearHiddenInput();
     this.setCurrentWordProperties(++this.currentWordNum);
   }
 
   removeLastChar() {
     if (!this.isInputBiggerThenWord()) {
-      this.currentCharIndex > 0 ? this.currentCharIndex-- : {};
+      if (this.currentCharIndex > 0) {
+        this.currentCharIndex--;
+      }
       this.setCurrentCharIsNormal();
     }
   }
 
-  setCurrentWordIsInvalid() {
-    this.isWordCorrect = false;
+  setInputIsLonger() {
     for (const span of this.currentWordSpan.querySelectorAll("span")) {
       span.classList.add("invalid-word");
     }
   }
 
-  setCurrentWordIsCorrect() {
-    this.isWordCorrect = true;
+  removeInputIsLonger() {
     for (const span of this.currentWordSpan.querySelectorAll("span")) {
       span.classList.remove("invalid-word");
     }
@@ -94,6 +118,7 @@ export default class TextField {
       this.setCurrentCharIsCorrect();
     } else {
       this.setCurrentCharIsInvalid();
+      storage.increaseTypoAmount();
     }
     this.currentCharIndex++;
   }
