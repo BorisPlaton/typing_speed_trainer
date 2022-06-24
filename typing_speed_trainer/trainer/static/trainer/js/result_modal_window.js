@@ -20,6 +20,7 @@ export default class ResultModalWindow {
   show() {
     this.setStatisticsValues();
     this.showWindow();
+    storage.cleanUpStorage();
   }
 
   setStatisticsValues() {
