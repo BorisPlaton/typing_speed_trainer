@@ -8,109 +8,100 @@
 {% block content %}
 {% include 'trainer/includes/result_modal_page.html' %}
 
-<div class="container">
-    <div class="py-4">
-        <div class="row g-4">
+<div class="grid">
 
-            <div class="col-lg-9 text-field">
-                <div class="text-trainer fs-4">
+    <div class="text bg-blue-600">
+        <div class="inner-text py-4 pe-4">
+            <div class="text-trainer">
+                <!--Hidden user input-->
 
-                    <!--Hidden user input-->
-                    <div class="user-input">
-                        <input type="text" class="input-text">
-                    </div>
+                <div class="user-input">
+                    <input type="text" class="input-text fs-3">
+                </div>
 
-                    <!--Background text-->
-                    <div class="background-text text-blue-100 fs-3"></div>
-
+                <!--Background text-->
+                <div class="background-text text-blue-100 fs-3">
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum esse ex natus rem. A architecto
+                    blanditiis
+                    dolor dolores eum facere, illo iste molestiae quaerat repellendus, sed tempore? Aspernatur debitis
+                    distinctio ex incidunt obcaecati placeat possimus, sit? Corporis deleniti est facere sed. Cum,
+                    numquam
+                    quaerat. Consectetur, earum hic praesentium quasi sapiente similique sunt! Ab adipisci alias aperiam
+                    atque autem beatae commodi consectetur corporis dolorem doloremque eos fugiat illo inventore itaque
+                    maiores mollitia nam nulla odio quas quia, ratione rem repellendus tempore temporibus, ullam vel
+                    voluptate. Alias aperiam, deleniti doloribus harum ipsa, ipsum magnam modi nesciunt quos ratione
+                    tempora
+                    veniam vero, vitae? Amet blanditiis, cumque delectus deleniti dolore doloremque explicabo illo
+                    impedit
+                    incidunt inventore iste non officia perferendis quibusdam quisquam repellendus sit. Architecto cum
+                    deserunt expedita fugit laudantium minus mollitia necessitatibus nulla provident. Adipisci facere
+                    illum,
+                    itaque neque reiciendis sapiente suscipit. Aspernatur consequuntur dicta distinctio eius enim fuga
+                    labore quis vel, veniam.
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="sidebar bg-blue-700">
+        <div class="inner-sidebar py-4 ps-4 text-light">
 
             <!--Settings bar-->
-            <div class="col-lg-3 settings-bar">
-                <div class="text-light rounded bg-blue-700 p-3">
-                    <div class="row g-2 row-cols-1">
+            <div class="settings-bar fw-light">
 
-                        <div class="col">
-                            <div class="border-blue-200-bottom">
-                                <h5 class="fw-bold">Настройки</h5>
-                            </div>
-                        </div>
-
-                        <div class="col">
-
-                            <div class="row g-2 row-cols-1">
-                                <div class="col">
-                                    <label for="select-time" class="mb-1">Время:</label>
-                                    <select class="form-select form-select-sm custom-select bg-main-600 border-0"
-                                            id="select-time">
-                                        <option value="1">1:00</option>
-                                        <option value="2">2:00</option>
-                                        <option value="3">3:00</option>
-                                    </select>
-                                </div>
-
-                                <div class="col">
-                                    <div class="d-flex justify-content-center border-blue-200-top">
-                                        <button class="btn-green-400 btn-sm mt-2 start-typing-trainer">Начать</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
+                <div>
+                    У вас будет одна минута, в течении которой вы должны написать как можно больше
+                    слов. По её окончанию вам будет выведен результат с вашей статистикой.
                 </div>
+
+                <div>
+                    Если в слове будет допущена ошибка, оно не будет считаться в конечном
+                    результате.
+                </div>
+
+                <div class="border-blue-200-top"></div>
+
+                <button class="btn-orange-400 start-typing-trainer mt-2">Начать</button>
+
             </div>
+            <!--========-->
+
 
             <!--Statistics bar-->
-            <div class="col-lg-3 statistics-bar">
-                <div class="text-light rounded bg-blue-700 p-3">
-                    <div class="row g-2 row-cols-1">
+            <div class="statistics-bar">
 
-                        <div class="col">
-                            <div class="border-blue-200-bottom">
-                                <h5 class="fw-bold">Статистика</h5>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="row row-cols-1 g-2">
-
-                                <div class="col">
-                                    Оставшиеся время:
-                                    <div class="fs-4 bg-blue-400 px-2 rounded left-time">-</div>
-                                </div>
-
-                                <div class="col">
-                                    Набрано слов:
-                                    <div class="fs-4 bg-blue-400 px-2 rounded text-green-300 words-amount">-</div>
-                                </div>
-
-                                <div class="col">
-                                    Ошибок:
-                                    <div class="fs-4 bg-blue-400 px-2 rounded text-red-300 typo-amount">-</div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="d-flex justify-content-center border-blue-200-top">
-                                <button class="btn-main-400 mt-2 stop-typing-trainer">Остановить</button>
-                            </div>
-                        </div>
-
-                    </div>
-
+                <div class="border-blue-200-bottom">
+                    <h5 class="fw-bold">Статистика</h5>
                 </div>
+
+                <div>
+                    Оставшиеся время:
+                    <div class="fs-4 bg-blue-400 px-2 rounded left-time">-</div>
+                </div>
+
+                <div>
+                    Набрано слов:
+                    <div class="fs-4 bg-blue-400 px-2 rounded text-green-300 words-amount">-</div>
+                </div>
+
+                <div>
+                    Ошибок:
+                    <div class="fs-4 bg-blue-400 px-2 rounded text-red-300 typo-amount">-</div>
+                </div>
+
+                <button class="btn-main-400 mt-2 stop-typing-trainer">Остановить</button>
+
             </div>
+            <!--========-->
+
 
         </div>
     </div>
+
 </div>
+
 {% endblock %}
 
 {% block script %}
-<script src="{% static 'trainer/js/main.js' %}" type="module"></script>
+    <script src="{% static 'trainer/js/main.js' %}" type="module"></script>
 {% endblock %}

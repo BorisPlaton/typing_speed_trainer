@@ -11,18 +11,75 @@
 
 html,
 body {
-  height: 100%;
   font-family: "Roboto", sans-serif;
 }
 
-.wrapper {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
+:root {
+  --right-space: 1fr;
+  --middle-space: 10fr;
+  --left-space: 1fr;
+}
+
+.base-grid {
+  display: grid;
+  height: 100vh;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "header"
+    "main"
+    "footer";
+}
+
+header {
+  grid-area: header;
+  display: grid;
+  grid-template-areas:
+    "header-logo"
+    "header-navbar";
+
+  .header-logo {
+    display: grid;
+    grid-area: "header-logo";
+    grid-template-columns: var(--right-space) var(--middle-space) var(
+        --left-space
+      );
+    grid-template-areas: ". logo .";
+
+    .logo {
+      grid-area: logo;
+    }
+  }
+
+  .header-navbar {
+    display: grid;
+    grid-area: "header-navbar";
+    grid-template-columns: var(--right-space) var(--middle-space) var(
+        --left-space
+      );
+    grid-row: 1fr;
+    grid-template-areas: ". item .";
+
+    .navbar-item {
+      grid-area: item;
+    }
+  }
 }
 
 main {
-  flex: 1 1 auto;
+  grid-area: main;
+}
+
+footer {
+  grid-area: footer;
+  display: grid;
+  grid-template-columns: var(--right-space) var(--middle-space) var(
+      --left-space
+    );
+  grid-template-areas: ". footer-content .";
+
+  .footer-content {
+    grid-area: footer-content;
+  }
 }
 
 a {

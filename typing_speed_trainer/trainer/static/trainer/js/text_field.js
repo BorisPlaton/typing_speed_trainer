@@ -1,8 +1,11 @@
 import { faker } from "https://cdn.skypack.dev/@faker-js/faker";
 import storage from "./data_storage.js";
+import Broker from "./broker.js";
 
-export default class TextField {
+export default class TextField extends Broker {
   constructor() {
+    super();
+
     this.backGroundText = document.querySelector(".background-text");
     this.hiddenInput = document.querySelector(".input-text");
 
@@ -86,6 +89,7 @@ export default class TextField {
   skipWord() {
     if (this.isInputAndWordEqual()) {
       storage.increaseCorrectWordsAmount();
+      this.notify("correctWord");
     }
     storage.increaseTotalWordsAmount();
     this.clearHiddenInput();
@@ -119,6 +123,7 @@ export default class TextField {
     } else {
       this.setCurrentCharIsInvalid();
       storage.increaseTypoAmount();
+      this.notify("invalidChar");
     }
     this.currentCharIndex++;
   }

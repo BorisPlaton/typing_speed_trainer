@@ -20,3 +20,10 @@ statisticsBar.addBrokerListener("typingTrainerStopped", () => {
   settingsBar.setup();
   textField.stopTyping();
 });
+
+textField.addBrokerListener("correctWord", () =>
+  statisticsBar.increaseCorrectWord()
+);
+textField.addBrokerListener("invalidChar", () =>
+  statisticsBar.increaseWrongChar()
+);

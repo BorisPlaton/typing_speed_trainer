@@ -1,32 +1,15 @@
-<div class="container-fluid bg-blue-700">
-    <div class="container">
-        <div class="py-4">
-            <div class="row align-items-center justify-content-between text-light g-3">
-                <div class="col-auto">
-                    <span class="fs-4 fw-light"><i class="bi bi-chevron-right"></i>... Typing practise</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<header class="">
 
-<div class="container-fluid bg-blue-400 border-blue-200-top border-blue-200-bottom fw-bold">
-    <div class="container">
-        <div class="py-2">
-            <div class="row g-4">
-                <div class="col-auto">
-                    <a href="{% url 'trainer:type_trainer' %}" class="link-light">Тренажер</a>
-                </div>
-                <div class="col-auto">
-                    <a href="" class="link-light">Личный кабинет</a>
-                </div>
-                <div class="col-auto">
-                    <a href="" class="link-light">Войти</a>
-                </div>
-                <div class="col-auto">
-                    <a href="" class="link-light">Выйти</a>
-                </div>
-            </div>
+    <div class="header-logo bg-blue-800 py-3">
+        <div class="logo text-light">
+            <span class="fs-4 fw-light"><i class="bi bi-chevron-right"></i>... Typing practise</span>
         </div>
     </div>
-</div>
+
+    <div class="header-navbar bg-blue-500 border-blue-200-top border-blue-200-bottom fw-bold py-1">
+        <div class="navbar-item">
+            <a href="{% url 'trainer:type_trainer' %}" class="link-light">Тренажер</a>
+        </div>
+    </div>
+
+</header>

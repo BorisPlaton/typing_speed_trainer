@@ -21,32 +21,22 @@
         {% endblock %}
     </title>
 </head>
-<body class="bg-blue-500">
+<body>
 
 <!--============= Content =============-->
-<div class="wrapper">
+<div class="base-grid">
 
     {% block header %}
-    <header>
         {% include 'includes/header.html' %}
-    </header>
     {% endblock %}
 
-    {% comment %}
-    <section class="last-results">
-        {% include 'includes/last-results.html' %}
-    </section>
-    {% endcomment %}
-
-    <main>
+    <main class="">
         {% block content %}
         {% endblock %}
     </main>
 
     {% block footer %}
-    <footer>
         {% include 'includes/footer.html' %}
-    </footer>
     {% endblock %}
 </div>
 <!--==========================-->

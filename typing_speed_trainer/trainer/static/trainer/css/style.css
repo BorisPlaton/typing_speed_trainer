@@ -1,3 +1,22 @@
+.grid {
+  display: grid;
+  height: 100%;
+  grid-template-columns: 4fr 2fr;
+}
+.grid .text {
+  display: grid;
+  grid-template-columns: 1fr 7fr;
+  grid-template-areas: ". inner-text";
+}
+.grid .sidebar {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  grid-template-areas: "test .";
+}
+.grid .inner-text {
+  grid-area: inner-text;
+}
+
 .text-trainer {
   position: relative;
 }
@@ -5,6 +24,7 @@
   cursor: pointer;
   user-select: none;
   text-align: justify;
+  line-height: 1.4;
 }
 
 .input-text {
@@ -23,8 +43,16 @@
   outline: 0 none;
 }
 
+.settings-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .statistics-bar {
   display: none;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .result-modal {
@@ -59,6 +87,10 @@
   justify-content: end;
   border-bottom-left-radius: 0.25em;
   border-bottom-right-radius: 0.25em;
+}
+
+.start-typing-trainer {
+  align-self: center;
 }
 
 .invalid-char {

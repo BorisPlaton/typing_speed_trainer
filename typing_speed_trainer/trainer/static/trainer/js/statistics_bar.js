@@ -51,6 +51,14 @@ export default class StatisticsBar extends Broker {
     this.typoAmount.innerHTML = storage.typoAmount;
   }
 
+  increaseCorrectWord() {
+    this.wordsAmount.innerHTML++;
+  }
+
+  increaseWrongChar() {
+    this.typoAmount.innerHTML++;
+  }
+
   showStatisticsBar() {
     this.statisticsBar.style.display = "block";
   }

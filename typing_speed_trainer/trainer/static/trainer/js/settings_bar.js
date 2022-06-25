@@ -6,10 +6,8 @@ export default class SettingsBar extends Broker {
     super();
 
     this.settingsBar = document.querySelector(".settings-bar");
-    this.textField = document.querySelector(".text-field");
     this.hiddenInput = document.querySelector(".input-text");
     this.startTrainerButton = document.querySelector(".start-typing-trainer");
-    this.timeSelect = document.querySelector("select");
     this.typingTrainerStarted = this.typingTrainerStarted.bind(this);
   }
 
@@ -28,12 +26,11 @@ export default class SettingsBar extends Broker {
   }
 
   setTotalTime() {
-    storage.totalTime =
-      this.timeSelect.options[this.timeSelect.selectedIndex].value;
+    storage.totalTime = 1;
   }
 
   showSettingsBar() {
-    this.settingsBar.style.display = "block";
+    this.settingsBar.style.display = "flex";
   }
 
   hideSettingsBar() {

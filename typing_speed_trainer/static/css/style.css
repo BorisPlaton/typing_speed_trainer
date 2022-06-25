@@ -8,18 +8,59 @@
 
 html,
 body {
-  height: 100%;
   font-family: "Roboto", sans-serif;
 }
 
-.wrapper {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
+:root {
+  --right-space: 1fr;
+  --middle-space: 10fr;
+  --left-space: 1fr;
+}
+
+.base-grid {
+  display: grid;
+  height: 100vh;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas: "header" "main" "footer";
+}
+
+header {
+  grid-area: header;
+  display: grid;
+  grid-template-areas: "header-logo" "header-navbar";
+}
+header .header-logo {
+  display: grid;
+  grid-area: "header-logo";
+  grid-template-columns: var(--right-space) var(--middle-space) var(--left-space);
+  grid-template-areas: ". logo .";
+}
+header .header-logo .logo {
+  grid-area: logo;
+}
+header .header-navbar {
+  display: grid;
+  grid-area: "header-navbar";
+  grid-template-columns: var(--right-space) var(--middle-space) var(--left-space);
+  grid-row: 1fr;
+  grid-template-areas: ". item .";
+}
+header .header-navbar .navbar-item {
+  grid-area: item;
 }
 
 main {
-  flex: 1 1 auto;
+  grid-area: main;
+}
+
+footer {
+  grid-area: footer;
+  display: grid;
+  grid-template-columns: var(--right-space) var(--middle-space) var(--left-space);
+  grid-template-areas: ". footer-content .";
+}
+footer .footer-content {
+  grid-area: footer-content;
 }
 
 a {
@@ -1163,6 +1204,48 @@ a.link-blue-700:hover {
 
 .border-blue-700-end {
   border-right: 1px solid #1d1f2e;
+}
+
+a.link-blue-800 {
+  color: #181926;
+}
+a.link-blue-800:hover {
+  color: #363855;
+}
+
+.text-blue-800 {
+  color: #181926;
+}
+
+.bg-blue-800 {
+  background-color: #181926;
+}
+
+a.link-blue-800 {
+  color: #181926;
+}
+a.link-blue-800:hover {
+  color: #363855;
+}
+
+.border-blue-800 {
+  border: 1px solid #181926 !important;
+}
+
+.border-blue-800-top {
+  border-top: 1px solid #181926;
+}
+
+.border-blue-800-bottom {
+  border-bottom: 1px solid #181926;
+}
+
+.border-blue-800-start {
+  border-left: 1px solid #181926;
+}
+
+.border-blue-800-end {
+  border-right: 1px solid #181926;
 }
 
 a.link-purple-100 {
@@ -2315,6 +2398,30 @@ a.link-main-700:hover {
 .btn-blue-700:active {
   border-color: #171925;
   background-color: #171925;
+}
+
+.btn-blue-800 {
+  padding: 6px 12px;
+  border: 1px solid #181926;
+  background-color: #181926;
+  border-radius: 0.25em;
+  font-size: 1em;
+  text-align: center;
+  vertical-align: middle;
+  transition: 0.1s all ease-in-out;
+  color: white;
+}
+.btn-blue-800.btn-sm {
+  padding: 4px 8px;
+  font-size: 0.875em;
+}
+.btn-blue-800:hover {
+  border-color: #0e0f16;
+  background-color: #0e0f16;
+}
+.btn-blue-800:active {
+  border-color: #12131d;
+  background-color: #12131d;
 }
 
 .btn-purple-100 {
