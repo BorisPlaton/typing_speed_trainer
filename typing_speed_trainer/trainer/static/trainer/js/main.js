@@ -21,6 +21,11 @@ statisticsBar.addBrokerListener("typingTrainerStopped", () => {
   textField.stopTyping();
 });
 
+statisticsBar.addBrokerListener("typingTrainerRestart", () => {
+  settingsBar.setup();
+  textField.stopTyping();
+});
+
 textField.addBrokerListener("correctWord", () =>
   statisticsBar.increaseCorrectWord()
 );

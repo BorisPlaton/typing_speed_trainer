@@ -42,13 +42,37 @@ header .header-navbar {
   display: grid;
   grid-area: "header-navbar";
   grid-template-columns: var(--right-space) var(--middle-space) var(--left-space);
-  grid-row: 1fr;
   grid-template-areas: ". item .";
 }
 header .header-navbar .navbar-item {
   grid-area: item;
 }
 
+@media only screen and (max-width: 1024px) {
+  header {
+    grid-area: header;
+    display: grid;
+    grid-template-areas: "header-logo" "header-navbar";
+  }
+  header .header-logo {
+    display: grid;
+    grid-area: "header-logo";
+    grid-template-columns: 5% 1fr 5%;
+    grid-template-areas: ". logo .";
+  }
+  header .header-logo .logo {
+    grid-area: logo;
+  }
+  header .header-navbar {
+    display: grid;
+    grid-area: "header-navbar";
+    grid-template-columns: 5% 1fr 5%;
+    grid-template-areas: ". item .";
+  }
+  header .header-navbar .navbar-item {
+    grid-area: item;
+  }
+}
 main {
   grid-area: main;
 }

@@ -3,6 +3,7 @@ export default class Broker {
     this.events = {
       typingTrainerStarted: [],
       typingTrainerStopped: [],
+      typingTrainerRestart: [],
       correctWord: [],
       invalidChar: [],
     };

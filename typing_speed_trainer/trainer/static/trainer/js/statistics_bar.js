@@ -5,6 +5,8 @@ export default class StatisticsBar extends Broker {
   constructor() {
     super();
 
+    this.isRestarted;
+
     this.statisticsBar = document.querySelector(".statistics-bar");
     this.stopTypingButton = document.querySelector(".stop-typing-trainer");
     this.leftTime = document.querySelector(".left-time");
@@ -12,7 +14,7 @@ export default class StatisticsBar extends Broker {
     this.wordsAmount = document.querySelector(".words-amount");
     this.typoAmount = document.querySelector(".typo-amount");
 
-    this.stopTypingButton.addEventListener("click", () => this.stopTimer());
+    this.stopTypingButton.addEventListener("click", () => this.stopTimer(true));
   }
 
   setup() {
@@ -25,7 +27,12 @@ export default class StatisticsBar extends Broker {
 
   typingTrainerStopped() {
     this.hideStatisticsBar();
-    this.notify("typingTrainerStopped");
+    if (this.isRestarted) {
+      this.notify("typingTrainerRestart");
+    } else {
+      this.notify("typingTrainerStopped");
+    }
+    this.isRestarted = false;
   }
 
   startTimer() {
@@ -38,7 +45,8 @@ export default class StatisticsBar extends Broker {
         this.leftTime.innerHTML--;
       }, 1000);
 
-      this.stopTimer = () => {
+      this.stopTimer = (isRestarted = false) => {
+        this.isRestarted = isRestarted;
         clearInterval(this.timer);
         resolve();
       };
