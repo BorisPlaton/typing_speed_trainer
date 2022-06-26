@@ -60,6 +60,14 @@ DATABASES = {
     }
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': os.getenv('REDIS_LOCATION'),
+        'TIMEOUT': 600
+    }
+}
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -90,20 +98,3 @@ STATICFILES_DIRS = [
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-if DEBUG:
-    import mimetypes
-
-    MIDDLEWARE += [
-        'debug_toolbar.middleware.DebugToolbarMiddleware',
-    ]
-    INSTALLED_APPS += [
-        'debug_toolbar',
-    ]
-    INTERNAL_IPS = ['127.0.0.1', ]
-
-    mimetypes.add_type("application/javascript", ".js", True)
-
-    DEBUG_TOOLBAR_CONFIG = {
-        'INTERCEPT_REDIRECTS': False,
-    }

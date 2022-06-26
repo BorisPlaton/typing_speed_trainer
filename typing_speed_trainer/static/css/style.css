@@ -72,6 +72,15 @@ header .header-navbar .navbar-item {
   header .header-navbar .navbar-item {
     grid-area: item;
   }
+  footer {
+    grid-area: footer;
+    display: grid;
+    grid-template-columns: 5% 1fr 5%;
+    grid-template-areas: ". footer-content .";
+  }
+  footer .footer-content {
+    grid-area: footer-content;
+  }
 }
 main {
   grid-area: main;

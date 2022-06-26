@@ -95,6 +95,17 @@ header {
       }
     }
   }
+
+  footer {
+    grid-area: footer;
+    display: grid;
+    grid-template-columns: 5% 1fr 5%;
+    grid-template-areas: ". footer-content .";
+
+    .footer-content {
+      grid-area: footer-content;
+    }
+  }
 }
 
 main {

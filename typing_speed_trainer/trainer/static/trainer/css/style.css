@@ -78,13 +78,13 @@
 .settings-bar {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
 }
 
 .statistics-bar {
   display: none;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
 }
 
 .result-modal {
@@ -119,6 +119,19 @@
   justify-content: end;
   border-bottom-left-radius: 0.25em;
   border-bottom-right-radius: 0.25em;
+}
+
+.last-result-content {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.last-results-list,
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
 .start-typing-trainer {

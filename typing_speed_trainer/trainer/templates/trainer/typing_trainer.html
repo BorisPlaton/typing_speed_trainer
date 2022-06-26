@@ -49,6 +49,8 @@
             <!--Settings bar-->
             <div class="settings-bar fw-light">
 
+                <h4 class="fw-bold m-0">Справка</h4>
+
                 <div>
                     У вас будет одна минута, в течении которой вы должны написать как можно больше
                     слов. По её окончанию вам будет выведен результат с вашей статистикой.
@@ -59,12 +61,24 @@
                     результате.
                 </div>
 
-                <div class="border-blue-200-top"></div>
-
-                <button class="btn-orange-400 start-typing-trainer mt-2">Начать</button>
+                <button class="btn-orange-400 start-typing-trainer">Начать</button>
 
             </div>
             <!--========-->
+
+            {% if results %}
+            <!--Last Results list-->
+            <div class="last-results-list mt-5">
+                <h4 class="fw-bold mb-0">Последние результаты</h4>
+
+                <div class="list">
+                    {% for result in results %}
+                    {% include 'trainer/includes/last_result.html' %}
+                    {% endfor %}
+                </div>
+            </div>
+            <!--========-->
+            {% endif %}
 
 
             <!--Statistics bar-->
@@ -103,5 +117,5 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'trainer/js/main.js' %}" type="module"></script>
+<script src="{% static 'trainer/js/main.js' %}" type="module"></script>
 {% endblock %}

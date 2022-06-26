@@ -1,0 +1,27 @@
+<div class="last-result">
+    <div class="last-result-content bg-blue-800 p-3 rounded shadow">
+
+        <div class="d-flex align-items-center">
+            <div class="me-2">
+                Правильных слов:
+            </div>
+            <div class="bg-blue-500 fs-5 px-2 rounded result-wpm flex-fill text-green-300 fw-bold">
+                {{ result.correctWordsAmount }}
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center">
+            <div class="me-2">
+                Ошибок:
+            </div>
+            <div class="bg-blue-500 fs-5 px-2 rounded result-typo-amount text-red-300 flex-fill fw-bold">
+                {{ result.typoAmount }}
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-end mt-2">
+            <small class="text-blue-100">{{ result.date|date:"H:i:s" }}</small>
+        </div>
+
+    </div>
+</div>
