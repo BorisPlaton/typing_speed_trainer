@@ -9,6 +9,8 @@ class DataStorage {
     this._typoAmount = 0;
     this._correctWordsAmount = 0;
     this._totalWordsAmount = 0;
+
+    this._dateEnd;
   }
 
   increaseTypoAmount() {
@@ -39,12 +41,24 @@ class DataStorage {
     this.setDefaultProperties();
   }
 
+  setDateEndIsNow() {
+    this._dateEnd = new Date();
+  }
+
+  get dateEnd() {
+    return this._dateEnd;
+  }
+
+  set dateEnd(value) {
+    this._dateEnd = value;
+  }
+
   get totalTime() {
     return this._totalTime;
   }
 
   set totalTime(value) {
-    this._totalTime = value * 60;
+    this._totalTime = value * 5;
   }
 
   get executionTime() {

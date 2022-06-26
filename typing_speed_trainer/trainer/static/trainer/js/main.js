@@ -15,6 +15,7 @@ const ajaxResult = new AjaxResult();
 
 textField.setup();
 settingsBar.setup();
+resultsList.setup();
 
 settingsBar.addBrokerListener("typingTrainerStarted", () => {
   resultsList.hideResultsList();
@@ -22,9 +23,10 @@ settingsBar.addBrokerListener("typingTrainerStarted", () => {
 });
 
 statisticsBar.addBrokerListener("typingTrainerStopped", () => {
+  storage.setDateEndIsNow();
   ajaxResult.sendResultToServer();
   resultModalWindow.show();
-  // resultsList.addLastResult();
+  resultsList.addLastResultFromStorage();
 
   storage.cleanUpStorage();
 

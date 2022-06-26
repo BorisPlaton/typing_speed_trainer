@@ -4,5 +4,6 @@ from trainer import views
 app_name = 'trainer'
 
 urlpatterns = [
-    path('', views.TypingTrainer.as_view(), name='type_trainer')
+    path('', views.TypingTrainer.as_view(), name='type_trainer'),
+    path('results/', views.ResultsList.as_view(), name='results'),
 ]

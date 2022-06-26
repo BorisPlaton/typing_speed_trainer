@@ -6,7 +6,7 @@ export default class AjaxResult extends Broker {
   constructor() {
     super();
     this.csrfToken = Cookies.get("csrftoken");
-    this.sendToUrl = window.location.href;
+    this.sendToUrl = "results/";
   }
 
   sendResultToServer() {
@@ -45,7 +45,10 @@ export default class AjaxResult extends Broker {
     const result = {
       typoAmount: storage.typoAmount,
       correctWordsAmount: storage.correctWordsAmount,
+      date: storage.dateEnd,
     };
+
+    console.log(result);
 
     return result;
   }

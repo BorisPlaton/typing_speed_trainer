@@ -5,8 +5,8 @@
             <div class="me-2">
                 Правильных слов:
             </div>
-            <div class="bg-blue-500 fs-5 px-2 rounded result-wpm flex-fill text-green-300 fw-bold">
-                {{ result.correctWordsAmount }}
+            <div class="bg-blue-500 fs-5 px-2 rounded result-correct-words-amount flex-fill text-green-300 fw-bold">
+
             </div>
         </div>
 
@@ -15,12 +15,14 @@
                 Ошибок:
             </div>
             <div class="bg-blue-500 fs-5 px-2 rounded result-typo-amount text-red-300 flex-fill fw-bold">
-                {{ result.typoAmount }}
+
             </div>
         </div>
 
         <div class="d-flex align-items-center justify-content-end mt-2">
-            <small class="text-blue-100">{{ result.date|date:"H:i:s" }}</small>
+            <small class="text-blue-100 date">
+
+            </small>
         </div>
 
     </div>

@@ -2,7 +2,6 @@ import json
 
 from django.core.cache import cache
 from django.http import JsonResponse
-from django.utils import timezone
 from django.views import View
 
 
@@ -10,6 +9,7 @@ class TrainerResultMixin(View):
 
     def post(self, request):
         data: dict = json.loads(request.body)
+        print(data)
         self.cache_result_data(data)
         return JsonResponse({
             'result': self.get_result_from_cache(
@@ -18,11 +18,8 @@ class TrainerResultMixin(View):
         })
 
     def cache_result_data(self, data: dict):
-        """Кеширует результат тренажера."""
+        """Кеширует результат."""
         new_id = self.get_and_increment_new_result_id()
-        data.update({
-            'date': timezone.now()
-        })
         cache.set(f'result:{new_id}', data)
 
     def get_all_results_from_cache(self) -> list[dict | None]:
@@ -61,6 +58,10 @@ class TrainerResultMixin(View):
 
     @staticmethod
     def get_and_increment_new_result_id() -> int:
+        """
+        Увеличивает значение текущего `id` результата и возвращает
+        его значение. Если `id` ещё нет, то создаёт его.
+        """
         if not cache.get('results_id'):
             cache.set('results_id', 0, None)
         result_id: int = cache.incr("results_id")
