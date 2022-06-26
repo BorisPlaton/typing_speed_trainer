@@ -44,7 +44,7 @@ class DataStorage {
   }
 
   set totalTime(value) {
-    this._totalTime = value * 5;
+    this._totalTime = value * 60;
   }
 
   get executionTime() {

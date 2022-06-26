@@ -4,7 +4,7 @@ export default class ResultsList extends Broker {
   constructor() {
     super();
 
-    this.resultsBar = document.querySelector(".last-results-list ");
+    this.resultsBar = document.querySelector(".last-results-list");
   }
 
   addLastResult() {}

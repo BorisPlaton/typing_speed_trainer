@@ -8,110 +8,122 @@
 {% block content %}
 {% include 'trainer/includes/result_modal_page.html' %}
 
-<div class="grid">
+<div class="container">
+    <div class="mt-3">
+        <div class="row g-4">
 
-    <div class="text bg-blue-600">
-        <div class="inner-text py-4 pe-4">
-            <div class="text-trainer">
+            <!--Text Field-->
+            <div class="col-lg-8">
+                <div class="text-trainer">
 
-                <!--Hidden user input-->
-                <div class="user-input">
-                    <input type="text" class="input-text fs-3">
-                </div>
+                    <!--Hidden user input-->
+                    <div class="user-input position-relative">
+                        <input type="text" class="input-text fs-3">
+                    </div>
 
-                <!--Background text-->
-                <div class="background-text text-blue-100 fs-3">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum esse ex natus rem. A architecto
-                    blanditiis
-                    dolor dolores eum facere, illo iste molestiae quaerat repellendus, sed tempore? Aspernatur debitis
-                    distinctio ex incidunt obcaecati placeat possimus, sit? Corporis deleniti est facere sed. Cum,
-                    numquam
-                    quaerat. Consectetur, earum hic praesentium quasi sapiente similique sunt! Ab adipisci alias aperiam
-                    atque autem beatae commodi consectetur corporis dolorem doloremque eos fugiat illo inventore itaque
-                    maiores mollitia nam nulla odio quas quia, ratione rem repellendus tempore temporibus, ullam vel
-                    voluptate. Alias aperiam, deleniti doloribus harum ipsa, ipsum magnam modi nesciunt quos ratione
-                    tempora
-                    veniam vero, vitae? Amet blanditiis, cumque delectus deleniti dolore doloremque explicabo illo
-                    impedit
-                    incidunt inventore iste non officia perferendis quibusdam quisquam repellendus sit. Architecto cum
-                    deserunt expedita fugit laudantium minus mollitia necessitatibus nulla provident. Adipisci facere
-                    illum,
-                    itaque neque reiciendis sapiente suscipit. Aspernatur consequuntur dicta distinctio eius enim fuga
-                    labore quis vel, veniam.
+                    <!--Background text-->
+                    <div class="background-text text-blue-100 fs-3">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum esse ex natus rem. A architecto
+                        blanditiis
+                        dolor dolores eum facere, illo iste molestiae quaerat repellendus, sed tempore? Aspernatur
+                        debitis
+                        distinctio ex incidunt obcaecati placeat possimus, sit? Corporis deleniti est facere sed. Cum,
+                        numquam
+                        quaerat. Consectetur, earum hic praesentium quasi sapiente similique sunt! Ab adipisci alias
+                        aperiam
+                        atque autem beatae commodi consectetur corporis dolorem doloremque eos fugiat illo inventore
+                        itaque
+                        maiores mollitia nam nulla odio quas quia, ratione rem repellendus tempore temporibus, ullam vel
+                        voluptate. Alias aperiam, deleniti doloribus harum ipsa, ipsum magnam modi nesciunt quos ratione
+                        tempora
+                        veniam vero, vitae? Amet blanditiis, cumque delectus deleniti dolore doloremque explicabo illo
+                        impedit
+                        incidunt inventore iste non officia perferendis quibusdam quisquam repellendus sit. Architecto
+                        cum
+                        deserunt expedita fugit laudantium minus mollitia necessitatibus nulla provident. Adipisci
+                        facere
+                        illum,
+                        itaque neque reiciendis sapiente suscipit. Aspernatur consequuntur dicta distinctio eius enim
+                        fuga
+                        labore quis vel, veniam.
+                    </div>
+
                 </div>
             </div>
+
+            <div class="col-lg-4">
+
+                <div class="sidebar text-light">
+
+                    <!--Settings bar-->
+                    <div class="settings-bar fw-light">
+
+                        <h4 class="fw-bold m-0">Справка</h4>
+
+                        <div>
+                            У вас будет одна минута, в течении которой вы должны написать как можно больше
+                            слов. По её окончанию вам будет выведен результат с вашей статистикой.
+                        </div>
+
+                        <div>
+                            Если в слове допущена ошибка, оно не будет учитываться в конечном
+                            результате.
+                        </div>
+
+                        <button class="btn-orange-400 start-typing-trainer">Начать</button>
+
+                    </div>
+
+                    <!--Statistics bar-->
+                    <div class="statistics-bar">
+                        <div class="bg-blue-800 inner p-3 rounded shadow d-flex flex-column">
+
+                            <h5 class="fw-bold m-0">Статистика</h5>
+
+                            <div class="d-flex align-items-center">
+                                <span>Оставшиеся время:</span>
+                                <div class="fs-4 bg-blue-400 px-2 rounded left-time flex-fill ms-2">-</div>
+                            </div>
+
+                            <div class="d-flex align-items-center">
+                                Набрано слов:
+                                <div class="fs-4 bg-blue-400 px-2 rounded text-green-300 words-amount flex-fill ms-2">
+                                    -
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center">
+                                Ошибок:
+                                <div class="fs-4 bg-blue-400 px-2 rounded text-red-300 typo-amount flex-fill ms-2">-
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-center">
+                                <button class="btn-main-400 stop-typing-trainer">Остановить</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Last Results list-->
+                    <div class="last-results-list mt-5">
+                        {% if results %}
+
+                        <h4 class="fw-bold mb-0">Последние результаты</h4>
+
+                        <div class="list">
+                            {% for result in results %}
+                            {% include 'trainer/includes/last_result.html' %}
+                            {% endfor %}
+                        </div>
+
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+
         </div>
     </div>
-
-    <div class="sidebar bg-blue-700">
-        <div class="inner-sidebar text-light">
-
-            <!--Settings bar-->
-            <div class="settings-bar fw-light">
-
-                <h4 class="fw-bold m-0">Справка</h4>
-
-                <div>
-                    У вас будет одна минута, в течении которой вы должны написать как можно больше
-                    слов. По её окончанию вам будет выведен результат с вашей статистикой.
-                </div>
-
-                <div>
-                    Если в слове допущена ошибка, оно не будет учитываться в конечном
-                    результате.
-                </div>
-
-                <button class="btn-orange-400 start-typing-trainer">Начать</button>
-
-            </div>
-            <!--========-->
-
-            {% if results %}
-            <!--Last Results list-->
-            <div class="last-results-list mt-5">
-                <h4 class="fw-bold mb-0">Последние результаты</h4>
-
-                <div class="list">
-                    {% for result in results %}
-                    {% include 'trainer/includes/last_result.html' %}
-                    {% endfor %}
-                </div>
-            </div>
-            <!--========-->
-            {% endif %}
-
-
-            <!--Statistics bar-->
-            <div class="statistics-bar">
-
-                <div class="border-blue-200-bottom">
-                    <h5 class="fw-bold">Статистика</h5>
-                </div>
-
-                <div>
-                    Оставшиеся время:
-                    <div class="fs-4 bg-blue-400 px-2 rounded left-time">-</div>
-                </div>
-
-                <div>
-                    Набрано слов:
-                    <div class="fs-4 bg-blue-400 px-2 rounded text-green-300 words-amount">-</div>
-                </div>
-
-                <div>
-                    Ошибок:
-                    <div class="fs-4 bg-blue-400 px-2 rounded text-red-300 typo-amount">-</div>
-                </div>
-
-                <button class="btn-main-400 mt-2 stop-typing-trainer">Остановить</button>
-
-            </div>
-            <!--========-->
-
-
-        </div>
-    </div>
-
 </div>
 
 {% endblock %}

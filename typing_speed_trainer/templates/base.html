@@ -24,21 +24,16 @@
 </head>
 <body>
 
-<!--============= Content =============-->
-<div class="base-grid">
+<div class="wrapper">
+    <!--============= Content =============-->
+    {% include 'includes/header.html' %}
 
-    {% block header %}
-        {% include 'includes/header.html' %}
-    {% endblock %}
-
-    <main class="">
+    <main class="bg-blue-600 pb-4">
         {% block content %}
         {% endblock %}
     </main>
 
-    {% block footer %}
-        {% include 'includes/footer.html' %}
-    {% endblock %}
+    {% include 'includes/footer.html' %}
 </div>
 <!--==========================-->
 
