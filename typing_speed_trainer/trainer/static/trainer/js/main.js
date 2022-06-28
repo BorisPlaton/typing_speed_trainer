@@ -27,10 +27,11 @@ document.addEventListener("DOMContentLoaded", () => {
   statisticsBar.addBrokerListener("typingTrainerStopped", () => {
     storage.setDateEndIsNow();
     statistics.calculateTypingStatistics();
-
-    ajaxResult.sendResultToServer();
+    textField.stopTyping();
 
     resultModalWindow.show();
+
+    ajaxResult.sendResultToServer();
 
     resultsList.addLastResultFromStorage();
 
@@ -38,7 +39,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     settingsBar.setup();
     resultsList.showResultsList();
-    textField.stopTyping();
   });
 
   statisticsBar.addBrokerListener("typingTrainerRestart", () => {

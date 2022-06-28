@@ -6,6 +6,8 @@ export default class TextField extends Broker {
   constructor() {
     super();
 
+    this.loadingAnimation = document.querySelector(".loading-page");
+
     this.backGroundText = document.querySelector(".background-text");
     this.hiddenInput = document.querySelector(".input-text");
 
@@ -30,10 +32,32 @@ export default class TextField extends Broker {
 
   stopTyping() {
     this.hiddenInput.blur();
+
     this.setTextFieldWords();
   }
 
+  setTextFieldWords() {
+    this.loadingAnimation.style.display = "flex";
+
+    setTimeout(() => {
+      this.clearTextField();
+      this.clearHiddenInput();
+      for (let i = 0; i < 200; i++) {
+        const spanElement = this.getTextFieldSpanElement(
+          faker.random.words(1).toLowerCase(),
+          i
+        );
+        this.backGroundText.append(spanElement);
+        this.backGroundText.innerHTML += " ";
+      }
+      this.setCurrentWordProperties(0);
+
+      this.loadingAnimation.style.display = "none";
+    }, 0);
+  }
+
   analyzeInputChar() {
+    storage.increaseCharsAmount();
     switch (true) {
       case this.isSpaceKeyPressed():
         this.currentWordText += " ";
@@ -44,7 +68,6 @@ export default class TextField extends Broker {
         this.removeLastChar();
         break;
       case this.isCharAdded():
-        storage.increaseCharsAmount();
         this.updateLastChar(
           this.currentWordText[this.currentCharIndex] ==
             this.getInputChar().slice(-1)
@@ -183,21 +206,6 @@ export default class TextField extends Broker {
     this.currentWordSpan = document.querySelector(`.wrd-${wordNum}`);
     this.currentWordText = this.getCurrentWordText();
     this.currentCharIndex = 0;
-  }
-
-  setTextFieldWords() {
-    this.clearTextField();
-    this.clearHiddenInput();
-    for (let i = 0; i < 200; i++) {
-      const spanElement = this.getTextFieldSpanElement(
-        faker.random.words(1).toLowerCase(),
-        i
-      );
-      this.backGroundText.append(spanElement);
-      this.backGroundText.innerHTML += " ";
-    }
-
-    this.setCurrentWordProperties(0);
   }
 
   getTextFieldSpanElement(word, wordNum) {
