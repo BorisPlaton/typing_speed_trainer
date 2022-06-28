@@ -59,6 +59,17 @@
   flex-direction: column;
   gap: 5px;
 }
+.result-modal .accuracy,
+.result-modal .modal-keystrokes,
+.result-modal .modal-wpm,
+.result-modal .modal-invalid-words-amount,
+.result-modal .modal-correct-words-amount,
+.result-modal .modal-accuracy,
+.result-modal .modal-typo-amount {
+  display: flex;
+  justify-content: end;
+  gap: 5px;
+}
 .result-modal .header {
   border-top-left-radius: 0.25em;
   border-top-right-radius: 0.25em;
@@ -74,6 +85,11 @@
 .last-result-content {
   display: flex;
   flex-direction: column;
+  gap: 7px;
+}
+.last-result-content div {
+  display: flex;
+  justify-content: end;
   gap: 5px;
 }
 

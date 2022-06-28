@@ -13,6 +13,7 @@ export default class TextField extends Broker {
     this.currentWordText;
     this.currentWordNum;
     this.currentCharIndex;
+    this.isWordLonger = false;
   }
 
   setup() {
@@ -39,13 +40,16 @@ export default class TextField extends Broker {
         this.skipWord();
         break;
       case this.isCharRemoved():
+        storage.decreaseCharsAmount();
         this.removeLastChar();
         break;
       case this.isCharAdded():
+        storage.increaseCharsAmount();
         this.updateLastChar(
           this.currentWordText[this.currentCharIndex] ==
             this.getInputChar().slice(-1)
         );
+        break;
     }
   }
 
@@ -88,8 +92,7 @@ export default class TextField extends Broker {
 
   skipWord() {
     if (this.isInputAndWordEqual()) {
-      storage.increaseCorrectWordsAmount();
-      this.notify("correctWord");
+      this.notifyCorrectWord("correctWord");
     }
     storage.increaseTotalWordsAmount();
     this.clearHiddenInput();
@@ -107,14 +110,29 @@ export default class TextField extends Broker {
 
   setInputIsLonger() {
     for (const span of this.currentWordSpan.querySelectorAll("span")) {
+      if (!this.isWordLonger) {
+        this.notifyInvalidChar();
+        this.isWordLonger = true;
+      }
       span.classList.add("invalid-word");
     }
   }
 
   removeInputIsLonger() {
     for (const span of this.currentWordSpan.querySelectorAll("span")) {
+      this.isWordLonger = false;
       span.classList.remove("invalid-word");
     }
+  }
+
+  notifyInvalidChar() {
+    storage.increaseTypoAmount();
+    this.notify("invalidChar");
+  }
+
+  notifyCorrectWord() {
+    storage.increaseCorrectWordsAmount();
+    this.notify("correctWord");
   }
 
   updateLastChar(isCorrect) {
@@ -122,8 +140,7 @@ export default class TextField extends Broker {
       this.setCurrentCharIsCorrect();
     } else {
       this.setCurrentCharIsInvalid();
-      storage.increaseTypoAmount();
-      this.notify("invalidChar");
+      this.notifyInvalidChar();
     }
     this.currentCharIndex++;
   }
@@ -171,7 +188,7 @@ export default class TextField extends Broker {
   setTextFieldWords() {
     this.clearTextField();
     this.clearHiddenInput();
-    for (let i = 0; i < 150; i++) {
+    for (let i = 0; i < 200; i++) {
       const spanElement = this.getTextFieldSpanElement(
         faker.random.words(1).toLowerCase(),
         i

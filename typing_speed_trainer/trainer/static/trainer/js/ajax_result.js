@@ -1,6 +1,6 @@
 import Broker from "./broker.js";
 import Cookies from "https://cdn.skypack.dev/js-cookie";
-import storage from "./data_storage.js";
+import statistics from "./statistics_data.js";
 
 export default class AjaxResult extends Broker {
   constructor() {
@@ -10,13 +10,10 @@ export default class AjaxResult extends Broker {
   }
 
   sendResultToServer() {
-    this.sendJSONRequest()
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    this.sendJSONRequest().catch((error) => {
+      console.error(error);
+    });
+    console.log(2);
   }
 
   sendJSONRequest() {
@@ -37,19 +34,7 @@ export default class AjaxResult extends Broker {
         }
       });
 
-      xhr.send(JSON.stringify(this.getResultData()));
+      xhr.send(JSON.stringify(statistics.getTypingStatistics()));
     });
-  }
-
-  getResultData() {
-    const result = {
-      typoAmount: storage.typoAmount,
-      correctWordsAmount: storage.correctWordsAmount,
-      date: storage.dateEnd,
-    };
-
-    console.log(result);
-
-    return result;
   }
 }

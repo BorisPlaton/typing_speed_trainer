@@ -4,37 +4,48 @@ class DataStorage {
   }
 
   setDefaultProperties() {
-    this._totalTime = 0;
-    this._executionTime = 0;
-    this._typoAmount = 0;
-    this._correctWordsAmount = 0;
-    this._totalWordsAmount = 0;
+    this.totalTime = 0;
+    this.executionTime = 0;
+    this.typoAmount = 0;
+    this.correctWordsAmount = 0;
+    this.totalWordsAmount = 0;
+    this.charsAmount = 0;
 
-    this._dateEnd;
+    this.dateEnd;
   }
 
   increaseTypoAmount() {
-    this._typoAmount++;
+    this.typoAmount++;
   }
 
   decreaseTypoAmount() {
-    this._typoAmount--;
+    this.typoAmount--;
   }
 
   increaseCorrectWordsAmount() {
-    this._correctWordsAmount++;
+    this.correctWordsAmount++;
   }
 
   decreaseCorrectWordsAmount() {
-    this._correctWordsAmount--;
+    this.correctWordsAmount--;
   }
 
   increaseTotalWordsAmount() {
-    this._totalWordsAmount++;
+    this.totalWordsAmount++;
   }
 
   decreaseTotalWordsAmount() {
-    this._totalWordsAmount--;
+    this.totalWordsAmount--;
+  }
+
+  increaseCharsAmount() {
+    this.charsAmount++;
+  }
+
+  decreaseCharsAmount() {
+    if (this.charsAmount > 0) {
+      this.charsAmount--;
+    }
   }
 
   cleanUpStorage() {
@@ -42,55 +53,7 @@ class DataStorage {
   }
 
   setDateEndIsNow() {
-    this._dateEnd = new Date();
-  }
-
-  get dateEnd() {
-    return this._dateEnd;
-  }
-
-  set dateEnd(value) {
-    this._dateEnd = value;
-  }
-
-  get totalTime() {
-    return this._totalTime;
-  }
-
-  set totalTime(value) {
-    this._totalTime = value * 5;
-  }
-
-  get executionTime() {
-    return this._executionTime;
-  }
-
-  set executionTime(value) {
-    this._executionTime = value;
-  }
-
-  get typoAmount() {
-    return this._typoAmount;
-  }
-
-  set typoAmount(value) {
-    this._typoAmount = value;
-  }
-
-  get correctWordsAmount() {
-    return this._correctWordsAmount;
-  }
-
-  set correctWordsAmount(value) {
-    this._correctWordsAmount = value;
-  }
-
-  get totaltWordsAmount() {
-    return this._totalWordsAmount;
-  }
-
-  set totaltWordsAmount(value) {
-    this._totalWordsAmount = value;
+    this.dateEnd = new Date();
   }
 }
 

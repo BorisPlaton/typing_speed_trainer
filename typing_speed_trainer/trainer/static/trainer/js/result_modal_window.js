@@ -1,12 +1,28 @@
 import storage from "./data_storage.js";
+import statistics from "./statistics_data.js";
 
 export default class ResultModalWindow {
   constructor() {
     this.modalWindow = document.querySelector(".result-modal");
     this.closeButton = document.querySelector(".close-result-modal");
-    this.timeAmount = document.querySelector(".modal-time");
-    this.typoAmount = document.querySelector(".modal-typo-amount");
-    this.wpm = document.querySelector(".modal-wpm");
+
+    this.wpm = this.modalWindow.querySelector(".modal-wpm");
+    this.correctWordsAmount = this.modalWindow.querySelector(
+      ".modal-correct-words-amount"
+    );
+    this.invalidWordsAmount = this.modalWindow.querySelector(
+      ".modal-invalid-words-amount"
+    );
+    this.correctKeystrokes = this.modalWindow.querySelector(
+      ".modal-keystrokes .correct"
+    );
+    this.invalidKeystrokes = this.modalWindow.querySelector(
+      ".modal-keystrokes .invalid"
+    );
+    this.summaryKeystrokes = this.modalWindow.querySelector(
+      ".modal-keystrokes .summary"
+    );
+    this.keystrokesAccuracy = this.modalWindow.querySelector(".modal-accuracy");
 
     this.closeButton.addEventListener("click", () => {
       this.hideWindow();
@@ -19,9 +35,15 @@ export default class ResultModalWindow {
   }
 
   setStatisticsValues() {
-    this.typoAmount.innerHTML = storage.typoAmount;
-    this.wpm.innerHTML = storage.correctWordsAmount;
-    this.timeAmount.innerHTML = storage.executionTime + "c";
+    const data = statistics.getTypingStatistics();
+
+    this.wpm.innerHTML = data.wpm;
+    this.correctWordsAmount.innerHTML = data.correctWordsAmount;
+    this.invalidWordsAmount.innerHTML = data.invalidWordsAmount;
+    this.correctKeystrokes.innerHTML = data.correctKeystrokes;
+    this.invalidKeystrokes.innerHTML = data.invalidKeystrokes;
+    this.summaryKeystrokes.innerHTML = data.summaryKeystrokes;
+    this.keystrokesAccuracy.innerHTML = data.typingAccuracy + "%";
   }
 
   showWindow() {

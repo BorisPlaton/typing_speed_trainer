@@ -9,20 +9,37 @@
             <div class="body-inner">
 
                 <div class="d-flex align-items-center">
-                    <div class="me-2">Прошло времени:</div>
-                    <div class="fs-4 bg-blue-500 px-2 rounded modal-time flex-fill">-</div>
+                    <div class="me-2">Слов в минуту:</div>
+                    <div class="fs-4 bg-blue-500 px-2 rounded modal-wpm flex-fill fw-bold">-</div>
                 </div>
 
                 <div class="d-flex align-items-center">
                     <div class="me-2">Правильных слов:</div>
-                    <div class="fs-4 bg-blue-500 px-2 rounded modal-wpm flex-fill text-green-300 fw-bold">-</div>
+                    <div class="fs-4 bg-blue-500 px-2 rounded modal-correct-words-amount flex-fill text-green-300 fw-bold">
+                        -
+                    </div>
                 </div>
 
                 <div class="d-flex align-items-center">
-                    <div class="me-2">Ошибок:</div>
-                    <div class="fs-4 bg-blue-500 px-2 rounded modal-typo-amount text-red-300 flex-fill fw-bold">-</div>
+                    <div class="me-2">Неправильных слов:</div>
+                    <div class="fs-4 bg-blue-500 px-2 rounded modal-invalid-words-amount text-red-300 flex-fill fw-bold">-</div>
                 </div>
 
+                <div class="d-flex align-items-center">
+                    <div class="me-2">Нажатий клавиш:</div>
+                    <div class="fs-4 bg-blue-500 px-2 rounded modal-keystrokes flex-fill">
+                        <span class="correct text-green-300 fw-bold">-</span>
+                        |
+                        <span class="invalid text-red-300 fw-bold">-</span>
+                        |
+                        <span class="summary fw-bold">-</span>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center">
+                    <div class="me-2">Точность:</div>
+                    <div class="fs-4 bg-blue-500 px-2 rounded modal-accuracy flex-fill fw-bold">-</div>
+                </div>
 
             </div>
         </div>

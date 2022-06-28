@@ -63,6 +63,18 @@
     gap: 5px;
   }
 
+  .accuracy,
+  .modal-keystrokes,
+  .modal-wpm,
+  .modal-invalid-words-amount,
+  .modal-correct-words-amount,
+  .modal-accuracy,
+  .modal-typo-amount {
+    display: flex;
+    justify-content: end;
+    gap: 5px;
+  }
+
   .header {
     border-top-left-radius: 0.25em;
     border-top-right-radius: 0.25em;
@@ -80,7 +92,13 @@
 .last-result-content {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 7px;
+
+  & div {
+    display: flex;
+    justify-content: end;
+    gap: 5px;
+  }
 }
 
 .last-results-list,

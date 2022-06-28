@@ -1,5 +1,5 @@
 import Broker from "./broker.js";
-import storage from "./data_storage.js";
+import statistics from "./statistics_data.js";
 
 export default class ResultsList extends Broker {
   constructor() {
@@ -51,6 +51,7 @@ export default class ResultsList extends Broker {
 
     this.resultsBar = document.querySelector(".last-results-list");
     this.resultsList = document.querySelector(".last-results-list .list");
+
     this.isResultBarCreated = true;
   }
 
@@ -64,15 +65,29 @@ export default class ResultsList extends Broker {
     const div = document.createElement("div");
     div.innerHTML = this.resultTemplate;
 
+    const wpm = div.querySelector(".result-wpm");
     const correctWordsAmount = div.querySelector(
       ".result-correct-words-amount"
     );
-    const typoAmount = div.querySelector(".result-typo-amount");
-    const date = div.querySelector(".date");
+    const invalidWordsAmount = div.querySelector(
+      ".result-invalid-words-amount"
+    );
+    const correctKeystrokes = div.querySelector(".result-keystrokes .correct");
+    const invalidKeystrokes = div.querySelector(".result-keystrokes .invalid");
+    const summaryKeystrokes = div.querySelector(".result-keystrokes .summary");
+    const keystrokesAccuracy = div.querySelector(".result-accuracy");
+    const dateEnd = div.querySelector(".result-date-end div");
 
+    wpm.innerHTML = data.wpm;
     correctWordsAmount.innerHTML = data.correctWordsAmount;
-    typoAmount.innerHTML = data.typoAmount;
-    date.innerHTML = data.date;
+    invalidWordsAmount.innerHTML = data.invalidWordsAmount;
+    correctKeystrokes.innerHTML = data.correctKeystrokes;
+    invalidKeystrokes.innerHTML = data.invalidKeystrokes;
+    summaryKeystrokes.innerHTML = data.summaryKeystrokes;
+    keystrokesAccuracy.innerHTML = data.typingAccuracy + "%";
+
+    const dateEndValue = new Date(data.dateEnd);
+    dateEnd.innerHTML = dateEndValue.toISOString().substring(11, 19);
 
     return div.firstChild;
   }
@@ -97,11 +112,7 @@ export default class ResultsList extends Broker {
   }
 
   addLastResultFromStorage() {
-    const data = {
-      typoAmount: storage.typoAmount,
-      correctWordsAmount: storage.correctWordsAmount,
-      date: storage.dateEnd,
-    };
+    const data = statistics.getTypingStatistics();
     this.addLastResult(data);
   }
 
