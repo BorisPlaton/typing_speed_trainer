@@ -94,7 +94,7 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = 'account.User'
 
 LOGIN_URL = 'account:login'
-LOGIN_REDIRECT_URL = 'trainer:type_trainer'
+LOGIN_REDIRECT_URL = 'account:profile'
 LOGOUT_REDIRECT_URL = 'account:login'
 
 LANGUAGE_CODE = 'ru-ru'

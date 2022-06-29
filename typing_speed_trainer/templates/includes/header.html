@@ -15,20 +15,22 @@
                 <div class="row g-lg-5 g-2">
 
                     <div class="col-lg-auto">
-                        <a href="{% url 'trainer:type_trainer' %}" class="link-light">Тренажер</a>
+                        <a href="{% url 'trainer:typing_trainer' %}" class="link-light">Тренажер</a>
                     </div>
 
+                    {% if user.is_authenticated %}
                     <div class="col-lg-auto">
                         <a href="{% url 'account:profile' %}" class="link-light">Мой профиль</a>
                     </div>
 
                     <div class="col-lg-auto">
-                        <a href="{% url 'account:login' %}" class="link-light">Войти</a>
-                    </div>
-
-                    <div class="col-lg-auto">
                         <a href="{% url 'account:logout' %}" class="link-light">Выйти</a>
                     </div>
+                    {% else %}
+                    <div class="col-lg-auto">
+                        <a href="{% url 'account:login' %}" class="link-light">Войти</a>
+                    </div>
+                    {% endif %}
 
                 </div>
             </div>

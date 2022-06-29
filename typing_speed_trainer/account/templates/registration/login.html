@@ -1,6 +1,16 @@
 {% extends 'registration/auth_base.html' %}
 {% load crispy_forms_tags %}
 
+{% block alert %}
+{% if form.non_field_errors %}
+<div class="alert alert-danger">
+    {% for error in form.non_field_errors %}
+    <span>{{ error }}</span>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}
+
 {% block auth_content %}
 <div class="d-flex justify-content-center align-items-center mt-2 mb-3">
     <span class="fs-5 fw-light">Вход</span>
@@ -9,9 +19,14 @@
 <form action="{% url 'account:login' %}" method="post" novalidate>
     <div class="d-flex flex-column">
         {% crispy form %}
-        <div class="d-flex justify-content-center mt-3">
+        <div class="d-flex justify-content-center mt-2">
             <button type="submit" class="btn-orange-400">Войти</button>
         </div>
     </div>
 </form>
+{% endblock %}
+
+{% block add_link %}
+<a href="{% url 'account:registration' %}">Создать аккаунт</a>
+<a href="">Забыли пароль</a>
 {% endblock %}

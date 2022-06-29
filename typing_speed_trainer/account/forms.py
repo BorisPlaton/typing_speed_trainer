@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 
 from account.models import User
-from account.utils.form_mixins import CrispyStyleModelFormMixin, CrispyStyleFormMixin
+from common.form_mixins import CrispyStyleModelFormMixin, CrispyStyleFormMixin
 
 
 class RegistrationForm(CrispyStyleModelFormMixin):
@@ -23,7 +23,6 @@ class RegistrationForm(CrispyStyleModelFormMixin):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['username'].help_text = None
-        print(self.helper)
 
     def clean_repeat_password(self):
         """Проверяет, что пароли совпадают."""

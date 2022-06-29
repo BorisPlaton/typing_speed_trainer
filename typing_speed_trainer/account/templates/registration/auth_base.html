@@ -1,11 +1,18 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="{% static 'account/css/auth-base-style.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
 
     <div class="row justify-content-center align-items-center">
         <div class="col-4">
-            {{ form.non_field_errors }}
+            {% block alert %}
+
+            {% endblock %}
         </div>
     </div>
 
@@ -20,6 +27,12 @@
                 {% block auth_content %}
 
                 {% endblock %}
+
+                <div class="d-flex flex-column mt-5">
+                {% block add_link %}
+
+                {% endblock %}
+                </div>
 
             </div>
         </div>
