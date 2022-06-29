@@ -9,13 +9,31 @@
     </div>
 
     <div class="bg-blue-500 border-blue-200-top border-blue-200-bottom fw-bold">
+
         <div class="container">
             <div class="py-1">
-                <div class="navbar-item">
-                    <a href="{% url 'trainer:type_trainer' %}" class="link-light">Тренажер</a>
+                <div class="row g-lg-5 g-2">
+
+                    <div class="col-lg-auto">
+                        <a href="{% url 'trainer:type_trainer' %}" class="link-light">Тренажер</a>
+                    </div>
+
+                    <div class="col-lg-auto">
+                        <a href="{% url 'account:profile' %}" class="link-light">Мой профиль</a>
+                    </div>
+
+                    <div class="col-lg-auto">
+                        <a href="{% url 'account:login' %}" class="link-light">Войти</a>
+                    </div>
+
+                    <div class="col-lg-auto">
+                        <a href="{% url 'account:logout' %}" class="link-light">Выйти</a>
+                    </div>
+
                 </div>
             </div>
         </div>
+
     </div>
 
 </header>

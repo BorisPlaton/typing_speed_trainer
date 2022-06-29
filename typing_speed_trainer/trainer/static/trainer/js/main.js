@@ -42,6 +42,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   statisticsBar.addBrokerListener("typingTrainerRestart", () => {
+    storage.cleanUpStorage();
+
     settingsBar.setup();
     resultsList.showResultsList();
     textField.stopTyping();

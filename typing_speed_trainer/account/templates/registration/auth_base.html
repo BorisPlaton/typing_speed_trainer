@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <div class="row justify-content-center align-items-center">
+        <div class="col-4">
+            {{ form.non_field_errors }}
+        </div>
+    </div>
+
+    <div class="row justify-content-center align-items-center">
+        <div class="col-4">
+            <div class="p-4 bg-blue-800 rounded text-light">
+
+                <div class="d-flex justify-content-center align-items-center pb-2 border-blue-200-bottom">
+                    <span class="fs-4 fw-light">Typing practise</span>
+                </div>
+
+                {% block auth_content %}
+
+                {% endblock %}
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

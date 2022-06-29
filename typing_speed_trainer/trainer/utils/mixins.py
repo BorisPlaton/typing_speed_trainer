@@ -9,7 +9,6 @@ class TrainerResultMixin(View):
 
     def post(self, request):
         data: dict = json.loads(request.body)
-        print(data)
         self.cache_result_data(data)
         return JsonResponse({
             'result': self.get_result_from_cache(

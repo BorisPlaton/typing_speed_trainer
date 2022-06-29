@@ -1,0 +1,62 @@
+{% extends 'account/account_base.html' %}
+{% load static %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="{% static 'account/css/profile-style.css' %}">
+{% endblock %}
+
+{% block account_content %}
+<div class="row g-3">
+
+    <!--User Statistics-->
+    <div class="col-lg-auto account-statistics">
+        <div class="p-3 bg-blue-800 rounded">
+            <div class="account-statistics text-light">
+
+                <div class="mb-1">
+                    <span class="fs-5 fw-bold lh-1">Ваша статистика</span>
+                    <br>
+                    <p class="lh-sm text-blue-100 fw-light m-0">
+                        <small class="">
+                            Статистика считается средним арифметическим<br>
+                            ваших предыдущих результатов.
+                        </small>
+                    </p>
+                </div>
+
+                <div class="bg-blue-500 p-2 rounded d-flex justify-content-between">
+                    <small><span class="fw-bold">54 WPM</span></small>
+                    <small><span class="fw-light ms-1 text-blue-100">Ср. Скорость набора текста</span></small>
+                </div>
+
+                <div class="bg-blue-500 p-2 rounded d-flex justify-content-between">
+                    <small><span class="fw-bold">96.5%</span></small>
+                    <small><span class="fw-light ms-1 text-blue-100">Ср. Аккуратность печати</span></small>
+                </div>
+
+                <div class="bg-blue-500 p-2 rounded d-flex justify-content-between">
+                    <small><span class="fw-bold text-green-300">33</span></small>
+                    <small><span class="fw-light ms-1 text-blue-100">Ср. Количество правильных слов</span></small>
+                </div>
+
+                <div class="bg-blue-500 p-2 rounded d-flex justify-content-between">
+                    <small><span class="fw-bold text-red-300">4</span></small>
+                    <small><span class="fw-light ms-1 text-blue-100">Ср. Количество неправильных слов</span></small>
+                </div>
+
+                <div class="bg-blue-500 p-2 rounded d-flex justify-content-between">
+                    <small><span class="fw-bold text-red-300">24</span></small>
+                    <small><span class="fw-light ms-1 text-blue-100">Ср. Количество опечаток</span></small>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="p-3 bg-blue-800 rounded">
+
+        </div>
+    </div>
+</div>
+{% endblock %}
