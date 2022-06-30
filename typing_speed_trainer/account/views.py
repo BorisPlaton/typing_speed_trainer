@@ -1,15 +1,15 @@
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
-from django.utils.decorators import method_decorator
-from django.views.generic import TemplateView, FormView
+from django.views.generic import FormView, DetailView
 
 from account.forms import RegistrationForm, LoginForm
+from account.models import User
 from common.mixins import UnauthenticatedMixin
 
 
-@method_decorator(login_required, name='dispatch')
-class Account(TemplateView):
+class Account(DetailView):
     """Личный кабинет пользователя."""
+    model = User
+    context_object_name = 'user_profile'
     template_name = 'account/profile.html'
 
 

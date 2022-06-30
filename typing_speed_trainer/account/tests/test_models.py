@@ -1,7 +1,5 @@
-from django.conf import settings
 from django.db import IntegrityError
 from django.test import TestCase
-from django.urls import reverse
 
 from account.models import User
 

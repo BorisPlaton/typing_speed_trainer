@@ -1,6 +1,8 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
+from django.urls import reverse
 
 
 class CustomUserManager(BaseUserManager):
@@ -35,12 +37,16 @@ class User(AbstractUser):
     """Модель пользователя."""
 
     email = models.EmailField('Почта', unique=True)
+    username = models.CharField('Имя пользователя', max_length=16, validators=[UnicodeUsernameValidator()])
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['username']
 
     objects = CustomUserManager()
 
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+
+    def get_absolute_url(self):
+        return reverse('account:profile', args=[self.pk])

@@ -1,4 +1,7 @@
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.shortcuts import redirect
+from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 
 from trainer.utils.mixins import TrainerResultMixin
@@ -9,6 +12,8 @@ class TypingTrainer(TemplateView):
     template_name = 'trainer/typing_trainer.html'
 
 
+@method_decorator(login_required, name='post')
+@method_decorator(login_required, name='get')
 class ResultsList(TrainerResultMixin):
 
     def get(self, request):

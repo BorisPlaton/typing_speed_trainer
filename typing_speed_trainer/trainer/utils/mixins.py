@@ -23,8 +23,8 @@ class TrainerResultMixin(View):
 
     def get_all_results_from_cache(self) -> list[dict | None]:
         """
-        Возвращает все записи результатов. Если таких ещё нет, вернет
-        пустой список.
+        Возвращает все записи результатов. Если таких ещё нет,
+        вернет пустой список.
         """
         results = []
         current_id = self.get_current_result_id()

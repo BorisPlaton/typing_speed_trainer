@@ -24,11 +24,11 @@
 </head>
 <body>
 
-<div class="wrapper">
+<div class="wrapper fw-light">
     <!--============= Content =============-->
     {% include 'includes/header.html' %}
 
-    <main class="bg-blue-600 pb-4">
+    <main class="bg-blue-600 pb-4" data-authenticated="{{ user.is_authenticated }}">
         {% block content %}
         {% endblock %}
     </main>

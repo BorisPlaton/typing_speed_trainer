@@ -9,7 +9,7 @@ class TestRequestStatuses(TestCase):
     def setUp(self) -> None:
         self.credentials = {
             'email': 'test@test.com',
-            'password': '12345'
+            'password': '12345',
         }
         self.user = User.objects.create_user(
             **self.credentials,

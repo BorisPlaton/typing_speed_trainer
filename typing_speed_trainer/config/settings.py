@@ -72,7 +72,7 @@ CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
         'LOCATION': os.getenv('REDIS_LOCATION'),
-        'TIMEOUT': 600
+        'TIMEOUT': 600,
     }
 }
 
@@ -91,10 +91,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'account.backends.EmailBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 AUTH_USER_MODEL = 'account.User'
 
 LOGIN_URL = 'account:login'
-LOGIN_REDIRECT_URL = 'account:profile'
+LOGIN_REDIRECT_URL = 'trainer:typing_trainer'
 LOGOUT_REDIRECT_URL = 'account:login'
 
 LANGUAGE_CODE = 'ru-ru'

@@ -20,7 +20,7 @@
 
                     {% if user.is_authenticated %}
                     <div class="col-lg-auto">
-                        <a href="{% url 'account:profile' %}" class="link-light">Мой профиль</a>
+                        <a href="{{ user.get_absolute_url }}" class="link-light">Мой профиль</a>
                     </div>
 
                     <div class="col-lg-auto">
