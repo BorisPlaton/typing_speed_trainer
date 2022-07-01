@@ -26,11 +26,11 @@
                     </div>
 
                     <div class="col-lg-auto">
-                        <a href="{% url 'account:logout' %}" class="link-light">Выйти</a>
+                        <a href="{% url 'user_auth:logout' %}" class="link-light">Выйти</a>
                     </div>
                     {% else %}
                     <div class="col-lg-auto">
-                        <a href="{% url 'account:login' %}" class="link-light">Войти</a>
+                        <a href="{% url 'user_auth:login' %}" class="link-light">Войти</a>
                     </div>
                     {% endif %}
 

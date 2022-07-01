@@ -10,9 +10,15 @@
 
     <div class="row justify-content-center align-items-center">
         <div class="col-4">
-            {% block alert %}
+            <div class="d-flex flex-column">
 
-            {% endblock %}
+                {% include 'includes/alerts.html' %}
+
+                {% block alert %}
+
+                {% endblock %}
+
+            </div>
         </div>
     </div>
 
@@ -29,9 +35,9 @@
                 {% endblock %}
 
                 <div class="d-flex flex-column mt-5">
-                {% block add_link %}
+                    {% block add_link %}
 
-                {% endblock %}
+                    {% endblock %}
                 </div>
 
             </div>

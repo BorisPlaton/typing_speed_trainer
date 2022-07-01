@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
 
+    'user_auth',
     'account',
     'trainer',
 ]
@@ -98,9 +99,9 @@ AUTHENTICATION_BACKENDS = [
 
 AUTH_USER_MODEL = 'account.User'
 
-LOGIN_URL = 'account:login'
+LOGIN_URL = 'user_auth:login'
 LOGIN_REDIRECT_URL = 'trainer:typing_trainer'
-LOGOUT_REDIRECT_URL = 'account:login'
+LOGOUT_REDIRECT_URL = 'user_auth:login'
 
 LANGUAGE_CODE = 'ru-ru'
 
@@ -117,3 +118,12 @@ STATICFILES_DIRS = [
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    EMAIL_HOST = os.getenv('EMAIL_HOST')
+    EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+    EMAIL_PORT = os.getenv('EMAIL_PORT')
+    EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS') == '1'

@@ -1,4 +1,4 @@
-{% extends 'registration/auth_base.html' %}
+{% extends 'user_auth/auth_base.html' %}
 {% load crispy_forms_tags %}
 
 {% block auth_content %}
@@ -6,7 +6,7 @@
     <span class="fs-5 fw-light">Регистрация</span>
 </div>
 
-<form action="{% url 'account:registration' %}" method="post" novalidate>
+<form action="{% url 'user_auth:registration' %}" method="post" novalidate>
     <div class="d-flex flex-column">
         {% crispy form %}
         <div class="d-flex justify-content-center mt-2">
@@ -17,5 +17,5 @@
 {% endblock %}
 
 {% block add_link %}
-<a href="{% url 'account:login' %}">Уже есть аккаунт?</a>
+<a href="{% url 'user_auth:login' %}">Уже есть аккаунт?</a>
 {% endblock %}

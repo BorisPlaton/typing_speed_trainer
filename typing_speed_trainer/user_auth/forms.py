@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, SetPasswordForm
 
 from account.models import User
 from common.form_mixins import CrispyStyleModelFormMixin, CrispyStyleFormMixin
@@ -30,8 +30,13 @@ class RegistrationForm(CrispyStyleModelFormMixin):
             raise forms.ValidationError("Пароли не совпадают")
         return self.cleaned_data['repeat_password']
 
+    def authenticate_user(self):
+        pass
+
 
 class LoginForm(AuthenticationForm, CrispyStyleFormMixin):
+    """Форма аутентификации пользователя."""
+
     username = forms.EmailField(label="Почта")
 
     error_messages = {
@@ -39,5 +44,22 @@ class LoginForm(AuthenticationForm, CrispyStyleFormMixin):
         "inactive": "Этот аккаунт неактивен.",
     }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+
+class UserPasswordResetForm(PasswordResetForm, CrispyStyleFormMixin):
+    """
+    Форма сброса пароля. Для восстановления пароля использует
+    почту пользователя.
+    """
+
+
+class UserPasswordResetConfirmForm(SetPasswordForm, CrispyStyleFormMixin):
+    """
+    Форма для изменения пароля. Для восстановления пароля использует
+    почту пользователя.
+    """
+
+    new_password1 = forms.CharField(
+        label="Новый пароль",
+        widget=forms.PasswordInput(),
+        strip=False,
+    )

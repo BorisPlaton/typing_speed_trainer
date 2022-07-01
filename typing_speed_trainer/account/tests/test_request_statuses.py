@@ -32,17 +32,17 @@ class TestRequestStatuses(TestCase):
         self.assertRedirects(response, reverse('account:profile', args=[self.user.pk]))
 
     def test_registration_page_200_status_code_with_unauthenticated_user(self):
-        response = self.client.get(reverse('account:registration'))
+        response = self.client.get(reverse('account:user_auth'))
         self.assertEqual(response.status_code, 200)
 
     def test_registration_page_302_status_code_with_authenticated_user(self):
         self.assertTrue(self.client.login(**self.credentials))
-        response = self.client.get(reverse('account:registration'))
+        response = self.client.get(reverse('account:user_auth'))
         self.assertRedirects(response, reverse(settings.LOGIN_REDIRECT_URL))
 
     def test_registration_page_302_status_code_with_query_parameters(self):
         self.assertTrue(self.client.login(**self.credentials))
-        response = self.client.get(reverse('account:registration') + '?next=' + reverse('trainer:typing_trainer'))
+        response = self.client.get(reverse('account:user_auth') + '?next=' + reverse('trainer:typing_trainer'))
         self.assertRedirects(response, reverse('trainer:typing_trainer'))
 
     def test_profile_page_200_status_code_with_unauthenticated_user(self):
