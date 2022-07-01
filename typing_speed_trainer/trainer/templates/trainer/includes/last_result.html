@@ -1,42 +1,43 @@
 <div class="last-result">
-    <div class="last-result-content bg-blue-800 p-3 rounded shadow fw-light">
+    <div class="last-result-content bg-blue-800 p-3 rounded shadow fw-light text-light">
 
         <div class="d-flex align-items-center">
             <div class="me-2">Слов в минуту:</div>
-            <div class="bg-blue-500 px-2 rounded result-wpm flex-fill fw-bold">-</div>
+            <div class="bg-blue-500 px-2 rounded result-wpm flex-fill fw-bold">{{ result.wpm }}</div>
         </div>
 
         <div class="d-flex align-items-center">
             <div class="me-2">Правильных слов:</div>
             <div class="bg-blue-500 px-2 rounded result-correct-words-amount flex-fill text-green-300 fw-bold">
-                -
+                {{ result.correctWordsAmount }}
             </div>
         </div>
 
         <div class="d-flex align-items-center">
             <div class="me-2">Неправильных слов:</div>
-            <div class="bg-blue-500 px-2 rounded result-invalid-words-amount text-red-300 flex-fill fw-bold">-
+            <div class="bg-blue-500 px-2 rounded result-invalid-words-amount text-red-300 flex-fill fw-bold">
+                {{ result.invalidWordsAmount }}
             </div>
         </div>
 
         <div class="d-flex align-items-center">
             <div class="me-2">Нажатий клавиш:</div>
             <div class="bg-blue-500 px-2 rounded result-keystrokes flex-fill">
-                <span class="correct text-green-300 fw-bold">-</span>
+                <span class="correct text-green-300 fw-bold">{{ result.correctKeystrokes }}</span>
                 |
-                <span class="invalid text-red-300 fw-bold">-</span>
+                <span class="invalid text-red-300 fw-bold">{{ result.invalidKeystrokes }}</span>
                 |
-                <span class="summary fw-bold">-</span>
+                <span class="summary fw-bold">{{ result.summaryKeystrokes }}</span>
             </div>
         </div>
 
         <div class="d-flex align-items-center">
             <div class="me-2">Точность:</div>
-            <div class="bg-blue-500 px-2 rounded result-accuracy flex-fill fw-bold">-</div>
+            <div class="bg-blue-500 px-2 rounded result-accuracy flex-fill fw-bold">{{ result.typingAccuracy }}%</div>
         </div>
 
         <div class="result-date-end d-flex justify-content-end mt-2">
-            <div class="fs-6"></div>
+            <div class="fs-6">{{ result.dateEnd|date:"G:i:s" }}</div>
         </div>
 
     </div>

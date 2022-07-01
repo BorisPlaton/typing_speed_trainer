@@ -95,7 +95,7 @@ export default class ResultsList extends Broker {
   getCurrentUserResultsDataFromServer() {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
-      xhr.open("GET", this.sendToUrl);
+      xhr.open("GET", this.getUrlToTakeTemplates());
       xhr.setRequestHeader("Content-type", "application/json");
       xhr.responseType = "json";
 
@@ -109,6 +109,10 @@ export default class ResultsList extends Broker {
 
       xhr.send();
     });
+  }
+
+  getUrlToTakeTemplates() {
+    return this.sendToUrl + "?templates=true";
   }
 
   addLastResultFromStorage() {

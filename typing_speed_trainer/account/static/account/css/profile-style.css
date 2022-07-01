@@ -9,3 +9,15 @@
   flex-direction: column;
   gap: 10px;
 }
+
+.last-result-content {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.last-result-content div {
+display: flex;
+justify-content: end;
+gap: 5px;
+}

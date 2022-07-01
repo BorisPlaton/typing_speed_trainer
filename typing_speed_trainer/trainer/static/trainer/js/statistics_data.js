@@ -12,7 +12,7 @@ class Statistics extends Broker {
       storage.totalWordsAmount - storage.correctWordsAmount;
     this.totalWordsAmount = storage.totalWordsAmount;
 
-    this.wpm = this.correctWordsAmount;
+    this.wpm = Math.ceil(this.correctKeystrokes / 5);
     this.dateEnd = storage.dateEnd;
 
     if (this.totalKeystrokes) {

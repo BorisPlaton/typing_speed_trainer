@@ -32,7 +32,6 @@ export default class TextField extends Broker {
 
   stopTyping() {
     this.hiddenInput.blur();
-
     this.setTextFieldWords();
   }
 
@@ -116,6 +115,10 @@ export default class TextField extends Broker {
   skipWord() {
     if (this.isInputAndWordEqual()) {
       this.notifyCorrectWord("correctWord");
+    } else {
+      if (!this.isWordLonger) {
+        this.notifyInvalidChar();
+      }
     }
     storage.increaseTotalWordsAmount();
     this.clearHiddenInput();

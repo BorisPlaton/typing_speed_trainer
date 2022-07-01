@@ -16,7 +16,7 @@
                 <div class="mb-1">
                     <span class="fs-5 fw-bold lh-1">Статистика {{ user_profile.username }}</span>
                     <br>
-                    <p class="lh-sm text-blue-100 m-0">
+                    <p class="lh-sm text-blue-100 m-0 mt-1">
                         <small class="">
                             Статистика считается средним арифметическим<br>
                             ваших предыдущих результатов.
@@ -54,60 +54,78 @@
     </div>
 
     <div class="col">
-        <div class="p-3 bg-blue-800 rounded">
+        <div class="row g-3">
 
-            <div class="row g-3">
+            <div class="col-12">
+                <div class="p-3 bg-blue-800 rounded">
 
-                <div class="col-3">
-                    <div class="d-flex align-items-center justify-content-center">
-                        <div class="bg-success" style="height: 150px; width: 150px;">
+                    <div class="row g-3">
 
+                        <div class="col-3">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <div class="bg-success" style="height: 150px; width: 150px;">
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-9 text-light">
+                            <div class="user-info">
+
+                                <div>
+                                    <span class="text-blue-100 me-1">Имя пользователя:</span>
+                                    <span class="fw-bold bg-blue-500 py-1 px-2 rounded">{{ user_profile.username }}</span>
+                                </div>
+
+                                {% if user_profile.first_name %}
+                                <div>
+                                    <span class="text-blue-100 me-1">Имя:</span>
+                                    <span class="fw-bold bg-blue-500 py-1 px-2 rounded">{{ user_profile.first_name }}</span>
+                                </div>
+                                {% endif %}
+
+                                {% if user_profile.last_name %}
+                                <div>
+                                    <span class="text-blue-100 me-1">Фамилия:</span>
+                                    <span class="fw-bold bg-blue-500 py-1 px-2 rounded">{{ user_profile.last_name }}</span>
+                                </div>
+                                {% endif %}
+
+                                <div>
+                                    <span class="text-blue-100 me-1">Дата регистрации:</span>
+                                    <span class="fw-bold bg-blue-500 py-1 px-2 rounded">
+                                        {{ user_profile.date_joined|date:"N d, Y" }}
+                                    </span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="bg-blue-800 px-3 py-2 rounded">
+                    <span class="fs-4 fw-bold text-light">Недавние результаты</span>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="row g-3">
+                    {% for result in results %}
+                    <div class="col-lg-6">
+                        {% include 'trainer/includes/last_result.html' %}
+                    </div>
+                    {% empty %}
+                    <div class="col-12">
+                        <div class="d-flex justify-content-center text-blue-100">
+                            <small>Видимо, {{ user.username }} не практиковался за последнее время.</small>
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
-
-                <div class="col-9 text-light">
-                    <div class="user-info">
-
-                        <div>
-                            <span class="text-blue-100 me-1">Имя пользователя:</span>
-                            <span class="fw-bold bg-blue-500 py-1 px-2 rounded">{{ user_profile.username }}</span>
-                        </div>
-
-                        {% if user_profile.first_name %}
-                        <div>
-                            <span class="text-blue-100 me-1">Имя:</span>
-                            <span class="fw-bold bg-blue-500 py-1 px-2 rounded">{{ user_profile.first_name }}</span>
-                        </div>
-                        {% endif %}
-
-                        {% if user_profile.last_name %}
-                        <div>
-                            <span class="text-blue-100 me-1">Фамилия:</span>
-                            <span class="fw-bold bg-blue-500 py-1 px-2 rounded">{{ user_profile.last_name }}</span>
-                        </div>
-                        {% endif %}
-
-                        <div>
-                            <span class="text-blue-100 me-1">Дата регистрации:</span>
-                            <span class="fw-bold bg-blue-500 py-1 px-2 rounded">
-                                {{ user_profile.date_joined|date:"N d, Y" }}
-                            </span>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="col-12">
-                    <div class="border-blue-200-bottom"></div>
-                </div>
-
-                <div class="col-12">
-                    <div>
-                        <p class="text-light">У {{ user_profile.username }} не было результатов за последнее время.</p>
-                    </div>
-                </div>
-
             </div>
 
         </div>
