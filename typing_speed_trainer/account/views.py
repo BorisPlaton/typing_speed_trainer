@@ -6,10 +6,10 @@ from django.views.generic import FormView, DetailView
 from account.forms import RegistrationForm, LoginForm
 from account.models import User
 from common.mixins import UnauthenticatedMixin
-from trainer.utils.mixins import TrainerResultMixin
+from trainer.utils.mixins import TrainerResultCacheMixin
 
 
-class Account(DetailView, TrainerResultMixin):
+class Account(DetailView, TrainerResultCacheMixin):
     """Личный кабинет пользователя."""
     model = User
     context_object_name = 'user_profile'
@@ -23,6 +23,14 @@ class Account(DetailView, TrainerResultMixin):
         context = super().get_context_data(**kwargs)
         context['results'] = self.get_formatted_results_from_cache()
         return context
+
+    def get_object(self, queryset=None):
+        """
+        Подключаем модель `trainer.models.Statistic` и
+        возвращаем объект `User`.
+        """
+        print(self.request.user.statistic)
+        return super().get_object((self.model.objects.select_related('statistic')))
 
     def get_formatted_results_from_cache(self) -> list[dict | None]:
         """

@@ -25,27 +25,26 @@
                 </div>
 
                 <div class="bg-blue-500 p-2 rounded d-flex justify-content-between">
-                    <small><span class="fw-bold">54 WPM</span></small>
+                    <small><span class="fw-bold">{{ user_profile.statistic.average_wpm }} WPM</span></small>
                     <small><span class="ms-1 text-blue-100">Ср. Скорость набора текста</span></small>
                 </div>
 
                 <div class="bg-blue-500 p-2 rounded d-flex justify-content-between">
-                    <small><span class="fw-bold">96.5%</span></small>
+                    <small><span class="fw-bold">{{ user_profile.statistic.average_accuracy }}%</span></small>
                     <small><span class="ms-1 text-blue-100">Ср. Аккуратность печати</span></small>
                 </div>
 
                 <div class="bg-blue-500 p-2 rounded d-flex justify-content-between">
-                    <small><span class="fw-bold text-green-300">33</span></small>
-                    <small><span class="ms-1 text-blue-100">Ср. Количество правильных слов</span></small>
+                    <small><span class="fw-bold text-green-300">
+                        {{ user_profile.statistic.average_correct_chars_amount }}
+                    </span></small>
+                    <small><span class="ms-1 text-blue-100">Ср. Количество правильных символов</span></small>
                 </div>
 
                 <div class="bg-blue-500 p-2 rounded d-flex justify-content-between">
-                    <small><span class="fw-bold text-red-300">4</span></small>
-                    <small><span class="ms-1 text-blue-100">Ср. Количество неправильных слов</span></small>
-                </div>
-
-                <div class="bg-blue-500 p-2 rounded d-flex justify-content-between">
-                    <small><span class="fw-bold text-red-300">24</span></small>
+                    <small><span class="fw-bold text-red-300">
+                        {{ user_profile.statistic.average_typo_amount }}
+                    </span></small>
                     <small><span class="ms-1 text-blue-100">Ср. Количество опечаток</span></small>
                 </div>
 

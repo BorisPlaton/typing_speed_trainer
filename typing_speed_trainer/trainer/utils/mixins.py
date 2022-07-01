@@ -1,11 +1,8 @@
-import json
-
 from django.core.cache import cache
-from django.http import JsonResponse
 from django.views import View
 
 
-class TrainerResultMixin(View):
+class TrainerResultCacheMixin(View):
     """
     Миксин для работы с кешем данных результатов тренажера определенного
     пользователя. Для того, чтоб класс корректно работал, нужно указать
@@ -14,15 +11,6 @@ class TrainerResultMixin(View):
     """
 
     user_pk: int = None
-
-    def post(self, request):
-        data: dict = json.loads(request.body)
-        self.cache_result_data(data)
-        return JsonResponse({
-            'result': self.get_result_from_cache(
-                self.get_current_result_id()
-            )
-        })
 
     def cache_result_data(self, data: dict):
         """Кеширует результат определенного пользователя."""
