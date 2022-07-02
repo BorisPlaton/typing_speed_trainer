@@ -1,5 +1,11 @@
 {% extends 'user_auth/auth_base.html' %}
+{% load static %}
 {% load crispy_forms_tags %}
+
+{% block stylesheet %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'user_auth/css/login-page.css' %}">
+{% endblock %}
 
 {% block alert %}
 {% if form.non_field_errors %}
@@ -18,10 +24,19 @@
 
 <form action="{% url 'user_auth:login' %}" method="post" novalidate>
     <div class="d-flex flex-column">
+
         {% crispy form %}
+
         <div class="d-flex justify-content-center mt-2">
             <button type="submit" class="btn-orange-400">Войти</button>
         </div>
+
+        <div class="d-flex justify-content-center mt-3">
+            <a class="link-github rounded text-light bg-blue-600" href="{% url 'social:begin' 'github' %}">
+                <i class="bi bi-github"></i>
+            </a>
+        </div>
+
     </div>
 </form>
 {% endblock %}

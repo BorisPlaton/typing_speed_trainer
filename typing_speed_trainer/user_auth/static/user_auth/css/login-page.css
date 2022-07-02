@@ -1,0 +1,11 @@
+.link-github {
+  line-height: 1;
+  padding: 7px;
+  cursor: pointer;
+  transition: 0.1s all ease-in-out;
+  background-color: #0b0b0d;
+}
+
+.link-github:hover {
+  background-color: #242424;
+}

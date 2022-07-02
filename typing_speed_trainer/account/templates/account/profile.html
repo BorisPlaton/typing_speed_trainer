@@ -1,5 +1,6 @@
 {% extends 'account/account_base.html' %}
 {% load static %}
+{% load thumbnail %}
 
 {% block stylesheet %}
 <link rel="stylesheet" href="{% static 'account/css/profile-style.css' %}">
@@ -60,15 +61,20 @@
 
                     <div class="row g-3">
 
-                        <div class="col-3">
+                        <div class="col-auto">
                             <div class="d-flex align-items-center justify-content-center">
-                                <div class="bg-success" style="height: 150px; width: 150px;">
-
+                                <div class="profile-photo">
+                                    {% thumbnail user_profile.profile.photo "150x150" crop="center" as user_photo%}
+                                        <img src="{{ user_photo.url }}" alt="Фото пользователя" class="rounded">
+                                        <div class="select-new-profile-photo">
+                                            
+                                        </div>
+                                    {% endthumbnail %}
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-9 text-light">
+                        <div class="col text-light">
                             <div class="user-info">
 
                                 <div>

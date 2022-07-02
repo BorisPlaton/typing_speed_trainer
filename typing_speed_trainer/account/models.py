@@ -6,15 +6,16 @@ from django.urls import reverse
 
 
 class CustomUserManager(BaseUserManager):
-    def create_user(self, email, password, **extra_fields):
+    def create_user(self, email, password=None, **extra_fields):
         """
         Создает обычного пользователя с его почтой и паролем.
         """
         if not email:
-            raise ValueError('The Email must be set')
+            raise ValueError('Должна быть предоставлена почта пользователя.')
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
-        user.set_password(password)
+        if password:
+            user.set_password(password)
         user.save()
         return user
 
@@ -50,3 +51,18 @@ class User(AbstractUser):
 
     def get_absolute_url(self):
         return reverse('account:profile', args=[self.pk])
+
+
+class Profile(models.Model):
+    """Модель профиля пользователя."""
+
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name='profile', verbose_name='Пользователь'
+    )
+    photo = models.ImageField(
+        'Фото пользователя', upload_to='profile_photos/%Y/%m/%d/', default='profile_photos/default.jpg'
+    )
+
+    class Meta:
+        verbose_name = 'Профиль'
+        verbose_name_plural = 'Профили'

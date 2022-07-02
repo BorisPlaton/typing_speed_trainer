@@ -3,3 +3,8 @@ db.sqlite3
 __pycache__
 .env
 venv
+
+typing_speed_trainer/media/*
+!typing_speed_trainer/media/profile_photos
+typing_speed_trainer/media/profile_photos/*
+!typing_speed_trainer/media/profile_photos/default.jpg

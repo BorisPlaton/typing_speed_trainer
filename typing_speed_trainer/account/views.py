@@ -23,10 +23,13 @@ class Account(DetailView, TrainerResultCacheMixin):
 
     def get_object(self, queryset=None):
         """
-        Подключаем модель `trainer.models.Statistic` и
-        возвращаем объект `User`.
+        Подключает модели `trainer.models.Statistic`, `account.models.Profile`
+        и возвращает объект модели `User`.
         """
-        return super().get_object((self.model.objects.select_related('statistic')))
+        queryset = (self.model.objects
+                    .select_related('statistic')
+                    .select_related('profile'))
+        return super().get_object(queryset)
 
     def get_formatted_results_from_cache(self) -> list[dict | None]:
         """
