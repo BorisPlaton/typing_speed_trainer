@@ -17,7 +17,81 @@
 }
 
 .last-result-content div {
-display: flex;
-justify-content: end;
-gap: 5px;
+  display: flex;
+  justify-content: end;
+  gap: 5px;
+}
+
+.profile-photo {
+  position: relative;
+}
+
+.select-new-profile-photo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  z-index: 1;
+  opacity: 0;
+  cursor: pointer;
+  height: 100%;
+  transition: 0.1s all ease-in-out;
+}
+
+.select-new-profile-photo:hover {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.load-photo-modal-page {
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  z-index: 3;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  animation: change-opacity 0.3s ease-in-out forwards;
+}
+
+.load-photo-modal-page .header {
+  border-top-left-radius: 0.25em;
+  border-top-right-radius: 0.25em;
+}
+
+.load-photo-modal-page .footer {
+  border-bottom-left-radius: 0.25em;
+  border-bottom-right-radius: 0.25em;
+}
+
+.load-photo-content {
+  animation: move-load-photo-modal 0.3s ease-in-out forwards;
+}
+
+@keyframes move-load-photo-modal {
+  from {
+    margin-bottom: 100px;
+  }
+
+  to {
+    margin-bottom: 0px;
+  }
+}
+
+@keyframes change-opacity {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }

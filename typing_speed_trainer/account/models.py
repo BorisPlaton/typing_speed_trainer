@@ -66,3 +66,6 @@ class Profile(models.Model):
     class Meta:
         verbose_name = 'Профиль'
         verbose_name_plural = 'Профили'
+
+    def get_absolute_url(self):
+        return reverse('account:profile', args=[self.user.pk])

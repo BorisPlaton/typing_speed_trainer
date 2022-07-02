@@ -1,0 +1,28 @@
+{% load crispy_forms_tags %}
+
+
+<div class="load-photo-modal-page">
+    <div class="load-photo-content">
+        <div class="container">
+            <form action="{% url 'account:profile' user.pk %}" method="post" enctype="multipart/form-data" novalidate>
+                <div class="inner d-flex flex-column text-light">
+
+                    <div class="header bg-blue-700 p-3">
+                        <span class="fw-bold fs-4">Изменить фото профиля</span>
+                    </div>
+
+                    <div class="content bg-blue-400 p-3 pb-0">
+                        {% crispy form %}
+                    </div>
+
+                    <div class="footer bg-blue-700 p-3">
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn-orange-400 btn-sm">Изменить</button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

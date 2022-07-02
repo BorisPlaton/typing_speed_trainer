@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetConfirmView
@@ -27,13 +26,12 @@ class UserLogin(LoginView):
     redirect_authenticated_user = True
 
 
-class UserPasswordReset(PasswordResetView):
+class UserPasswordReset(PasswordResetView, UnauthenticatedMixin):
     """
     Страница для сброса пароля пользователя. Использует
     почту пользователя.
     """
     form_class = UserPasswordResetForm
-    redirect_authenticated_user = True
     success_url = reverse_lazy('user_auth:login')
     email_template_name = 'user_auth/password_reset_email.html'
     template_name = 'user_auth/user_password_reset_form.html'
@@ -43,17 +41,15 @@ class UserPasswordReset(PasswordResetView):
         return super().form_valid(form)
 
 
-class UserPasswordResetConfirm(PasswordResetConfirmView):
+class UserPasswordResetConfirm(PasswordResetConfirmView, UnauthenticatedMixin):
     """
     Страница для изменения пароля. Вызывается после того, как
     пользователь перешел по ссылке, что была отправлена из `UserPasswordReset`.
     """
     form_class = UserPasswordResetConfirmForm
-    redirect_authenticated_user = True
     template_name = 'user_auth/user_password_reset_confirm.html'
     success_url = reverse_lazy('user_auth:login')
 
     def form_valid(self, form):
         messages.success(self.request, "Пароль был успешно изменён")
         return super().form_valid(form)
-

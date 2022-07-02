@@ -1,20 +1,27 @@
 from datetime import datetime
 
-from django.views.generic import DetailView
+from django.views.generic.edit import UpdateView
 
+from account.forms import ChangeProfilePhotoForm
 from account.models import User
 from trainer.utils.mixins import TrainerResultCacheMixin
 
 
-class Account(DetailView, TrainerResultCacheMixin):
-    """Личный кабинет пользователя."""
+class Account(UpdateView, TrainerResultCacheMixin):
+    """Страница профиля пользователя."""
     model = User
+    form_class = ChangeProfilePhotoForm
     context_object_name = 'user_profile'
     template_name = 'account/profile.html'
 
     def dispatch(self, request, *args, **kwargs):
         self.user_pk = kwargs.get('pk')
         return super().dispatch(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = self.object.profile
+        return kwargs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -27,8 +34,8 @@ class Account(DetailView, TrainerResultCacheMixin):
         и возвращает объект модели `User`.
         """
         queryset = (self.model.objects
-                    .select_related('statistic')
-                    .select_related('profile'))
+                    .select_related('profile')
+                    .select_related('statistic'))
         return super().get_object(queryset)
 
     def get_formatted_results_from_cache(self) -> list[dict | None]:

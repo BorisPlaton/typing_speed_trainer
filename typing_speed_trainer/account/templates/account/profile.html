@@ -7,6 +7,10 @@
 {% endblock %}
 
 {% block account_content %}
+{% if user_profile == user %}
+{% include 'account/includes/load-page-modal.html' %}
+{% endif %}
+
 <div class="row g-3">
 
     <!--User Statistics-->
@@ -64,11 +68,13 @@
                         <div class="col-auto">
                             <div class="d-flex align-items-center justify-content-center">
                                 <div class="profile-photo">
+                                    {% if user_profile == user %}
+                                    <div class="select-new-profile-photo rounded">
+                                        <i class="fs-5 bi bi-camera text-light"></i>
+                                    </div>
+                                    {% endif %}
                                     {% thumbnail user_profile.profile.photo "150x150" crop="center" as user_photo%}
-                                        <img src="{{ user_photo.url }}" alt="Фото пользователя" class="rounded">
-                                        <div class="select-new-profile-photo">
-                                            
-                                        </div>
+                                    <img src="{{ user_photo.url }}" alt="Фото пользователя" class="rounded">
                                     {% endthumbnail %}
                                 </div>
                             </div>
@@ -137,4 +143,10 @@
     </div>
 
 </div>
+{% endblock %}
+
+{% block script %}
+{% if user_profile == user %}
+<script src="{% static 'account/js/load_profile_photo.js' %}"></script>
+{% endif %}
 {% endblock %}

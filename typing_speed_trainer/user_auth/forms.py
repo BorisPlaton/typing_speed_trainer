@@ -30,9 +30,6 @@ class RegistrationForm(CrispyStyleModelFormMixin):
             raise forms.ValidationError("Пароли не совпадают")
         return self.cleaned_data['repeat_password']
 
-    def authenticate_user(self):
-        pass
-
 
 class LoginForm(AuthenticationForm, CrispyStyleFormMixin):
     """Форма аутентификации пользователя."""
