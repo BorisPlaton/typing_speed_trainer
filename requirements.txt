@@ -3,6 +3,7 @@ async-timeout==4.0.2
 certifi==2022.6.15
 cffi==1.15.1
 charset-normalizer==2.1.0
+coverage==6.4.1
 crispy-bootstrap5==0.6
 cryptography==37.0.2
 defusedxml==0.7.1

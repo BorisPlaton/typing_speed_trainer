@@ -4,9 +4,11 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import F
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
+from django.views import View
 from django.views.generic import TemplateView
 
 from trainer.models import Statistic
+from trainer.utils.decorators import json_request_required
 from trainer.utils.mixins import TrainerResultCacheMixin
 from trainer.utils.shortcuts import get_correct_template_path
 
@@ -17,7 +19,8 @@ class TypingTrainer(TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class ResultsList(TrainerResultCacheMixin):
+@method_decorator(json_request_required, name='post')
+class ResultsList(View, TrainerResultCacheMixin):
     """
     Принимает POST-запрос с результатами пользователя и кеширует их.
     Также отдает данные в виде JSON о результатах пользователя. Если есть
@@ -26,6 +29,10 @@ class ResultsList(TrainerResultCacheMixin):
     """
 
     def get(self, request):
+        """
+        Возвращает данные пользователя из кэша, если требуется, и
+        html-шаблоны результатов.
+        """
         data = self.get_result_templates() if request.GET.get('templates') == 'true' else {}
         data.update({
             'resultsData': self.get_all_results_from_cache(),
@@ -35,18 +42,24 @@ class ResultsList(TrainerResultCacheMixin):
     def post(self, request):
         """
         Кеширует данные из запроса и отправляет ответ в виде JSON
-        с этими же данными.
+        с этими же данными, если полученные данные корректны.
         """
-        data: dict = json.loads(request.body)
-        self.update_user_data(data['wpm'], data['typingAccuracy'])
-        self.cache_result_data(data)
-        return JsonResponse({
-            'result': self.get_result_from_cache(
-                self.get_current_result_id()
-            )
-        })
 
-    def update_user_data(self, wpm: int, typing_accuracy: float):
+        data: dict = json.loads(request.body)
+        if self.is_correct_user_typing_result_data(data):
+            self.update_user_statists_model(data['wpm'], data['typingAccuracy'])
+            self.cache_result_data(data)
+            return JsonResponse({
+                'result': self.get_result_from_cache(
+                    self.get_current_result_id()
+                )
+            })
+        return JsonResponse({
+            'status': 'Некорректные данные',
+            'data': data,
+        }, status=400)
+
+    def update_user_statists_model(self, wpm: int, typing_accuracy: float):
         """
         Обновляет поля `user.attempts_amount`, `user.attempts_amount` и
         `user.attempts_amount` модели `User`.
@@ -62,11 +75,19 @@ class ResultsList(TrainerResultCacheMixin):
         statistic.save()
 
     def dispatch(self, request, *args, **kwargs):
+        """
+        Присваивает значение `self.user_pk` `id` пользователя, для
+        корректной работы `TrainerResultCacheMixin`.
+        """
         self.user_pk = request.user.pk
         return super().dispatch(request, *args, **kwargs)
 
     @staticmethod
     def get_result_templates() -> dict:
+        """
+        Возвращает шаблоны результата и списка результатов в виде словаря
+        с ключами `resultsListTemplate` и `resultTemplate`.
+        """
         with (
             open(get_correct_template_path(
                 'trainer', 'includes', 'results_list.html'
