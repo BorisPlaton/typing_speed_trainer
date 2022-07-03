@@ -1,12 +1,25 @@
-const selectPhoto = document.querySelector(".select-new-profile-photo");
-const modalSelectPhotoForm = document.querySelector(".load-photo-modal-page");
+const selectPhotoButton = document.querySelector(".select-new-profile-photo");
+const modalSelectPhotoForm = document.querySelector(".modal-page.photo");
 
-selectPhoto.addEventListener("click", () => {
+const deletePhotoButton = document.querySelector(".delete-profile-photo");
+const modalDeletePhotoForm = document.querySelector(".modal-page.delete");
+
+selectPhotoButton.addEventListener("click", () => {
   modalSelectPhotoForm.style.display = "flex";
 });
 
 modalSelectPhotoForm.addEventListener("click", (event) => {
   if (event.target === event.currentTarget) {
     modalSelectPhotoForm.style.display = "none";
+  }
+});
+
+deletePhotoButton.addEventListener("click", () => {
+  modalDeletePhotoForm.style.display = "flex";
+});
+
+modalDeletePhotoForm.addEventListener("click", (event) => {
+  if (event.target === event.currentTarget) {
+    modalDeletePhotoForm.style.display = "none";
   }
 });

@@ -9,6 +9,7 @@
 {% block account_content %}
 {% if user_profile == user %}
 {% include 'account/includes/load-page-modal.html' %}
+{% include 'account/includes/delete-photo-modal.html' %}
 {% endif %}
 
 <div class="row g-3">
@@ -69,6 +70,9 @@
                             <div class="d-flex align-items-center justify-content-center">
                                 <div class="profile-photo">
                                     {% if user_profile == user %}
+                                    <div class="delete-profile-photo">
+                                        <i class="bi bi-trash3"></i>
+                                    </div>
                                     <div class="select-new-profile-photo rounded">
                                         <i class="fs-5 bi bi-camera text-light"></i>
                                     </div>

@@ -200,45 +200,45 @@ a.link-red-400:hover {
 }
 
 a.link-red-500 {
-  color: rgb(189, 27, 15);
+  color: #d91f11;
 }
 a.link-red-500:hover {
-  color: #ee382a;
+  color: #f15246;
 }
 
 .text-red-500 {
-  color: rgb(189, 27, 15);
+  color: #d91f11;
 }
 
 .bg-red-500 {
-  background-color: rgb(189, 27, 15);
+  background-color: #d91f11;
 }
 
 a.link-red-500 {
-  color: rgb(189, 27, 15);
+  color: #d91f11;
 }
 a.link-red-500:hover {
-  color: #ee382a;
+  color: #f15246;
 }
 
 .border-red-500 {
-  border: 1px solid rgb(189, 27, 15) !important;
+  border: 1px solid #d91f11 !important;
 }
 
 .border-red-500-top {
-  border-top: 1px solid rgb(189, 27, 15);
+  border-top: 1px solid #d91f11;
 }
 
 .border-red-500-bottom {
-  border-bottom: 1px solid rgb(189, 27, 15);
+  border-bottom: 1px solid #d91f11;
 }
 
 .border-red-500-start {
-  border-left: 1px solid rgb(189, 27, 15);
+  border-left: 1px solid #d91f11;
 }
 
 .border-red-500-end {
-  border-right: 1px solid rgb(189, 27, 15);
+  border-right: 1px solid #d91f11;
 }
 
 a.link-orange-100 {
@@ -1809,8 +1809,8 @@ a.link-main-700:hover {
 
 .btn-red-500 {
   padding: 6px 12px;
-  border: 1px solid rgb(189, 27, 15);
-  background-color: rgb(189, 27, 15);
+  border: 1px solid #d91f11;
+  background-color: #d91f11;
   border-radius: 0.25em;
   font-size: 1em;
   text-align: center;
@@ -1823,12 +1823,12 @@ a.link-main-700:hover {
   font-size: 0.875em;
 }
 .btn-red-500:hover {
-  border-color: #a5180d;
-  background-color: #a5180d;
+  border-color: #c11c0f;
+  background-color: #c11c0f;
 }
 .btn-red-500:active {
-  border-color: #af190e;
-  background-color: #af190e;
+  border-color: #cb1d10;
+  background-color: #cb1d10;
 }
 
 .btn-orange-100 {

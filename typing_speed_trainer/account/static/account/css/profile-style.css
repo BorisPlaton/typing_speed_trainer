@@ -47,7 +47,7 @@
   background-color: rgba(0, 0, 0, 0.3);
 }
 
-.load-photo-modal-page {
+.modal-page {
   background-color: rgba(0, 0, 0, 0.5);
   display: none;
   align-items: center;
@@ -62,19 +62,39 @@
   animation: change-opacity 0.3s ease-in-out forwards;
 }
 
-.load-photo-modal-page .header {
+.modal-page .header {
   border-top-left-radius: 0.25em;
   border-top-right-radius: 0.25em;
 }
 
-.load-photo-modal-page .footer {
+.modal-page .footer {
   border-bottom-left-radius: 0.25em;
   border-bottom-right-radius: 0.25em;
 }
 
-.load-photo-content {
+.modal-page .page {
   animation: move-load-photo-modal 0.3s ease-in-out forwards;
 }
+
+.delete-profile-photo {
+    z-index: 2;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 7px;
+    border-radius: 15px;
+    line-height: 1;
+    color: white;
+    position: absolute;
+    bottom: -10px;
+    right: -10px;
+    transition: all 0.1s ease-in-out;
+    cursor: pointer;
+}
+
+.delete-profile-photo:hover {
+    background: rgba(0, 0, 0, 0.8);
+    color: #eb343d;
+}
+
 
 @keyframes move-load-photo-modal {
   from {
