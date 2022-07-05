@@ -4,7 +4,7 @@ from django.test import TestCase
 from account.models import User
 
 
-class TestRequestStatuses(TestCase):
+class TestAccountModels(TestCase):
 
     def setUp(self) -> None:
         self.credentials = {

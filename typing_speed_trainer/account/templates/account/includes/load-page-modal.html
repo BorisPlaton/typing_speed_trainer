@@ -4,7 +4,7 @@
 <div class="modal-page photo">
     <div class="page">
         <div class="container">
-            <form action="{% url 'account:profile' user.pk %}" method="post" enctype="multipart/form-data" novalidate>
+            <form action="{% url 'account:update_profile_photo' %}" method="post" enctype="multipart/form-data" novalidate>
                 <div class="inner d-flex flex-column text-light">
 
                     <div class="header bg-blue-700 p-3">
@@ -12,7 +12,7 @@
                     </div>
 
                     <div class="content bg-blue-400 p-3 pb-0">
-                        {% crispy form %}
+                        {% crispy load_photo_form %}
                     </div>
 
                     <div class="footer bg-blue-700 p-3">

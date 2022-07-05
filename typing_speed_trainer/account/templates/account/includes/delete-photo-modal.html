@@ -16,7 +16,7 @@
 
                 <div class="footer bg-blue-700 p-3">
                     <div class="d-flex justify-content-end">
-                        <form action="{% url 'account:delete_profile_photo' user.pk %}" method="post">
+                        <form action="{% url 'account:delete_profile_photo' %}" method="post">
                             {% csrf_token %}
                             <button type="submit" class="ms-2 btn-red-500 btn-sm">Удалить</button>
                         </form>

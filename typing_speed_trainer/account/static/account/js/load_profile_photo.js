@@ -14,12 +14,14 @@ modalSelectPhotoForm.addEventListener("click", (event) => {
   }
 });
 
-deletePhotoButton.addEventListener("click", () => {
-  modalDeletePhotoForm.style.display = "flex";
-});
+if (deletePhotoButton) {
+  deletePhotoButton.addEventListener("click", () => {
+    modalDeletePhotoForm.style.display = "flex";
+  });
 
-modalDeletePhotoForm.addEventListener("click", (event) => {
-  if (event.target === event.currentTarget) {
-    modalDeletePhotoForm.style.display = "none";
-  }
-});
+  modalDeletePhotoForm.addEventListener("click", (event) => {
+    if (event.target === event.currentTarget) {
+      modalDeletePhotoForm.style.display = "none";
+    }
+  });
+}

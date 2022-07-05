@@ -1,26 +1,28 @@
 {% extends 'account/account_base.html' %}
 {% load static %}
 {% load thumbnail %}
+{% load crispy_forms_tags %}
 
 {% block stylesheet %}
 <link rel="stylesheet" href="{% static 'account/css/profile-style.css' %}">
 {% endblock %}
 
 {% block account_content %}
-{% if user_profile == user %}
+{% if user_profile.user == user %}
 {% include 'account/includes/load-page-modal.html' %}
 {% include 'account/includes/delete-photo-modal.html' %}
 {% endif %}
 
 <div class="row g-3">
 
-    <!--User Statistics-->
-    <div class="col-lg-auto account-statistics">
+    <div class="col-lg-auto">
+
+        <!--User's Statistics-->
         <div class="p-3 bg-blue-800 rounded">
             <div class="account-statistics text-light">
 
                 <div class="mb-1">
-                    <span class="fs-5 fw-bold lh-1">Статистика {{ user_profile.username }}</span>
+                    <span class="fs-5 fw-bold lh-1">Статистика {{ user_profile.user.username }}</span>
                     <br>
                     <p class="lh-sm text-blue-100 m-0 mt-1">
                         <small class="">
@@ -31,31 +33,58 @@
                 </div>
 
                 <div class="bg-blue-500 p-2 rounded d-flex justify-content-between">
-                    <small><span class="fw-bold">{{ user_profile.statistic.average_wpm }} WPM</span></small>
+                    <small><span class="fw-bold">{{ user_profile.user.statistic.average_wpm }} WPM</span></small>
                     <small><span class="ms-1 text-blue-100">Ср. Скорость набора текста</span></small>
                 </div>
 
                 <div class="bg-blue-500 p-2 rounded d-flex justify-content-between">
-                    <small><span class="fw-bold">{{ user_profile.statistic.average_accuracy }}%</span></small>
+                    <small><span class="fw-bold">{{ user_profile.user.statistic.average_accuracy }}%</span></small>
                     <small><span class="ms-1 text-blue-100">Ср. Аккуратность печати</span></small>
                 </div>
 
                 <div class="bg-blue-500 p-2 rounded d-flex justify-content-between">
                     <small><span class="fw-bold text-green-300">
-                        {{ user_profile.statistic.average_correct_chars_amount }}
+                        {{ user_profile.user.statistic.average_correct_chars_amount }}
                     </span></small>
                     <small><span class="ms-1 text-blue-100">Ср. Количество правильных символов</span></small>
                 </div>
 
                 <div class="bg-blue-500 p-2 rounded d-flex justify-content-between">
                     <small><span class="fw-bold text-red-300">
-                        {{ user_profile.statistic.average_typo_amount }}
+                        {{ user_profile.user.statistic.average_typo_amount }}
                     </span></small>
                     <small><span class="ms-1 text-blue-100">Ср. Количество опечаток</span></small>
                 </div>
 
             </div>
         </div>
+
+        {% if user_profile.user == user %}
+        <!--Settings form-->
+        <div class="mt-3 p-3 bg-blue-800 rounded">
+            <div class="account-statistics text-light">
+
+                <div class="mb-1">
+                    <span class="fs-5 fw-bold lh-1">Настройки</span>
+                    <br>
+                    <p class="lh-sm text-blue-100 m-0 mt-1">
+                        <small class="">
+                            Что будут видеть другие пользователи
+                        </small>
+                    </p>
+                </div>
+
+                <div>
+                    <form action="{% url 'account:update_profile_settings' %}" method="post" novalidate>
+                        {% csrf_token %}
+                        {% crispy user_settings_form %}
+                    </form>
+                </div>
+
+            </div>
+        </div>
+        {% endif %}
+
     </div>
 
     <div class="col">
@@ -66,18 +95,20 @@
 
                     <div class="row g-3">
 
-                        <div class="col-auto">
-                            <div class="d-flex align-items-center justify-content-center">
+                        <div class="col-auto d-flex align-items-center justify-content-center">
+                            <div class="">
                                 <div class="profile-photo">
-                                    {% if user_profile == user %}
+                                    {% if user_profile.user == user %}
+                                    {% if not has_default_photo %}
                                     <div class="delete-profile-photo">
                                         <i class="bi bi-trash3"></i>
                                     </div>
+                                    {% endif %}
                                     <div class="select-new-profile-photo rounded">
                                         <i class="fs-5 bi bi-camera text-light"></i>
                                     </div>
                                     {% endif %}
-                                    {% thumbnail user_profile.profile.photo "150x150" crop="center" as user_photo%}
+                                    {% thumbnail user_profile.photo "150x150" crop="center" as user_photo %}
                                     <img src="{{ user_photo.url }}" alt="Фото пользователя" class="rounded">
                                     {% endthumbnail %}
                                 </div>
@@ -89,27 +120,34 @@
 
                                 <div>
                                     <span class="text-blue-100 me-1">Имя пользователя:</span>
-                                    <span class="fw-bold bg-blue-500 py-1 px-2 rounded">{{ user_profile.username }}</span>
+                                    <span class="fw-bold bg-blue-500 py-1 px-2 rounded">{{ user_profile.user.username }}</span>
                                 </div>
 
-                                {% if user_profile.first_name %}
+                                {% if user_profile.is_email_shown %}
                                 <div>
-                                    <span class="text-blue-100 me-1">Имя:</span>
-                                    <span class="fw-bold bg-blue-500 py-1 px-2 rounded">{{ user_profile.first_name }}</span>
+                                    <span class="text-blue-100 me-1">Почта:</span>
+                                    <span class="fw-bold bg-blue-500 py-1 px-2 rounded">{{ user_profile.user.email }}</span>
                                 </div>
                                 {% endif %}
 
-                                {% if user_profile.last_name %}
+                                {% if user_profile.user.first_name %}
+                                <div>
+                                    <span class="text-blue-100 me-1">Имя:</span>
+                                    <span class="fw-bold bg-blue-500 py-1 px-2 rounded">{{ user_profile.user.first_name }}</span>
+                                </div>
+                                {% endif %}
+
+                                {% if user_profile.user.last_name %}
                                 <div>
                                     <span class="text-blue-100 me-1">Фамилия:</span>
-                                    <span class="fw-bold bg-blue-500 py-1 px-2 rounded">{{ user_profile.last_name }}</span>
+                                    <span class="fw-bold bg-blue-500 py-1 px-2 rounded">{{ user_profile.user.last_name }}</span>
                                 </div>
                                 {% endif %}
 
                                 <div>
                                     <span class="text-blue-100 me-1">Дата регистрации:</span>
                                     <span class="fw-bold bg-blue-500 py-1 px-2 rounded">
-                                        {{ user_profile.date_joined|date:"N d, Y" }}
+                                        {{ user_profile.user.date_joined|date:"N d, Y" }}
                                     </span>
                                 </div>
 
@@ -129,17 +167,28 @@
 
             <div class="col-12">
                 <div class="row g-3">
-                    {% for result in results %}
-                    <div class="col-lg-6">
-                        {% include 'trainer/includes/last_result.html' %}
-                    </div>
-                    {% empty %}
-                    <div class="col-12">
-                        <div class="d-flex justify-content-center text-blue-100">
-                            <small>Видимо, {{ user.username }} не практиковался за последнее время.</small>
+                    {% if user_profile.are_results_shown %}
+                        {% for result in results %}
+                        <div class="col-lg-6">
+                            {% include 'trainer/includes/last_result.html' %}
                         </div>
-                    </div>
-                    {% endfor %}
+                        {% empty %}
+                        <div class="col-12">
+                            <div class="d-flex justify-content-center text-blue-100">
+                                <small>Видимо, {{ user_profile.user.username }} не практиковался за последнее время.</small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="col-12">
+                            <div class="d-flex justify-content-center text-blue-100">
+                                <small>
+                                    {{ user_profile.user.username }} запретил показывать свои результаты другим
+                                    пользователям.
+                                </small>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
 
@@ -150,7 +199,7 @@
 {% endblock %}
 
 {% block script %}
-{% if user_profile == user %}
+{% if user_profile.user == user %}
 <script src="{% static 'account/js/load_profile_photo.js' %}"></script>
 {% endif %}
 {% endblock %}

@@ -3,7 +3,7 @@ from django.test import TestCase
 from account.models import User
 
 
-class TestRequestStatuses(TestCase):
+class TestCustomUserManager(TestCase):
 
     def setUp(self) -> None:
         self.credentials = {

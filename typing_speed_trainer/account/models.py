@@ -62,6 +62,8 @@ class Profile(models.Model):
     photo = models.ImageField(
         'Фото пользователя', upload_to='profile_photos/%Y/%m/%d/', default='profile_photos/default.jpg'
     )
+    are_results_shown = models.BooleanField("Показывать последние результаты", default=True)
+    is_email_shown = models.BooleanField("Показывать почту", default=False)
 
     class Meta:
         verbose_name = 'Профиль'
@@ -69,3 +71,6 @@ class Profile(models.Model):
 
     def get_absolute_url(self):
         return reverse('account:profile', args=[self.user.pk])
+
+    def __str__(self):
+        return f'{self.user}'
