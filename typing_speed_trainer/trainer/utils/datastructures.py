@@ -1,6 +1,17 @@
 from datetime import datetime
 from typing import TypedDict, NamedTuple
 
+from account.models import User
+
+
+class LastUserCachedResults(NamedTuple):
+    """
+    Последний результат пользователя, что был сохранён
+    в кэше.
+    """
+    user_id: int
+    result_id: int
+
 
 class UserTypingResult(TypedDict):
     """
@@ -16,6 +27,14 @@ class UserTypingResult(TypedDict):
     typingAccuracy: float | int
     wpm: int
     dateEnd: datetime | str
+
+
+class UserTypingResultWithUser(UserTypingResult):
+    """
+    То же самое, что и в `UserTypingResult`, но имеет модель
+    `User` по ключу `user`.
+    """
+    user: User
 
 
 class ResultFieldType(NamedTuple):

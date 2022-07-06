@@ -7,6 +7,7 @@ export default class ResultsList extends Broker {
 
     this.sendToUrl = "results/";
     this.isResultBarCreated = false;
+    this.otherUserResults = document.querySelector(".other-users-results");
 
     this.resultsBar;
     this.resultsList;
@@ -47,7 +48,7 @@ export default class ResultsList extends Broker {
     const divElement = document.createElement("div");
 
     divElement.innerHTML = this.resultsListTemplate;
-    sidebar.appendChild(divElement.firstChild);
+    sidebar.insertBefore(divElement.firstChild, this.otherUserResults);
 
     this.resultsBar = document.querySelector(".last-results-list");
     this.resultsList = document.querySelector(".last-results-list .list");
@@ -131,11 +132,13 @@ export default class ResultsList extends Broker {
     if (this.isResultBarCreated) {
       this.resultsBar.style.display = "none";
     }
+    this.otherUserResults.style.display = "none";
   }
 
   showResultsList() {
     if (this.isResultBarCreated) {
       this.resultsBar.style.display = "flex";
     }
+    this.otherUserResults.style.display = "flex";
   }
 }

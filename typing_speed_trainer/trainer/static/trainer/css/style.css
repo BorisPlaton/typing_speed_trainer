@@ -97,15 +97,33 @@
   gap: 5px;
 }
 
+.other-users-last-result-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.other-users-last-result-content div {
+  display: flex;
+  gap: 5px;
+  justify-content: space-between;
+}
+
+.other-user-results-list {
+  max-height: 605px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 .last-results-list,
-.list {
+.list,
+.other-users-results {
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
 
 .list {
-  max-height: 690px;
+  max-height: 460px;
   overflow-y: auto;
 }
 

@@ -9,18 +9,25 @@ from django.views.generic import TemplateView
 
 from trainer.models import Statistic
 from trainer.utils.decorators import json_request_required
-from trainer.utils.mixins import TrainerResultCacheMixin
+from trainer.utils.mixins import TrainerResultCacheMixin, AllUserResultsMixin
 from trainer.utils.shortcuts import get_correct_template_path
 
 
-class TypingTrainer(TemplateView):
+class TypingTrainer(TemplateView, AllUserResultsMixin):
     """Страница с тренажером скорости печати."""
     template_name = 'trainer/typing_trainer.html'
+    join_to_user_cache_model = ['profile']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['other_users_results'] = self.get_last_cached_results(10, with_users=True)
+
+        return context
 
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(json_request_required, name='post')
-class ResultsList(View, TrainerResultCacheMixin):
+class ResultsList(View, AllUserResultsMixin, TrainerResultCacheMixin):
     """
     Принимает POST-запрос с результатами пользователя и кеширует их.
     Также отдает данные в виде JSON о результатах пользователя. Если есть
@@ -35,25 +42,24 @@ class ResultsList(View, TrainerResultCacheMixin):
         """
         data = self.get_result_templates() if request.GET.get('templates') == 'true' else {}
         data.update({
-            'resultsData': self.get_all_results_from_cache(),
+            'resultsData': self.get_all_current_user_results_from_cache(),
         })
-        return JsonResponse(data)
+        return JsonResponse(data, status=200)
 
     def post(self, request):
         """
         Кеширует данные из запроса и отправляет ответ в виде JSON
         с этими же данными, если полученные данные корректны.
         """
-
         data: dict = json.loads(request.body)
         if self.is_correct_user_typing_result_data(data):
             self.update_user_statists_model(data['wpm'], data['typingAccuracy'])
             self.cache_result_data(data)
-            return JsonResponse({
-                'result': self.get_result_from_cache(
-                    self.get_current_result_id()
-                )
-            })
+
+            if self.request.user.profile.are_results_shown:
+                self.add_to_last_cached_results(self.user_pk, self.get_current_result_id())
+
+            return JsonResponse({'result': data})
         return JsonResponse({
             'status': 'Некорректные данные',
             'data': data,

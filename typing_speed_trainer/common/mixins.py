@@ -48,18 +48,6 @@ class UnauthenticatedMixin(View, SuccessURLAllowedHostsMixin):
         return url_is_safe
 
 
-class SameUserMixin(View):
-    """
-    Миксин, который проверяет, что действие пользователя, направлено
-    на самого себя, иначе возвращает ответ со статусом 403 (Forbidden).
-    """
-
-    def dispatch(self, request, *args, **kwargs):
-        if self.request.user.pk == self.kwargs.get('pk'):
-            return super().dispatch(request, *args, **kwargs)
-        return HttpResponseForbidden()
-
-
 class MultipleFormViewMixin(ContextMixin):
     """Миксин для отображения множества форм. Не отвечает за их обработку."""
     forms = {}

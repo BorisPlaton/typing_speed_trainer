@@ -1,5 +1,6 @@
 {% extends 'trainer/base_trainer.html' %}
 {% load static %}
+{% load thumbnail %}
 
 {% block stylesheet %}
 <link rel="stylesheet" href="{% static 'trainer/css/style.css' %}">
@@ -88,6 +89,67 @@
                     </div>
 
                     <!--Last results list placed here-->
+
+                    <!--Last results other users-->
+                    <div class="mt-5 other-users-results fw-normal">
+                        <div>
+                            <span class="fw-bold fs-4">Результаты других людей</span>
+                        </div>
+
+                        <div class="other-user-results-list">
+                            <div class="row g-2">
+                                {% for result in other_users_results %}
+
+                                <div class="col-lg-12 col-6">
+                                    <div class="other-users-last-result-content bg-blue-800 p-3 rounded shadow fw-light text-light">
+
+                                        <div class="d-flex justify-content-start align-items-center mb-2">
+                                            <a href="{{ result.user.get_absolute_url }}" class="link-light">
+                                                {% thumbnail result.user.profile.photo "25x25" crop="center" as user_photo%}
+                                                <img src="{{ user_photo.url }}" alt="Фото пользователя" class="rounded">
+                                                {% endthumbnail %}
+                                                <span class="ms-2">
+                                                {{ result.user.username }}
+                                            </span>
+                                            </a>
+                                        </div>
+
+                                        <div class="bg-blue-500 px-2 py-1 rounded">
+                                            <small class="fw-bold">{{ result.wpm }}</small>
+                                            <small class="text-blue-100">Скорость печати</small>
+                                        </div>
+
+                                        <div class="bg-blue-500 px-2 py-1 rounded">
+                                            <small>
+                                                <span class="correct text-green-300 fw-bold me-1">
+                                                    {{ result.correctKeystrokes }}
+                                                </span>
+                                                        |
+                                                        <span class="invalid text-red-300 fw-bold mx-1">
+                                                    {{ result.invalidKeystrokes }}
+                                                </span>
+                                                        |
+                                                        <span class="summary fw-bold ms-1">
+                                                    {{ result.summaryKeystrokes }}
+                                                </span>
+                                            </small>
+                                            <small class="text-blue-100">Нажатий клавиш</small>
+                                        </div>
+
+                                        <div class="result-date-end d-flex justify-content-end mt-2">
+                                            <small class="text-blue-100">{{ result.dateEnd }}</small>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                {% empty %}
+                                <small class="text-blue-100">Здесь пока ничего нет.</small>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
 
                 </div>
             </div>
