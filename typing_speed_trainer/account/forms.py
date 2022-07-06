@@ -1,4 +1,4 @@
-from crispy_forms.layout import HTML, Layout, Div, Submit
+from crispy_forms.layout import Layout, Div, Submit
 
 from account.models import Profile
 from common.form_mixins import CrispyStyleModelFormMixin

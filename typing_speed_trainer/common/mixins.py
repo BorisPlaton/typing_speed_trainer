@@ -2,7 +2,6 @@ from django.conf import settings
 from django.contrib.auth.views import SuccessURLAllowedHostsMixin
 from django.core.exceptions import ImproperlyConfigured
 from django.forms import modelform_factory
-from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, resolve_url
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views import View

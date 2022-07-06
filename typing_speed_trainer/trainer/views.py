@@ -42,7 +42,7 @@ class ResultsList(View, AllUserResultsMixin, TrainerResultCacheMixin):
         """
         data = self.get_result_templates() if request.GET.get('templates') == 'true' else {}
         data.update({
-            'resultsData': self.get_all_current_user_results_from_cache(),
+            'resultsData': self.get_all_current_user_results(),
         })
         return JsonResponse(data, status=200)
 
@@ -57,7 +57,7 @@ class ResultsList(View, AllUserResultsMixin, TrainerResultCacheMixin):
             self.cache_result_data(data)
 
             if self.request.user.profile.are_results_shown:
-                self.add_to_last_cached_results(self.user_pk, self.get_current_result_id())
+                self.add_to_last_cached_results(self.user_id, self.current_user_result_id)
 
             return JsonResponse({'result': data})
         return JsonResponse({
@@ -82,10 +82,10 @@ class ResultsList(View, AllUserResultsMixin, TrainerResultCacheMixin):
 
     def dispatch(self, request, *args, **kwargs):
         """
-        Присваивает значение `self.user_pk` `id` пользователя, для
-        корректной работы `TrainerResultCacheMixin`.
+        Присваивает `user_id` значение `id` пользователя для корректной
+        работы миксина `TrainerResultCacheMixin`.
         """
-        self.user_pk = request.user.pk
+        self.user_id = request.user.pk
         return super().dispatch(request, *args, **kwargs)
 
     @staticmethod

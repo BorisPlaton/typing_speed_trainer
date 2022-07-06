@@ -33,10 +33,10 @@ class TestRequestStatuses(TestCase):
         )
 
         self.user_cache_class = TrainerResultCacheMixin()
-        self.user_cache_class.user_pk = self.user.pk
+        self.user_cache_class.user_id = self.user.pk
 
     def tearDown(self):
-        self.user_cache_class.clean_user_cached_data()
+        self.user_cache_class.clean_user_results()
 
     def test_empty_results_list_from_results_page(self):
         self.assertTrue(self.client.login(**self.credentials))

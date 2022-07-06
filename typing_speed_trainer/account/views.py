@@ -62,7 +62,7 @@ class Account(DetailView, MultipleFormViewMixin, TrainerResultCacheMixin):
         Форматирует значение ключа `dateEnd` в `datetime.datetime`
         и возвращает список со всеми результатами пользователя.
         """
-        results = self.get_all_current_user_results_from_cache()
+        results = self.get_all_current_user_results()
         for result in results:
             result['dateEnd'] = datetime.strptime(result['dateEnd'], '%Y-%m-%dT%H:%M:%S.%fZ')
         return results[::-1]
