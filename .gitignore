@@ -4,6 +4,7 @@ __pycache__
 .env
 venv
 .coverage
+.pytest_cache
 htmlcov
 
 typing_speed_trainer/media/*

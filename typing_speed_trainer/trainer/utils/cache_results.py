@@ -1,7 +1,7 @@
 from collections import deque
 from datetime import datetime
 
-from django.core.cache import cache
+from django.core.cache import caches
 
 from account.models import User
 from config import settings
@@ -13,34 +13,63 @@ from trainer.utils.datastructures import (
 )
 
 
-class AbstractResultCache:
+class ResultCache:
+    """
+    Класс для взаимодействия с кешем и добавления/удаления/получения
+    данных из него.
+    """
 
-    @staticmethod
-    def get_user_result(result_id: int, user_id: int):
-        return cache.get(f'result:{result_id}', version=user_id)
+    cache_base_name = 'default'
 
-    @staticmethod
-    def set_user_result(result_id: int, data, user_id: int):
-        cache.set(f'result:{result_id}', data, version=user_id)
+    @property
+    def result_cache(self):
+        if not self.cache_base_name:
+            raise ValueError("Укажите `cache_base_name` при инициализации или `result_cache`.")
 
-    @staticmethod
-    def delete_user_result(result_id: int, user_id: int):
-        cache.delete(f'result:{result_id}', version=user_id)
+        cache = caches[self.cache_base_name]
 
-    @staticmethod
-    def get_user_current_result_id(user_id: int):
-        return cache.get('results_id', version=user_id)
+        if not cache:
+            raise ValueError("Неверное название `cache_base_name`.")
 
-    @staticmethod
-    def set_user_current_result_id(new_result_id, user_id: int):
-        if new_result_id < 0:
+        return cache
+
+    def get_user_result(self, result_id: int, user_id: int):
+        """Возвращает данные из кеша."""
+        return self.result_cache.get(f'result:{result_id}', version=user_id)
+
+    def set_user_result(self, result_id: int, data, user_id: int):
+        """Добавляет данные в кеш."""
+        if not (isinstance(result_id, int) and isinstance(result_id, int)):
+            raise ValueError(f"`result_id` не может быть типа {type(result_id)}")
+        self.result_cache.set(f'result:{result_id}', data, version=user_id)
+
+    def delete_user_result(self, result_id: int, user_id: int) -> bool:
+        """Удаляет данные из кеша."""
+        return self.result_cache.delete(f'result:{result_id}', version=user_id)
+
+    def get_user_current_result_id(self, user_id: int):
+        """Возвращает значение `results_id` из кеша."""
+        return self.result_cache.get('results_id', version=user_id)
+
+    def set_user_current_result_id(self, new_result_id: int, user_id: int):
+        """
+        Добавляет значение `results_id` в кеш. Значение не может
+        быть меньше 0.
+        """
+        if not isinstance(new_result_id, int):
+            raise ValueError(f"`new_result_id` не может быть типа {type(new_result_id)}.")
+        elif new_result_id < 0:
             raise ValueError("`new_result_id` не может быть меньше нуля.")
-        cache.set('results_id', new_result_id, version=user_id)
+        self.result_cache.set('results_id', new_result_id, version=user_id)
 
     def increment_current_result_id(self, user_id: int) -> int:
+        """
+        Увеличивает значение `results_id` на 1. Если `results_id` ещё нет
+        в кеше, то добавляет его.
+        """
         if not self.get_user_current_result_id(user_id):
             self.set_user_current_result_id(0, user_id)
-        return cache.incr('results_id', version=user_id)
+        return self.result_cache.incr('results_id', version=user_id)
 
     def get_results_keynames(self, user_id: int) -> list[str | None]:
         """Возвращает все ключи данных из кэша, если таковы есть."""
@@ -58,7 +87,12 @@ class AbstractResultCache:
         return result_key_names
 
 
-class CurrentUserCacheMixin(AbstractResultCache):
+class CurrentUserCache(ResultCache):
+    """
+    Класс для взаимодействия с кешем данных определенного пользователя,
+    который определяется по атрибуту `user_id`.
+    """
+
     user_id: int = None
 
     @property
@@ -94,28 +128,26 @@ class CurrentUserCacheMixin(AbstractResultCache):
         вернет пустой список.
         """
         result_keynames = self.get_current_user_results_keynames()
-        results: dict = cache.get_many(
+        results: dict = self.result_cache.get_many(
             result_keynames, version=self.user_id
         )
         return [result for result in results.values()]
 
-    def clean_user_results(self) -> int:
+    def clean_current_user_results(self) -> int:
         """
         Очищает все данные результатов пользователя из кэша
         и возвращает количество удаленных ключей.
         """
         result_keynames = self.get_current_user_results_keynames()
         if result_keynames:
-            cache.delete_many(result_keynames, version=self.user_id)
+            self.result_cache.delete_many(result_keynames, version=self.user_id)
         return len(result_keynames)
 
 
-class TrainerResultCacheMixin(CurrentUserCacheMixin):
+class TrainerResultCache(CurrentUserCache):
     """
     Миксин для работы с кешем данных результатов тренажера определенного
-    пользователя. Для того, чтоб класс корректно работал, нужно указать
-    в атрибут класса `user_pk` поле модели `id` пользователя. По умолчанию
-    атрибут имеет значение `None`.
+    пользователя.
     """
 
     def cache_result_data(self, data: UserTypingResult) -> None:
@@ -153,7 +185,7 @@ class TrainerResultCacheMixin(CurrentUserCacheMixin):
         return True
 
 
-class AllUserResultsMixin(AbstractResultCache):
+class AllUserResultsMixin(ResultCache):
     """
     Миксин для хранения и получения последних данных результатов из кеша.
     Максимальное количество сохраненных объектов в очереди определяется
@@ -166,7 +198,7 @@ class AllUserResultsMixin(AbstractResultCache):
         """
         Сохраняет данные о результате с полями `user_id` и `result_id`.
         """
-        self._add_to_last_cached_deque(user_id=user_id, result_id=result_id)
+        self._add_to_last_cached_results(user_id=user_id, result_id=result_id)
 
     def get_last_cached_results(self, amount, with_users=True) -> list[UserTypingResult | UserTypingResultWithUser]:
         """
@@ -180,6 +212,12 @@ class AllUserResultsMixin(AbstractResultCache):
             return self.get_raw_last_cached_results(amount)
 
     def get_last_cached_results_with_users(self, amount: int) -> list[UserTypingResultWithUser]:
+        """
+        Возвращает все последние записи результатов из кеша с их пользователями.
+
+        Длина может быть меньше, так как данные результатов могли исчезнуть
+        из кеша.
+        """
         last_results_data: list[tuple] = []
         users_pk_list: list[int] = []
 
@@ -213,7 +251,11 @@ class AllUserResultsMixin(AbstractResultCache):
 
         return results_list_with_users
 
-    def _get_user_model(self) -> User.objects:
+    def _get_user_model(self):
+        """
+        Возвращает модель пользователя со всеми подключенными моделями,
+        что указаны в атрибуте `join_to_user_cache_model`.
+        """
         user_model = User.objects
 
         if not self.join_to_user_cache_model:
@@ -242,7 +284,8 @@ class AllUserResultsMixin(AbstractResultCache):
         return last_results_data
 
     def _get_last_cached_results(self) -> list[LastUserCachedResults | None]:
-        last_cached_deque: deque[LastUserCachedResults] = cache.get(
+        """Возвращает очередь с `LastUserCachedResults` из кеша."""
+        last_cached_deque: deque[LastUserCachedResults] = self.result_cache.get(
             'last_cached_results',
             deque(maxlen=settings.MAX_LENGTH_LAST_CACHED_DEQUE)
         )
@@ -253,9 +296,10 @@ class AllUserResultsMixin(AbstractResultCache):
 
         return last_cached_list
 
-    def _add_to_last_cached_deque(self, user_id: int, result_id: int):
+    def _add_to_last_cached_results(self, user_id: int, result_id: int):
+        """Добавляет `LastUserCachedResults` в очередь с другими данными в кеш."""
         last_cached_results = self._get_last_cached_results()
         last_cached_results.append(
             LastUserCachedResults(user_id=user_id, result_id=result_id)
         )
-        cache.set('last_cached_results', last_cached_results)
+        self.result_cache.set('last_cached_results', last_cached_results)

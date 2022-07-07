@@ -79,7 +79,12 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
         'LOCATION': os.getenv('REDIS_LOCATION'),
         'TIMEOUT': 600,
-    }
+    },
+    'test': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': os.getenv('TEST_REDIS_LOCATION'),
+        'TIMEOUT': 600,
+    },
 }
 
 AUTH_PASSWORD_VALIDATORS = [

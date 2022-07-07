@@ -9,7 +9,7 @@ from django.views.generic import TemplateView
 
 from trainer.models import Statistic
 from trainer.utils.decorators import json_request_required
-from trainer.utils.mixins import TrainerResultCacheMixin, AllUserResultsMixin
+from trainer.utils.cache_results import TrainerResultCache, AllUserResultsMixin
 from trainer.utils.shortcuts import get_correct_template_path
 
 
@@ -27,7 +27,7 @@ class TypingTrainer(TemplateView, AllUserResultsMixin):
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(json_request_required, name='post')
-class ResultsList(View, AllUserResultsMixin, TrainerResultCacheMixin):
+class ResultsList(View, AllUserResultsMixin, TrainerResultCache):
     """
     Принимает POST-запрос с результатами пользователя и кеширует их.
     Также отдает данные в виде JSON о результатах пользователя. Если есть

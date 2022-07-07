@@ -9,10 +9,10 @@ from django.views.generic.edit import UpdateView
 from account.forms import ChangeProfilePhotoForm, ChangeProfileSettingsForm
 from account.models import Profile
 from common.mixins import MultipleFormViewMixin
-from trainer.utils.mixins import TrainerResultCacheMixin
+from trainer.utils.cache_results import TrainerResultCache
 
 
-class Account(DetailView, MultipleFormViewMixin, TrainerResultCacheMixin):
+class Account(DetailView, MultipleFormViewMixin, TrainerResultCache):
     """Страница профиля пользователя."""
 
     model = Profile
@@ -35,7 +35,7 @@ class Account(DetailView, MultipleFormViewMixin, TrainerResultCacheMixin):
         Устанавливаем значение атрибута `user_pk` равным полю `id`
         пользователя, для корректной работы миксина `TrainerResultCacheMixin`.
         """
-        self.user_pk = kwargs.get('pk')
+        self.user_id = kwargs.get('pk')
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):

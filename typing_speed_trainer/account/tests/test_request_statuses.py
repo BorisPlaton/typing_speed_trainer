@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from account.models import User
-from trainer.utils.mixins import TrainerResultCacheMixin
+from trainer.utils.cache_results import TrainerResultCache
 
 
 class TestRequestStatuses(TestCase):
@@ -16,11 +16,11 @@ class TestRequestStatuses(TestCase):
             **self.credentials,
         )
 
-        self.user_cache_class = TrainerResultCacheMixin()
+        self.user_cache_class = TrainerResultCache()
         self.user_cache_class.user_id = self.user.pk
 
     def tearDown(self):
-        self.user_cache_class.clean_user_results()
+        self.user_cache_class.clean_current_user_results()
 
     def test_profile_page_200_status_code_with_unauthenticated_user(self):
         response = self.client.get(reverse('account:profile', args=[self.user.pk]))
