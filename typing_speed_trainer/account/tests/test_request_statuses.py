@@ -20,7 +20,7 @@ class TestRequestStatuses(TestCase):
         self.user_cache_class.user_id = self.user.pk
 
     def tearDown(self):
-        self.user_cache_class.clean_current_user_results()
+        self.user_cache_class.delete_current_user_results()
 
     def test_profile_page_200_status_code_with_unauthenticated_user(self):
         response = self.client.get(reverse('account:profile', args=[self.user.pk]))

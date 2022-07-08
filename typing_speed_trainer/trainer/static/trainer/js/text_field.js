@@ -8,7 +8,7 @@ export default class TextField extends Broker {
 
     this.loadingAnimation = document.querySelector(".loading-page");
 
-    this.backGroundText = document.querySelector(".background-text");
+    this.backgroundText = document.querySelector(".background-text");
     this.hiddenInput = document.querySelector(".input-text");
 
     this.currentWordSpan;
@@ -19,15 +19,26 @@ export default class TextField extends Broker {
   }
 
   setup() {
-    this.backGroundText.addEventListener("click", () => {
+    this.setTextFieldWords();
+
+    this.backgroundText.addEventListener("click", () => {
       this.hiddenInput.focus();
     });
+
     this.hiddenInput.addEventListener("input", () => {
       this.analyzeInputChar();
       this.analyzeWord();
     });
 
-    this.setTextFieldWords();
+    this.hiddenInput.addEventListener("focus", () => {
+      this.backgroundText.classList.add("selected");
+      this.setNextCharIsSelected();
+    });
+
+    this.hiddenInput.addEventListener("focusout", () => {
+      this.backgroundText.classList.remove("selected");
+      this.setCurrentCharIsUnfocused();
+    });
   }
 
   stopTyping() {
@@ -46,8 +57,8 @@ export default class TextField extends Broker {
           faker.random.words(1).toLowerCase(),
           i
         );
-        this.backGroundText.append(spanElement);
-        this.backGroundText.innerHTML += " ";
+        this.backgroundText.append(spanElement);
+        this.backgroundText.innerHTML += " ";
       }
       this.setCurrentWordProperties(0);
 
@@ -69,7 +80,7 @@ export default class TextField extends Broker {
       case this.isCharAdded():
         this.updateLastChar(
           this.currentWordText[this.currentCharIndex] ==
-            this.getInputChar().slice(-1)
+            this.getInputText().slice(-1)
         );
         break;
     }
@@ -87,29 +98,29 @@ export default class TextField extends Broker {
   }
 
   isInputAndWordEqual() {
-    return this.getInputChar() == this.currentWordText;
+    return this.getInputText() == this.currentWordText;
   }
 
   isInputBiggerThenWord() {
-    return this.getInputChar().length > this.currentWordText.length;
+    return this.getInputText().length > this.currentWordText.length;
   }
 
   isSpaceKeyPressed() {
-    return this.getInputChar().slice(-1) == " ";
+    return this.getInputText().slice(-1) == " ";
   }
 
   isCharRemoved() {
-    return this.currentCharIndex > this.getInputChar().length;
+    return this.currentCharIndex > this.getInputText().length;
   }
 
   isCharAdded() {
     if (!this.isInputBiggerThenWord()) {
-      return this.currentCharIndex < this.getInputChar().length;
+      return this.currentCharIndex < this.getInputText().length;
     }
   }
 
   isInputAndWordSameLength() {
-    return this.currentCharIndex == this.getInputChar().length;
+    return this.currentWordText.length == this.getInputText().length;
   }
 
   skipWord() {
@@ -123,15 +134,15 @@ export default class TextField extends Broker {
     storage.increaseTotalWordsAmount();
     this.clearHiddenInput();
     this.setCurrentWordProperties(++this.currentWordNum);
+    this.setNextCharIsSelected();
   }
 
   removeLastChar() {
-    if (!this.isInputBiggerThenWord()) {
-      if (this.currentCharIndex > 0) {
-        this.currentCharIndex--;
-      }
-      this.setCurrentCharIsNormal();
+    this.setCurrentCharIsUnfocused();
+    if (this.currentCharIndex > 0) {
+      this.currentCharIndex--;
     }
+    this.setCurrentCharIsNormal();
   }
 
   setInputIsLonger() {
@@ -162,6 +173,7 @@ export default class TextField extends Broker {
   }
 
   updateLastChar(isCorrect) {
+    this.setCurrentCharIsUnfocused();
     if (isCorrect) {
       this.setCurrentCharIsCorrect();
     } else {
@@ -169,6 +181,7 @@ export default class TextField extends Broker {
       this.notifyInvalidChar();
     }
     this.currentCharIndex++;
+    this.setNextCharIsSelected();
   }
 
   getCurrentWordText() {
@@ -181,15 +194,31 @@ export default class TextField extends Broker {
   }
 
   setCurrentCharIsCorrect() {
-    this.currentWordSpan
-      .querySelector(`.chr-${this.currentCharIndex}`)
-      .classList.add("correct-char");
+    try {
+      this.getCurrentCharSpan().classList.add("correct-char");
+    } catch (e) {}
   }
 
   setCurrentCharIsInvalid() {
-    this.currentWordSpan
-      .querySelector(`.chr-${this.currentCharIndex}`)
-      .classList.add("invalid-char");
+    try {
+      this.getCurrentCharSpan().classList.add("invalid-char");
+    } catch (e) {}
+  }
+
+  setNextCharIsSelected() {
+    try {
+      this.getCurrentCharSpan().classList.add("selected-char");
+    } catch (e) {}
+  }
+
+  setCurrentCharIsUnfocused() {
+    try {
+      this.getCurrentCharSpan().classList.remove("selected-char");
+    } catch (e) {}
+  }
+
+  getCurrentCharSpan() {
+    return this.currentWordSpan.querySelector(`.chr-${this.currentCharIndex}`);
   }
 
   setCurrentCharIsNormal() {
@@ -198,9 +227,10 @@ export default class TextField extends Broker {
     ).classList;
     currentCharClassList.remove("correct-char");
     currentCharClassList.remove("invalid-char");
+    this.setNextCharIsSelected();
   }
 
-  getInputChar() {
+  getInputText() {
     return this.hiddenInput.value;
   }
 
@@ -227,7 +257,7 @@ export default class TextField extends Broker {
   }
 
   clearTextField() {
-    this.backGroundText.innerHTML = "";
+    this.backgroundText.innerHTML = "";
   }
 
   clearHiddenInput() {

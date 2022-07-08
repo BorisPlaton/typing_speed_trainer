@@ -35,7 +35,7 @@ class TestRequestStatuses(TestCase):
         self.user_cache_class.user_id = self.user.pk
 
     def tearDown(self) -> None:
-        self.user_cache_class.clean_current_user_results()
+        self.user_cache_class.delete_current_user_results()
 
     def test_typing_trainer_page_200_status_code_with_unauthenticated_user(self):
         response = self.client.get(reverse('trainer:typing_trainer'))

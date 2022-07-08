@@ -36,7 +36,7 @@ class TestRequestStatuses(TestCase):
         self.user_cache_class.user_id = self.user.pk
 
     def tearDown(self):
-        self.user_cache_class.clean_current_user_results()
+        self.user_cache_class.delete_current_user_results()
 
     def test_empty_results_list_from_results_page(self):
         self.assertTrue(self.client.login(**self.credentials))

@@ -12,7 +12,6 @@ export default class SettingsBar extends Broker {
   }
 
   setup() {
-    this.hiddenInput.style.opacity = "1";
     this.setEventListeners();
     this.showSettingsBar();
   }
@@ -21,7 +20,6 @@ export default class SettingsBar extends Broker {
     this.removeEventListeners();
     this.setTotalTime();
     this.hideSettingsBar();
-    this.hiddenInput.style.opacity = "0";
     this.notify("typingTrainerStarted");
   }
 

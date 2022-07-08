@@ -4,6 +4,8 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 from django.urls import reverse
 
+from trainer.utils.cache_results import CurrentUserCache
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -51,6 +53,15 @@ class User(AbstractUser):
 
     def get_absolute_url(self):
         return reverse('account:profile', args=[self.pk])
+
+    def delete_all_cached_results(self):
+        """
+        Удаляет все данные пользователя по результатам тренажера
+        из кеша.
+        """
+        cache = CurrentUserCache()
+        cache.user_id = self.pk
+        cache.delete_current_user_results()
 
 
 class Profile(models.Model):

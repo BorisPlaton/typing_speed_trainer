@@ -3,7 +3,6 @@ from datetime import datetime
 
 from django.core.cache import caches
 
-from account.models import User
 from common.utils import is_args_type
 from config import settings
 from trainer.utils.datastructures import (
@@ -61,6 +60,12 @@ class ResultCache:
             raise ValueError("`get_user_current_result_id` принимает аргументы только типа `int`.")
 
         return self.result_cache.get('last_result_id', version=user_id)
+
+    def delete_user_current_result_id(self, user_id: int):
+        if not is_args_type(int, user_id):
+            raise ValueError("`delete_user_current_result_id` принимает аргументы только типа `int`.")
+
+        self.result_cache.delete('last_result_id', version=user_id)
 
     def _set_user_current_result_id(self, new_result_id: int, user_id: int):
         """
@@ -151,7 +156,7 @@ class CurrentUserCache(ResultCache):
         )
         return [result for result in results.values()]
 
-    def clean_current_user_results(self) -> int:
+    def delete_current_user_results(self) -> int:
         """
         Очищает все данные результатов пользователя из кэша
         и возвращает количество удаленных ключей.
@@ -159,6 +164,7 @@ class CurrentUserCache(ResultCache):
         result_keynames = self.get_current_user_results_keynames()
         if result_keynames:
             self.result_cache.delete_many(result_keynames, version=self.user_id)
+        self.delete_user_current_result_id(self.user_id)
         return len(result_keynames)
 
 
@@ -207,7 +213,7 @@ class AllUserResultsMixin(ResultCache):
     константой `MAX_LENGTH_LAST_CACHED_DEQUE`, что задаётся в файле конфигурации.
     """
 
-    join_to_user_cache_model: list[str] = []
+    user_model = None
 
     def add_to_last_cached_results(self, user_id, result_id):
         """
@@ -230,6 +236,9 @@ class AllUserResultsMixin(ResultCache):
         else:
             return self.get_raw_last_cached_results(amount)
 
+    def get_user_model(self):
+        return self.user_model
+
     def get_last_cached_results_with_users(self, amount: int) -> list[UserTypingResultWithUser]:
         """
         Возвращает все последние записи результатов из кеша с их пользователями.
@@ -251,8 +260,7 @@ class AllUserResultsMixin(ResultCache):
         if not users_pk_list:
             return []
 
-        user_model = self._get_user_model()
-        users_instance = user_model.filter(pk__in=users_pk_list)
+        users_instance = self.get_user_model().filter(pk__in=users_pk_list)
         results_list_with_users = []
 
         for result_tuple in last_results_data:
@@ -269,21 +277,6 @@ class AllUserResultsMixin(ResultCache):
             )
 
         return results_list_with_users
-
-    def _get_user_model(self):
-        """
-        Возвращает модель пользователя со всеми подключенными моделями,
-        что указаны в атрибуте `join_to_user_cache_model`.
-        """
-        user_model = User.objects
-
-        if not self.join_to_user_cache_model:
-            return user_model
-
-        for join_model in self.join_to_user_cache_model:
-            user_model = user_model.select_related(join_model)
-
-        return user_model
 
     def get_raw_last_cached_results(self, amount: int) -> list[UserTypingResult]:
         """
@@ -310,8 +303,8 @@ class AllUserResultsMixin(ResultCache):
         )
 
         last_cached_list = [
-            result for result in last_cached_deque
-            if self.get_user_result(result.result_id, result.user_id)
-        ][:amount]
+                               result for result in last_cached_deque
+                               if self.get_user_result(result.result_id, result.user_id)
+                           ][:amount]
 
         return last_cached_list

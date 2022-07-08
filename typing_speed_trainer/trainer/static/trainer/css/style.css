@@ -1,17 +1,78 @@
+@keyframes selected-text {
+  from {
+    color: #6f7589;
+  }
+  to {
+    color: #80869c;
+  }
+}
+@keyframes unselected-text {
+  from {
+    color: #80869c;
+  }
+  to {
+    color: #6f7589;
+  }
+}
+@keyframes change-correct-color {
+  from {
+    color: white;
+  }
+  to {
+    color: #58bb43;
+  }
+}
+@keyframes change-invalid-color {
+  from {
+    color: white;
+  }
+  to {
+    color: rgb(255, 68, 54);
+  }
+}
+@keyframes change-selected-char {
+  from {
+    color: #6f7589;
+  }
+  to {
+    color: #c1c8e0;
+  }
+}
+@keyframes move-result-modal {
+  from {
+    margin-bottom: 100px;
+  }
+  to {
+    margin-bottom: 0px;
+  }
+}
+@keyframes change-opacity {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 .text-trainer {
   position: relative;
 }
-.text-trainer .background-text {
+
+.background-text {
   cursor: pointer;
   user-select: none;
   text-align: justify;
   line-height: 1.4;
+  color: #6f7589;
+}
+.background-text.selected {
+  animation: selected-text 0.1s ease-out forwards;
 }
 
 .input-text {
   position: absolute;
   top: 0;
-  opacity: 1;
+  opacity: 0;
   left: 0;
   caret-color: #a1aec4;
   cursor: pointer;
@@ -139,41 +200,12 @@
   animation: change-correct-color 0.1s ease-out forwards;
 }
 
-.invalid-word {
-  color: rgb(255, 68, 54) !important;
+.selected-char {
+  animation: change-selected-char 0.1s ease-out forwards;
 }
 
-@keyframes change-correct-color {
-  from {
-    color: white;
-  }
-  to {
-    color: #58bb43;
-  }
-}
-@keyframes change-invalid-color {
-  from {
-    color: white;
-  }
-  to {
-    color: rgb(255, 68, 54);
-  }
-}
-@keyframes move-result-modal {
-  from {
-    margin-bottom: 100px;
-  }
-  to {
-    margin-bottom: 0px;
-  }
-}
-@keyframes change-opacity {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.invalid-word {
+  color: rgb(255, 68, 54) !important;
 }
 
 /*# sourceMappingURL=style.css.map */

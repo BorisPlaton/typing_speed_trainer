@@ -1,0 +1,73 @@
+$selected-text-color: #80869c;
+$unselected-text-color: #6f7589;
+
+$selected-char: #c1c8e0;
+
+$change-color-start: white;
+$invalid-color: rgb(255, 68, 54);
+$correct-color: #58bb43;
+
+@keyframes selected-text {
+  from {
+    color: $unselected-text-color;
+  }
+  to {
+    color: $selected-text-color;
+  }
+}
+
+@keyframes unselected-text {
+  from {
+    color: $selected-text-color;
+  }
+  to {
+    color: $unselected-text-color;
+  }
+}
+
+@keyframes change-correct-color {
+  from {
+    color: $change-color-start;
+  }
+  to {
+    color: $correct-color;
+  }
+}
+
+@keyframes change-invalid-color {
+  from {
+    color: $change-color-start;
+  }
+  to {
+    color: $invalid-color;
+  }
+}
+
+@keyframes change-selected-char {
+  from {
+    color: $unselected-text-color;
+  }
+  to {
+    color: $selected-char;
+  }
+}
+
+@keyframes move-result-modal {
+  from {
+    margin-bottom: 100px;
+  }
+
+  to {
+    margin-bottom: 0px;
+  }
+}
+
+@keyframes change-opacity {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
