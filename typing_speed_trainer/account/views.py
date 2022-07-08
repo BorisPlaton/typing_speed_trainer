@@ -8,11 +8,11 @@ from django.views.generic.edit import UpdateView
 
 from account.forms import ChangeProfilePhotoForm, ChangeProfileSettingsForm
 from account.models import Profile
-from common.mixins import MultipleFormViewMixin
+from common.mixins import MultipleFormViewMixin, ResultsFormattingMixin
 from trainer.utils.cache_results import TrainerResultCache
 
 
-class Account(DetailView, MultipleFormViewMixin, TrainerResultCache):
+class Account(DetailView, ResultsFormattingMixin, MultipleFormViewMixin, TrainerResultCache):
     """Страница профиля пользователя."""
 
     model = Profile
@@ -62,10 +62,9 @@ class Account(DetailView, MultipleFormViewMixin, TrainerResultCache):
         Форматирует значение ключа `dateEnd` в `datetime.datetime`
         и возвращает список со всеми результатами пользователя.
         """
-        results = self.get_all_current_user_results()
-        for result in results:
-            result['dateEnd'] = datetime.strptime(result['dateEnd'], '%Y-%m-%dT%H:%M:%S.%fZ')
-        return results[::-1]
+        return self.get_formatted_date_end_results(
+            self.get_all_current_user_results()
+        )[::-1]
 
 
 @method_decorator(login_required, name='dispatch')

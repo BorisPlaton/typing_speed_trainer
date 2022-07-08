@@ -4,6 +4,7 @@ from datetime import datetime
 from django.core.cache import caches
 
 from account.models import User
+from common.utils import is_args_type
 from config import settings
 from trainer.utils.datastructures import (
     UserTypingResult,
@@ -24,55 +25,72 @@ class ResultCache:
     @property
     def result_cache(self):
         if not self.cache_base_name:
-            raise ValueError("Укажите `cache_base_name` при инициализации или `result_cache`.")
+            raise ValueError("Укажите атрибут `cache_base_name`.")
+        if not isinstance(self.cache_base_name, str):
+            raise ValueError(f"`cache_base_name` должен быть типа `str`, а не {type(self.cache_base_name)}.")
 
         cache = caches[self.cache_base_name]
-
-        if not cache:
-            raise ValueError("Неверное название `cache_base_name`.")
 
         return cache
 
     def get_user_result(self, result_id: int, user_id: int):
         """Возвращает данные из кеша."""
+        if not is_args_type(int, result_id, user_id):
+            raise ValueError("`get_user_result` принимает аргументы только типа `int`.")
+
         return self.result_cache.get(f'result:{result_id}', version=user_id)
 
-    def set_user_result(self, result_id: int, data, user_id: int):
+    def set_user_result(self, data, user_id: int):
         """Добавляет данные в кеш."""
-        if not (isinstance(result_id, int) and isinstance(result_id, int)):
-            raise ValueError(f"`result_id` не может быть типа {type(result_id)}")
+        if not is_args_type(int, user_id):
+            raise ValueError("`user_id` должны быть только типа `int`.")
+
+        result_id = self.increment_current_result_id(user_id)
         self.result_cache.set(f'result:{result_id}', data, version=user_id)
 
     def delete_user_result(self, result_id: int, user_id: int) -> bool:
         """Удаляет данные из кеша."""
+        if not is_args_type(int, result_id, user_id):
+            raise ValueError("`delete_user_result` принимает аргументы только типа `int`.")
+
         return self.result_cache.delete(f'result:{result_id}', version=user_id)
 
     def get_user_current_result_id(self, user_id: int):
         """Возвращает значение `results_id` из кеша."""
-        return self.result_cache.get('results_id', version=user_id)
+        if not is_args_type(int, user_id):
+            raise ValueError("`get_user_current_result_id` принимает аргументы только типа `int`.")
 
-    def set_user_current_result_id(self, new_result_id: int, user_id: int):
+        return self.result_cache.get('last_result_id', version=user_id)
+
+    def _set_user_current_result_id(self, new_result_id: int, user_id: int):
         """
         Добавляет значение `results_id` в кеш. Значение не может
         быть меньше 0.
         """
-        if not isinstance(new_result_id, int):
-            raise ValueError(f"`new_result_id` не может быть типа {type(new_result_id)}.")
-        elif new_result_id < 0:
+        if not is_args_type(int, new_result_id, user_id):
+            raise ValueError("`set_user_current_result_id` принимает аргументы только типа `int`.")
+        if new_result_id < 0:
             raise ValueError("`new_result_id` не может быть меньше нуля.")
-        self.result_cache.set('results_id', new_result_id, version=user_id)
+
+        self.result_cache.set('last_result_id', new_result_id, version=user_id)
 
     def increment_current_result_id(self, user_id: int) -> int:
         """
         Увеличивает значение `results_id` на 1. Если `results_id` ещё нет
         в кеше, то добавляет его.
         """
+        if not is_args_type(int, user_id):
+            raise ValueError("`increment_current_result_id` принимает аргументы только типа `int`.")
         if not self.get_user_current_result_id(user_id):
-            self.set_user_current_result_id(0, user_id)
-        return self.result_cache.incr('results_id', version=user_id)
+            self._set_user_current_result_id(0, user_id)
+
+        return self.result_cache.incr('last_result_id', version=user_id)
 
     def get_results_keynames(self, user_id: int) -> list[str | None]:
         """Возвращает все ключи данных из кэша, если таковы есть."""
+        if not is_args_type(int, user_id):
+            raise ValueError("`get_results_keynames` принимает аргументы только типа `int`.")
+
         current_id = self.get_user_current_result_id(user_id)
 
         if not current_id:
@@ -101,26 +119,26 @@ class CurrentUserCache(ResultCache):
         Возвращает текущий `id` ключа результата. Если такого
         ещё нет, возвращает `None`.
         """
-        return super().get_user_current_result_id(self.user_id)
+        return self.get_user_current_result_id(self.user_id)
 
     def increment_current_user_result_id(self) -> int:
         """Увеличивает текущее значение `current_user_result_id` на один."""
-        return super().increment_current_result_id(self.user_id)
+        return self.increment_current_result_id(self.user_id)
 
     def get_current_user_results_keynames(self) -> list[str | None]:
         """Возвращает все существующую ключи данных из кеша."""
-        return super().get_results_keynames(self.user_id)
+        return self.get_results_keynames(self.user_id)
 
     def get_current_user_result(self, result_id: int):
         """
         Возвращает данные результата по ключу `result_id`. Если
         их нет, вернет `None`.
         """
-        return super().get_user_result(result_id, self.user_id)
+        return self.get_user_result(result_id, self.user_id)
 
-    def set_current_user_result(self, result_id: int, data):
+    def set_current_user_result(self, data):
         """Добавляет в кеш данные результата пользователя."""
-        return super().set_user_result(result_id, data, self.user_id)
+        self.set_user_result(data, self.user_id)
 
     def get_all_current_user_results(self):
         """
@@ -152,10 +170,7 @@ class TrainerResultCache(CurrentUserCache):
 
     def cache_result_data(self, data: UserTypingResult) -> None:
         """Кеширует результат определенного пользователя."""
-        self.set_current_user_result(
-            self.increment_current_user_result_id(),
-            data,
-        )
+        self.set_current_user_result(data)
 
     @staticmethod
     def is_correct_user_typing_result_data(outer_data: dict) -> bool:
@@ -198,7 +213,11 @@ class AllUserResultsMixin(ResultCache):
         """
         Сохраняет данные о результате с полями `user_id` и `result_id`.
         """
-        self._add_to_last_cached_results(user_id=user_id, result_id=result_id)
+        last_cached_results = self._get_last_cached_results()
+        last_cached_results.append(
+            LastUserCachedResults(user_id=user_id, result_id=result_id)
+        )
+        self.result_cache.set('last_cached_results', last_cached_results)
 
     def get_last_cached_results(self, amount, with_users=True) -> list[UserTypingResult | UserTypingResultWithUser]:
         """
@@ -221,7 +240,7 @@ class AllUserResultsMixin(ResultCache):
         last_results_data: list[tuple] = []
         users_pk_list: list[int] = []
 
-        for result, _ in zip(self._get_last_cached_results(), range(amount)):
+        for result in self._get_last_cached_results(amount):
             result_from_cache: UserTypingResult = self.get_user_result(result.result_id, result.user_id)
             if result_from_cache:
                 last_results_data.append(
@@ -271,19 +290,19 @@ class AllUserResultsMixin(ResultCache):
         Возвращает список, длиной `amount` или меньше, последних данных
         результатов из кеша.
 
-        Длина может быть меньше, так как данные результатов могли исчезнуть
+        Длина может быть меньше, так как данные результатов могут исчезнуть
         из кеша.
         """
         last_results_data: list[UserTypingResult] = []
 
-        for result, _ in zip(self._get_last_cached_results(), range(amount)):
+        for result in self._get_last_cached_results(amount):
             result_from_cache: UserTypingResult = self.get_user_result(result.result_id, result.user_id)
             if result_from_cache:
                 last_results_data.append(result_from_cache)
 
         return last_results_data
 
-    def _get_last_cached_results(self) -> list[LastUserCachedResults | None]:
+    def _get_last_cached_results(self, amount=settings.MAX_LENGTH_LAST_CACHED_DEQUE) -> list[LastUserCachedResults]:
         """Возвращает очередь с `LastUserCachedResults` из кеша."""
         last_cached_deque: deque[LastUserCachedResults] = self.result_cache.get(
             'last_cached_results',
@@ -291,15 +310,8 @@ class AllUserResultsMixin(ResultCache):
         )
 
         last_cached_list = [
-            result for result in last_cached_deque if self.get_user_result(result.result_id, result.user_id)
-        ]
+            result for result in last_cached_deque
+            if self.get_user_result(result.result_id, result.user_id)
+        ][:amount]
 
         return last_cached_list
-
-    def _add_to_last_cached_results(self, user_id: int, result_id: int):
-        """Добавляет `LastUserCachedResults` в очередь с другими данными в кеш."""
-        last_cached_results = self._get_last_cached_results()
-        last_cached_results.append(
-            LastUserCachedResults(user_id=user_id, result_id=result_id)
-        )
-        self.result_cache.set('last_cached_results', last_cached_results)

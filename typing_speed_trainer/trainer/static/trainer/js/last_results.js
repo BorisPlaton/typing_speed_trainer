@@ -77,7 +77,7 @@ export default class ResultsList extends Broker {
     const invalidKeystrokes = div.querySelector(".result-keystrokes .invalid");
     const summaryKeystrokes = div.querySelector(".result-keystrokes .summary");
     const keystrokesAccuracy = div.querySelector(".result-accuracy");
-    const dateEnd = div.querySelector(".result-date-end div");
+    const dateEnd = div.querySelector(".result-date-end small");
 
     wpm.innerHTML = data.wpm;
     correctWordsAmount.innerHTML = data.correctWordsAmount;
