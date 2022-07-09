@@ -64,7 +64,7 @@ class Account(DetailView, ResultsFormattingMixin, MultipleFormViewMixin, Trainer
         """
         return self.get_formatted_date_end_results(
             self.get_all_current_user_results()
-        )[::-1]
+        )
 
 
 @method_decorator(login_required, name='dispatch')

@@ -275,7 +275,6 @@ class AllUserResultsMixin(ResultCache):
                     **result_tuple[0],
                 )
             )
-
         return results_list_with_users
 
     def get_raw_last_cached_results(self, amount: int) -> list[UserTypingResult]:

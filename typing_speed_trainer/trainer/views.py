@@ -18,16 +18,15 @@ from trainer.utils.shortcuts import get_correct_template_path
 class TypingTrainer(TemplateView, ResultsFormattingMixin, AllUserResultsMixin):
     """Страница с тренажером скорости печати."""
     template_name = 'trainer/typing_trainer.html'
+    user_model = User.objects.select_related('profile')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['other_users_results'] = self.get_formatted_date_end_results(
             self.get_last_cached_results(10, with_users=True)
-        )
+        )[::-1]
+        print(context['other_users_results'])
         return context
-
-    def get_user_model(self):
-        return User.objects.filter(pk=self.request.user.pk).select_related('profile')
 
 
 @method_decorator(login_required, name='dispatch')
@@ -47,7 +46,7 @@ class ResultsList(View, AllUserResultsMixin, TrainerResultCache):
         """
         data = self.get_result_templates() if request.GET.get('templates') == 'true' else {}
         data.update({
-            'resultsData': self.get_all_current_user_results(),
+            'resultsData': self.get_all_current_user_results()[::-1],
         })
         return JsonResponse(data, status=200)
 

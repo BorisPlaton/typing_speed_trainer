@@ -68,6 +68,7 @@ export default class TextField extends Broker {
 
   analyzeInputChar() {
     storage.increaseCharsAmount();
+    this.setCurrentCharIsUnfocused();
     switch (true) {
       case this.isSpaceKeyPressed():
         this.currentWordText += " ";
@@ -84,6 +85,7 @@ export default class TextField extends Broker {
         );
         break;
     }
+    this.setNextCharIsSelected();
   }
 
   analyzeWord() {
@@ -134,7 +136,6 @@ export default class TextField extends Broker {
     storage.increaseTotalWordsAmount();
     this.clearHiddenInput();
     this.setCurrentWordProperties(++this.currentWordNum);
-    this.setNextCharIsSelected();
   }
 
   removeLastChar() {
@@ -173,7 +174,6 @@ export default class TextField extends Broker {
   }
 
   updateLastChar(isCorrect) {
-    this.setCurrentCharIsUnfocused();
     if (isCorrect) {
       this.setCurrentCharIsCorrect();
     } else {
@@ -181,7 +181,6 @@ export default class TextField extends Broker {
       this.notifyInvalidChar();
     }
     this.currentCharIndex++;
-    this.setNextCharIsSelected();
   }
 
   getCurrentWordText() {
@@ -227,7 +226,6 @@ export default class TextField extends Broker {
     ).classList;
     currentCharClassList.remove("correct-char");
     currentCharClassList.remove("invalid-char");
-    this.setNextCharIsSelected();
   }
 
   getInputText() {

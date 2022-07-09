@@ -20,6 +20,7 @@ export default class SettingsBar extends Broker {
     this.removeEventListeners();
     this.setTotalTime();
     this.hideSettingsBar();
+    this.hiddenInput.focus();
     this.notify("typingTrainerStarted");
   }
 
