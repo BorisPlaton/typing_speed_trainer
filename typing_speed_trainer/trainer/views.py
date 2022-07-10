@@ -25,7 +25,6 @@ class TypingTrainer(TemplateView, ResultsFormattingMixin, AllUserResultsMixin):
         context['other_users_results'] = self.get_formatted_date_end_results(
             self.get_last_cached_results(10, with_users=True)
         )[::-1]
-        print(context['other_users_results'])
         return context
 
 
