@@ -1,6 +1,7 @@
 import { faker } from "https://cdn.skypack.dev/@faker-js/faker";
 import storage from "./data_storage.js";
 import Broker from "./broker.js";
+import wordsStorage from "./words_storage.js";
 
 export default class TextField extends Broker {
   constructor() {
@@ -46,24 +47,23 @@ export default class TextField extends Broker {
     this.setTextFieldWords();
   }
 
-  setTextFieldWords() {
+  async setTextFieldWords() {
     this.loadingAnimation.style.display = "flex";
 
-    setTimeout(() => {
-      this.clearTextField();
-      this.clearHiddenInput();
-      for (let i = 0; i < 200; i++) {
-        const spanElement = this.getTextFieldSpanElement(
-          faker.random.words(1).toLowerCase(),
-          i
-        );
-        this.backgroundText.append(spanElement);
-        this.backgroundText.innerHTML += " ";
-      }
-      this.setCurrentWordProperties(0);
+    this.clearTextField();
+    this.clearHiddenInput();
 
-      this.loadingAnimation.style.display = "none";
-    }, 0);
+    const wordsAmount = 250;
+    const newWords = await wordsStorage.getWordsList(wordsAmount);
+
+    for (let i = 0; i < wordsAmount; i++) {
+      const spanElement = this.getTextFieldSpanElement(newWords.words[i], i);
+      this.backgroundText.append(spanElement);
+      this.backgroundText.innerHTML += " ";
+    }
+
+    this.setCurrentWordProperties(0);
+    this.loadingAnimation.style.display = "none";
   }
 
   analyzeInputChar() {
