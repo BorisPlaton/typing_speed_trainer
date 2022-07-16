@@ -4,6 +4,7 @@ export default class Broker {
       typingTrainerStarted: [],
       typingTrainerStopped: [],
       typingTrainerRestart: [],
+      languageChanged: [],
       correctWord: [],
       invalidChar: [],
     };
@@ -13,7 +14,7 @@ export default class Broker {
     this.events[event].push(callback);
   }
 
-  notify(event) {
-    this.events[event].forEach((callback) => callback());
+  notify(event, args = null) {
+    this.events[event].forEach((callback) => callback(args));
   }
 }

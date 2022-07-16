@@ -1,176 +1,159 @@
-import { faker } from "https://cdn.skypack.dev/@faker-js/faker";
 import storage from "./data_storage.js";
 import Broker from "./broker.js";
 import wordsStorage from "./words_storage.js";
+import { startLoadingAnimation, stopLoadingAnimation } from "./shortcuts.js";
 
 export default class TextField extends Broker {
   constructor() {
     super();
 
-    this.loadingAnimation = document.querySelector(".loading-page");
-
     this.backgroundText = document.querySelector(".background-text");
     this.hiddenInput = document.querySelector(".input-text");
 
-    this.currentWordSpan;
+    this.currentWordNum = 0;
+    this.currentCharIndex = 0;
     this.currentWordText;
-    this.currentWordNum;
-    this.currentCharIndex;
-    this.isWordLonger = false;
+
+    this.isTrainerStarted = false;
+    this.isWordsUpdated = false;
+    this.wordsIsAlreadyLonger = false;
+
+    this.renderedTextHtml = null;
+
+    this.fieldWordsAmount = 125;
+    this.fieldWordsLanguage;
   }
 
   setup() {
-    this.setTextFieldWords();
+    this.hiddenInput.addEventListener("input", () => {
+      this.notifyTrainerStarted();
+      this.updateWordsListIfNeeded();
+      this.analyzeInput();
+    });
 
     this.backgroundText.addEventListener("click", () => {
       this.hiddenInput.focus();
     });
 
-    this.hiddenInput.addEventListener("input", () => {
-      this.analyzeInputChar();
-      this.analyzeWord();
-    });
-
     this.hiddenInput.addEventListener("focus", () => {
-      this.backgroundText.classList.add("selected");
-      this.setNextCharIsSelected();
+      this.setTextIsSelected();
+      this.setCurrentCharIsSelected();
     });
 
     this.hiddenInput.addEventListener("focusout", () => {
-      this.backgroundText.classList.remove("selected");
+      this.setTextIsUnfocused();
       this.setCurrentCharIsUnfocused();
     });
   }
 
   stopTyping() {
     this.hiddenInput.blur();
-    this.setTextFieldWords();
+    this.isTrainerStarted = false;
   }
 
-  async setTextFieldWords() {
-    this.loadingAnimation.style.display = "flex";
-
-    this.clearTextField();
+  updateTextField(wordsLanguage = null) {
+    this.fieldWordsLanguage = wordsLanguage || this.fieldWordsLanguage;
     this.clearHiddenInput();
 
-    const wordsAmount = 250;
-    const newWords = await wordsStorage.getWordsList(wordsAmount);
+    if (!this.renderedTextHtml) {
+      startLoadingAnimation();
+      this.getTextFieldHtml().then((textHtml) => {
+        this.setTextFieldHtml(textHtml);
+        this.setCurrentWordProperties(0);
+        stopLoadingAnimation();
+      });
+    } else {
+      this.setTextFieldHtml(this.renderedTextHtml);
+      this.setCurrentWordProperties(0);
+      this.setCurrentCharIsSelected();
+      this.renderedTextHtml = null;
+      this.isWordsUpdated = false;
+    }
+  }
 
-    for (let i = 0; i < wordsAmount; i++) {
+  async getTextFieldHtml() {
+    const newBackgroundText = document.createElement("div");
+    const newWords = await wordsStorage.getWordsList(
+      this.fieldWordsAmount,
+      this.fieldWordsLanguage
+    );
+
+    for (let i = 0; i < this.fieldWordsAmount; i++) {
       const spanElement = this.getTextFieldSpanElement(newWords.words[i], i);
-      this.backgroundText.append(spanElement);
-      this.backgroundText.innerHTML += " ";
+      newBackgroundText.append(spanElement);
+      newBackgroundText.innerHTML += " ";
     }
 
-    this.setCurrentWordProperties(0);
-    this.loadingAnimation.style.display = "none";
+    return newBackgroundText.innerHTML;
   }
 
-  analyzeInputChar() {
-    storage.increaseCharsAmount();
+  setTextFieldHtml(textFieldHtml) {
+    this.backgroundText.innerHTML = textFieldHtml;
+  }
+
+  analyzeInput() {
     this.setCurrentCharIsUnfocused();
-    switch (true) {
-      case this.isSpaceKeyPressed():
-        this.currentWordText += " ";
-        this.skipWord();
-        break;
-      case this.isCharRemoved():
-        storage.decreaseCharsAmount();
-        this.removeLastChar();
-        break;
-      case this.isCharAdded():
-        this.updateLastChar(
-          this.currentWordText[this.currentCharIndex] ==
-            this.getInputText().slice(-1)
-        );
-        break;
+
+    if (this.isSpaceKeyPressed) {
+      return this.skipWord();
     }
-    this.setNextCharIsSelected();
-  }
 
-  analyzeWord() {
-    switch (true) {
-      case this.isInputBiggerThenWord():
-        this.setInputIsLonger();
-        break;
-      case this.isInputAndWordSameLength():
-        this.removeInputIsLonger();
-        break;
+    if (this.isCharRemoved) {
+      storage.decreaseCharsAmount();
+      this.removeLastChar();
+    } else if (this.isCharAdded) {
+      storage.increaseCharsAmount();
+      this.updateLastChar(
+        this.currentWordText[this.currentCharIndex] == this.inputText.slice(-1)
+      );
     }
-  }
 
-  isInputAndWordEqual() {
-    return this.getInputText() == this.currentWordText;
-  }
-
-  isInputBiggerThenWord() {
-    return this.getInputText().length > this.currentWordText.length;
-  }
-
-  isSpaceKeyPressed() {
-    return this.getInputText().slice(-1) == " ";
-  }
-
-  isCharRemoved() {
-    return this.currentCharIndex > this.getInputText().length;
-  }
-
-  isCharAdded() {
-    if (!this.isInputBiggerThenWord()) {
-      return this.currentCharIndex < this.getInputText().length;
+    if (this.isWordLonger) {
+      if (!this.wordsIsAlreadyLonger) {
+        this.notifyInvalidChar();
+        this.wordsIsAlreadyLonger = true;
+      }
+      this.setInputIsLonger();
+    } else {
+      this.removeInputIsLonger();
+      this.wordsIsAlreadyLonger = false;
     }
+
+    this.setCurrentCharIsSelected();
   }
 
-  isInputAndWordSameLength() {
-    return this.currentWordText.length == this.getInputText().length;
+  async updateWordsListIfNeeded() {
+    if ((this.wordsLeft < 15) & !this.isWordsUpdated) {
+      await wordsStorage.updateWordsList(
+        this.fieldWordsAmount,
+        this.fieldWordsLanguage
+      );
+      this.isWordsUpdated = true;
+      this.renderedTextHtml = await this.getTextFieldHtml();
+    }
   }
 
   skipWord() {
-    if (this.isInputAndWordEqual()) {
-      this.notifyCorrectWord("correctWord");
-    } else {
-      if (!this.isWordLonger) {
-        this.notifyInvalidChar();
-      }
-    }
     storage.increaseTotalWordsAmount();
+
+    if (this.inputText.slice(0, -1) == this.currentWordText) {
+      this.notifyCorrectWord();
+    } else if (!this.isWordLonger) {
+      this.notifyInvalidChar();
+    }
+
     this.clearHiddenInput();
-    this.setCurrentWordProperties(++this.currentWordNum);
-  }
-
-  removeLastChar() {
-    this.setCurrentCharIsUnfocused();
-    if (this.currentCharIndex > 0) {
-      this.currentCharIndex--;
-    }
-    this.setCurrentCharIsNormal();
-  }
-
-  setInputIsLonger() {
-    for (const span of this.currentWordSpan.querySelectorAll("span")) {
-      if (!this.isWordLonger) {
-        this.notifyInvalidChar();
-        this.isWordLonger = true;
-      }
-      span.classList.add("invalid-word");
+    try {
+      this.setCurrentWordProperties(++this.currentWordNum);
+      this.updateCurrentWordText();
+      this.setCurrentCharIsSelected();
+    } catch {
+      this.updateTextField();
     }
   }
 
-  removeInputIsLonger() {
-    for (const span of this.currentWordSpan.querySelectorAll("span")) {
-      this.isWordLonger = false;
-      span.classList.remove("invalid-word");
-    }
-  }
-
-  notifyInvalidChar() {
-    storage.increaseTypoAmount();
-    this.notify("invalidChar");
-  }
-
-  notifyCorrectWord() {
-    storage.increaseCorrectWordsAmount();
-    this.notify("correctWord");
+  clearHiddenInput() {
+    this.hiddenInput.value = "";
   }
 
   updateLastChar(isCorrect) {
@@ -183,41 +166,77 @@ export default class TextField extends Broker {
     this.currentCharIndex++;
   }
 
-  getCurrentWordText() {
+  removeLastChar() {
+    if (this.currentCharIndex > 0) {
+      this.currentCharIndex--;
+    }
+    this.setCurrentCharIsNormal();
+  }
+
+  removeInputIsLonger() {
+    for (const span of this.currentWordSpan.querySelectorAll("span")) {
+      span.classList.remove("invalid-word");
+    }
+  }
+
+  get wordsLeft() {
+    return this.fieldWordsAmount - this.currentWordNum;
+  }
+
+  get isWordLonger() {
+    return this.inputText.length > this.currentWordText.length;
+  }
+
+  get isSpaceKeyPressed() {
+    return this.inputText.slice(-1) == " ";
+  }
+
+  get isCharRemoved() {
+    return this.currentCharIndex > this.inputText.length;
+  }
+
+  get isCharAdded() {
+    if (!this.isWordLonger) {
+      return this.currentCharIndex < this.inputText.length;
+    }
+  }
+
+  get currentCharSpan() {
+    return this.currentWordSpan.querySelector(`.chr-${this.currentCharIndex}`);
+  }
+
+  get inputText() {
+    return this.hiddenInput.value;
+  }
+
+  get currentWordSpan() {
+    return document.querySelector(`.wrd-${this.currentWordNum}`);
+  }
+
+  updateCurrentWordText() {
     const wordSpans = this.currentWordSpan.querySelectorAll("span");
     let wordText = "";
     for (const charSpan of wordSpans) {
       wordText += charSpan.innerHTML;
     }
-    return wordText;
+    this.currentWordText = wordText;
   }
 
-  setCurrentCharIsCorrect() {
-    try {
-      this.getCurrentCharSpan().classList.add("correct-char");
-    } catch (e) {}
+  notifyInvalidChar() {
+    storage.increaseTypoAmount();
+    this.notify("invalidChar");
   }
 
-  setCurrentCharIsInvalid() {
-    try {
-      this.getCurrentCharSpan().classList.add("invalid-char");
-    } catch (e) {}
+  notifyCorrectWord() {
+    storage.increaseCorrectWordsAmount();
+    this.notify("correctWord");
   }
 
-  setNextCharIsSelected() {
-    try {
-      this.getCurrentCharSpan().classList.add("selected-char");
-    } catch (e) {}
-  }
-
-  setCurrentCharIsUnfocused() {
-    try {
-      this.getCurrentCharSpan().classList.remove("selected-char");
-    } catch (e) {}
-  }
-
-  getCurrentCharSpan() {
-    return this.currentWordSpan.querySelector(`.chr-${this.currentCharIndex}`);
+  notifyTrainerStarted() {
+    if (!this.isTrainerStarted) {
+      this.notify("typingTrainerStarted");
+      this.isTrainerStarted = true;
+    }
   }
 
   setCurrentCharIsNormal() {
@@ -228,15 +247,48 @@ export default class TextField extends Broker {
     currentCharClassList.remove("invalid-char");
   }
 
-  getInputText() {
-    return this.hiddenInput.value;
-  }
-
   setCurrentWordProperties(wordNum) {
     this.currentWordNum = wordNum;
-    this.currentWordSpan = document.querySelector(`.wrd-${wordNum}`);
-    this.currentWordText = this.getCurrentWordText();
     this.currentCharIndex = 0;
+    this.updateCurrentWordText();
+  }
+
+  setInputIsLonger() {
+    for (const span of this.currentWordSpan.querySelectorAll("span")) {
+      span.classList.add("invalid-word");
+    }
+  }
+
+  setCurrentCharIsCorrect() {
+    try {
+      this.currentCharSpan.classList.add("correct-char");
+    } catch (e) {}
+  }
+
+  setCurrentCharIsInvalid() {
+    try {
+      this.currentCharSpan.classList.add("invalid-char");
+    } catch (e) {}
+  }
+
+  setCurrentCharIsSelected() {
+    try {
+      this.currentCharSpan.classList.add("selected-char");
+    } catch (e) {}
+  }
+
+  setCurrentCharIsUnfocused() {
+    try {
+      this.currentCharSpan.classList.remove("selected-char");
+    } catch (e) {}
+  }
+
+  setTextIsSelected() {
+    this.backgroundText.classList.add("selected");
+  }
+
+  setTextIsUnfocused() {
+    this.backgroundText.classList.remove("selected");
   }
 
   getTextFieldSpanElement(word, wordNum) {
@@ -252,13 +304,5 @@ export default class TextField extends Broker {
     }
 
     return spanElement;
-  }
-
-  clearTextField() {
-    this.backgroundText.innerHTML = "";
-  }
-
-  clearHiddenInput() {
-    this.hiddenInput.value = "";
   }
 }

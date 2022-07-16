@@ -7,8 +7,30 @@ import ResultsList from "./last_results.js";
 import storage from "./data_storage.js";
 import statistics from "./statistics_data.js";
 
-class AbstractTextField {
-  setup() {}
+class BaseTextField {
+  constructor() {
+    this.settingsBar = new SettingsBar();
+    this.statisticsBar = new StatisticsBar();
+    this.resultModalWindow = new ResultModalWindow();
+    this.textField = new TextField();
+  }
+
+  setup() {
+    this.textField.addBrokerListener("correctWord", () =>
+      this.statisticsBar.increaseCorrectWord()
+    );
+
+    this.textField.addBrokerListener("invalidChar", () =>
+      this.statisticsBar.increaseWrongChar()
+    );
+
+    this.settingsBar.addBrokerListener("languageChanged", (args) => {
+      this.textField.updateTextField(args);
+    });
+
+    this.textField.setup();
+    this.settingsBar.setup();
+  }
 }
 
 export default class TextFieldFactory {
@@ -19,24 +41,26 @@ export default class TextFieldFactory {
   }
 }
 
-class AuthenticatedUserTextField extends AbstractTextField {
+class AuthenticatedUserTextField extends BaseTextField {
   constructor() {
     super();
 
-    this.settingsBar = new SettingsBar();
-    this.statisticsBar = new StatisticsBar();
-    this.resultModalWindow = new ResultModalWindow();
-    this.textField = new TextField();
     this.resultsList = new ResultsList();
     this.ajaxResult = new AjaxResult();
   }
 
   setup() {
-    this.textField.setup();
-    this.settingsBar.setup();
+    super.setup();
+
     this.resultsList.setup();
 
     this.settingsBar.addBrokerListener("typingTrainerStarted", () => {
+      this.resultsList.hideResultsList();
+      this.statisticsBar.setup();
+    });
+
+    this.textField.addBrokerListener("typingTrainerStarted", () => {
+      this.settingsBar.typingTrainerStarted();
       this.resultsList.hideResultsList();
       this.statisticsBar.setup();
     });
@@ -45,52 +69,35 @@ class AuthenticatedUserTextField extends AbstractTextField {
       storage.setDateEndIsNow();
       statistics.calculateTypingStatistics();
       this.textField.stopTyping();
-
       this.resultModalWindow.show();
-
       this.ajaxResult.sendResultToServer();
-
       this.resultsList.addLastResultFromStorage();
-
       storage.cleanUpStorage();
-
-      this.settingsBar.setup();
+      this.settingsBar.showSettingsBar();
       this.resultsList.showResultsList();
+      this.settingsBar.languageSelected();
     });
 
     this.statisticsBar.addBrokerListener("typingTrainerRestart", () => {
       storage.cleanUpStorage();
-
-      this.settingsBar.setup();
+      this.settingsBar.showSettingsBar();
       this.resultsList.showResultsList();
       this.textField.stopTyping();
+      this.settingsBar.languageSelected();
     });
-
-    this.textField.addBrokerListener("correctWord", () =>
-      this.statisticsBar.increaseCorrectWord()
-    );
-
-    this.textField.addBrokerListener("invalidChar", () =>
-      this.statisticsBar.increaseWrongChar()
-    );
   }
 }
 
-class AnonymousUserTextField extends AbstractTextField {
-  constructor() {
-    super();
-
-    this.settingsBar = new SettingsBar();
-    this.statisticsBar = new StatisticsBar();
-    this.resultModalWindow = new ResultModalWindow();
-    this.textField = new TextField();
-  }
-
+class AnonymousUserTextField extends BaseTextField {
   setup() {
-    this.textField.setup();
-    this.settingsBar.setup();
+    super.setup();
 
     this.settingsBar.addBrokerListener("typingTrainerStarted", () => {
+      this.statisticsBar.setup();
+    });
+
+    this.textField.addBrokerListener("typingTrainerStarted", () => {
+      this.settingsBar.typingTrainerStarted();
       this.statisticsBar.setup();
     });
 
@@ -103,22 +110,16 @@ class AnonymousUserTextField extends AbstractTextField {
 
       storage.cleanUpStorage();
 
-      this.settingsBar.setup();
+      this.settingsBar.showSettingsBar();
+      this.settingsBar.languageSelected();
     });
 
     this.statisticsBar.addBrokerListener("typingTrainerRestart", () => {
       storage.cleanUpStorage();
 
-      this.settingsBar.setup();
+      this.settingsBar.showSettingsBar();
       this.textField.stopTyping();
+      this.settingsBar.languageSelected();
     });
-
-    this.textField.addBrokerListener("correctWord", () =>
-      this.statisticsBar.increaseCorrectWord()
-    );
-
-    this.textField.addBrokerListener("invalidChar", () =>
-      this.statisticsBar.increaseWrongChar()
-    );
   }
 }

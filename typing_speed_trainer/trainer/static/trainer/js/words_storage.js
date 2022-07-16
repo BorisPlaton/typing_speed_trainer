@@ -37,6 +37,9 @@ class Words {
   constructor() {
     this.wordsServer = new WordsServer();
     this.wordsList = [];
+
+    this.lastWordsAmount;
+    this.lastWordsLanguage;
   }
 
   async updateWordsList(wordsAmount = null, wordsLanguage = null) {
@@ -52,9 +55,15 @@ class Words {
   }
 
   async getWordsList(wordsAmount = null, wordsLanguage = null) {
-    if (!this.wordsList.length || wordsAmount || wordsLanguage) {
+    if (
+      !this.wordsList.length ||
+      wordsAmount != this.lastWordsAmount ||
+      wordsLanguage != this.lastWordsLanguage
+    ) {
       this.wordsList = await this.updateWordsList(wordsAmount, wordsLanguage);
     }
+    this.lastWordsAmount = wordsAmount;
+    this.lastWordsLanguage = wordsLanguage;
     return this.wordsList;
   }
 }
