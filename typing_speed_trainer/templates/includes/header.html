@@ -14,22 +14,22 @@
 
         <div class="container">
             <div class="py-1">
-                <div class="row g-lg-5 g-2">
+                <div class="row g-lg-5 g-4">
 
-                    <div class="col-lg-auto">
+                    <div class="col-auto">
                         <a href="{% url 'trainer:typing_trainer' %}" class="link-light">Тренажер</a>
                     </div>
 
                     {% if user.is_authenticated %}
-                    <div class="col-lg-auto">
+                    <div class="col-auto">
                         <a href="{{ user.get_absolute_url }}" class="link-light">Мой профиль</a>
                     </div>
 
-                    <div class="col-lg-auto">
+                    <div class="col-auto">
                         <a href="{% url 'user_auth:logout' %}" class="link-light">Выйти</a>
                     </div>
                     {% else %}
-                    <div class="col-lg-auto">
+                    <div class="col-auto">
                         <a href="{% url 'user_auth:login' %}" class="link-light">Войти</a>
                     </div>
                     {% endif %}

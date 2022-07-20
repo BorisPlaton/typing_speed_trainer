@@ -26,6 +26,10 @@
   position: relative;
 }
 
+#div_id_photo .input-group {
+    display: none;
+}
+
 .select-new-profile-photo {
   position: absolute;
   top: 0;
