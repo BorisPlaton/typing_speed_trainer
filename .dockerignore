@@ -4,7 +4,7 @@
 .idea
 .git
 
-dotenv_example.txt
+typing_speed_trainer/.env.dist
 docker-compose.yml
 __pycache__
 migrations
@@ -14,6 +14,7 @@ htmlcov
 tests
 venv
 sass
+docker_volume
 
 requirements/*
 !requirements/prod.txt

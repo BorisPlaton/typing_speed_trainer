@@ -4,16 +4,25 @@ services:
     build: .
     image: typing_trainer_image
     container_name: typing_trainer_container
-    working_dir: /typing_speed_trainer
     environment:
-      - PYTHONUNBUFFERED=1
       - REDIS_LOCATION=redis://redis:6379
     volumes:
-      - .:/typing_speed_trainer
+      - ./typing_speed_trainer/database/:/typing_speed_trainer/database/db.sqlite3
     ports:
-      - "8000:8000"
+      - "8080:8000"
     depends_on:
       - redis
+      - random_words_api
     command: python typing_speed_trainer/manage.py runserver 0.0.0.0:8000
   redis:
     image: 'redis'
+  random_words_api:
+    image: borisplaton/random_words_api:test
+    container_name: random_words_api_container
+    ports:
+      - "5050:5000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+      - FLASK_ENV=production
+    command: flask run -h 0.0.0.0 -p 5000

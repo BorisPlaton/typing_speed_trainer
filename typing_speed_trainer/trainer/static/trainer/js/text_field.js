@@ -20,7 +20,7 @@ export default class TextField extends Broker {
 
     this.renderedTextHtml = null;
 
-    this.fieldWordsAmount = 125;
+    this.fieldWordsAmount = 250;
     this.fieldWordsLanguage;
   }
 
