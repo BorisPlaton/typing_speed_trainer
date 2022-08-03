@@ -1,5 +1,4 @@
 import storage from "./data_storage.js";
-import statistics from "./statistics_data.js";
 
 export default class ResultModalWindow {
   constructor() {
@@ -35,8 +34,7 @@ export default class ResultModalWindow {
   }
 
   setStatisticsValues() {
-    const data = statistics.getTypingStatistics();
-
+    const data = storage.typingStatistics;
     this.wpm.innerHTML = data.wpm;
     this.correctWordsAmount.innerHTML = data.correctWordsAmount;
     this.invalidWordsAmount.innerHTML = data.invalidWordsAmount;

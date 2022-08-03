@@ -14,7 +14,6 @@ htmlcov
 tests
 venv
 sass
-docker_volume
 
 requirements/*
 !requirements/prod.txt

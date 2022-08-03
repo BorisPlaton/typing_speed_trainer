@@ -6,6 +6,8 @@ export default class Broker {
       typingTrainerRestart: [],
       languageChanged: [],
       correctWord: [],
+      correctChar: [],
+      decreaseCorrectChar: [],
       invalidChar: [],
     };
   }

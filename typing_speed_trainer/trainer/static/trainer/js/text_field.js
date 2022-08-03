@@ -1,7 +1,90 @@
 import storage from "./data_storage.js";
 import Broker from "./broker.js";
 import wordsStorage from "./words_storage.js";
-import { startLoadingAnimation, stopLoadingAnimation } from "./shortcuts.js";
+
+class Word {
+  /**
+   * @param {string} word
+   */
+  constructor(word) {
+    this.word = word;
+    this.wordCharsStates = [];
+  }
+
+  removeLastChar() {
+    this.wordCharsStates.pop();
+  }
+
+  addCharIsCorrect() {
+    if (!this.isWordFull) {
+      this.wordCharsStates.push(true);
+    }
+  }
+
+  addCharIsWrong() {
+    if (!this.isWordFull) {
+      this.wordCharsStates.push(false);
+    }
+  }
+
+  /**
+   * @param {string} char
+   */
+  addNewChar(char) {
+    if (this.isWordFull) {
+      return;
+    }
+    if (this.currentChar === char) {
+      this.addCharIsCorrect();
+    } else {
+      this.addCharIsWrong();
+    }
+  }
+
+  resetWordCharsStates() {
+    this.wordCharsStates = [];
+  }
+
+  /**
+   * @param {string} word
+   */
+  changeWord(word) {
+    this.word = word;
+    this.resetWordCharsStates();
+  }
+
+  get currentChar() {
+    return this.isWordFull
+      ? this.lastWrittenChar
+      : this.word.charAt(this.writtenWordLength);
+  }
+
+  get writtenWordLength() {
+    return this.wordCharsStates.length;
+  }
+
+  get lastWrittenCharIndex() {
+    return this.writtenWordLength ? this.writtenWordLength - 1 : 0;
+  }
+
+  get lastWrittenChar() {
+    return this.word.charAt(this.lastWrittenCharIndex);
+  }
+
+  get originalWordLength() {
+    return this.word.length;
+  }
+
+  get isWordFull() {
+    return this.originalWordLength == this.writtenWordLength;
+  }
+
+  get isLastCharCorrect() {
+    return this.writtenWordLength
+      ? this.wordCharsStates[this.lastWrittenCharIndex]
+      : null;
+  }
+}
 
 export default class TextField extends Broker {
   constructor() {
@@ -11,8 +94,7 @@ export default class TextField extends Broker {
     this.hiddenInput = document.querySelector(".input-text");
 
     this.currentWordNum = 0;
-    this.currentCharIndex = 0;
-    this.currentWordText;
+    this.currentWord = new Word();
 
     this.isTrainerStarted = false;
     this.isWordsUpdated = false;
@@ -87,10 +169,6 @@ export default class TextField extends Broker {
     return newBackgroundText.innerHTML;
   }
 
-  setTextFieldHtml(textFieldHtml) {
-    this.backgroundText.innerHTML = textFieldHtml;
-  }
-
   analyzeInput() {
     this.setCurrentCharIsUnfocused();
 
@@ -104,11 +182,11 @@ export default class TextField extends Broker {
     } else if (this.isCharAdded) {
       storage.increaseCharsAmount();
       this.updateLastChar(
-        this.currentWordText[this.currentCharIndex] == this.inputText.slice(-1)
+        this.currentWord.currentChar === this.inputText.slice(-1)
       );
     }
 
-    if (this.isWordLonger) {
+    if (this.isInputWordLonger) {
       if (!this.wordsIsAlreadyLonger) {
         this.notifyInvalidChar();
         this.wordsIsAlreadyLonger = true;
@@ -135,17 +213,14 @@ export default class TextField extends Broker {
 
   skipWord() {
     storage.increaseTotalWordsAmount();
-
-    if (this.inputText.slice(0, -1) == this.currentWordText) {
-      this.notifyCorrectWord();
-    } else if (!this.isWordLonger) {
+    if (this.inputText.slice(0, -1) == this.currentWord.word) {
+      this.notify("correctWord");
+    } else if (!this.isInputWordLonger) {
       this.notifyInvalidChar();
     }
-
     this.clearHiddenInput();
     try {
       this.setCurrentWordProperties(++this.currentWordNum);
-      this.updateCurrentWordText();
       this.setCurrentCharIsSelected();
     } catch {
       this.updateTextField();
@@ -159,17 +234,20 @@ export default class TextField extends Broker {
   updateLastChar(isCorrect) {
     if (isCorrect) {
       this.setCurrentCharIsCorrect();
+      this.currentWord.addCharIsCorrect();
+      this.notify("correctChar");
     } else {
       this.setCurrentCharIsInvalid();
+      this.currentWord.addCharIsWrong();
       this.notifyInvalidChar();
     }
-    this.currentCharIndex++;
   }
 
   removeLastChar() {
-    if (this.currentCharIndex > 0) {
-      this.currentCharIndex--;
+    if (this.currentWord.isLastCharCorrect) {
+      this.notify("decreaseCorrectChar");
     }
+    this.currentWord.removeLastChar();
     this.setCurrentCharIsNormal();
   }
 
@@ -183,8 +261,8 @@ export default class TextField extends Broker {
     return this.fieldWordsAmount - this.currentWordNum;
   }
 
-  get isWordLonger() {
-    return this.inputText.length > this.currentWordText.length;
+  get isInputWordLonger() {
+    return this.inputText.length > this.currentWord.originalWordLength;
   }
 
   get isSpaceKeyPressed() {
@@ -192,17 +270,19 @@ export default class TextField extends Broker {
   }
 
   get isCharRemoved() {
-    return this.currentCharIndex > this.inputText.length;
+    return this.currentWord.writtenWordLength > this.inputText.length;
   }
 
   get isCharAdded() {
-    if (!this.isWordLonger) {
-      return this.currentCharIndex < this.inputText.length;
+    if (!this.isInputWordLonger) {
+      return this.currentWord.writtenWordLength < this.inputText.length;
     }
   }
 
   get currentCharSpan() {
-    return this.currentWordSpan.querySelector(`.chr-${this.currentCharIndex}`);
+    return this.currentWordSpan.querySelector(
+      `.chr-${this.currentWord.writtenWordLength}`
+    );
   }
 
   get inputText() {
@@ -213,23 +293,17 @@ export default class TextField extends Broker {
     return document.querySelector(`.wrd-${this.currentWordNum}`);
   }
 
-  updateCurrentWordText() {
+  updateCurrentWord() {
     const wordSpans = this.currentWordSpan.querySelectorAll("span");
     let wordText = "";
     for (const charSpan of wordSpans) {
       wordText += charSpan.innerHTML;
     }
-    this.currentWordText = wordText;
+    this.currentWord.changeWord(wordText);
   }
 
   notifyInvalidChar() {
-    storage.increaseTypoAmount();
     this.notify("invalidChar");
-  }
-
-  notifyCorrectWord() {
-    storage.increaseCorrectWordsAmount();
-    this.notify("correctWord");
   }
 
   notifyTrainerStarted() {
@@ -239,9 +313,13 @@ export default class TextField extends Broker {
     }
   }
 
+  setTextFieldHtml(textFieldHtml) {
+    this.backgroundText.innerHTML = textFieldHtml;
+  }
+
   setCurrentCharIsNormal() {
     const currentCharClassList = this.currentWordSpan.querySelector(
-      `.chr-${this.currentCharIndex}`
+      `.chr-${this.currentWord.writtenWordLength}`
     ).classList;
     currentCharClassList.remove("correct-char");
     currentCharClassList.remove("invalid-char");
@@ -249,8 +327,7 @@ export default class TextField extends Broker {
 
   setCurrentWordProperties(wordNum) {
     this.currentWordNum = wordNum;
-    this.currentCharIndex = 0;
-    this.updateCurrentWordText();
+    this.updateCurrentWord();
   }
 
   setInputIsLonger() {
@@ -305,4 +382,14 @@ export default class TextField extends Broker {
 
     return spanElement;
   }
+}
+
+const loadingAnimation = document.querySelector(".loading-page");
+
+export function startLoadingAnimation() {
+  loadingAnimation.style.display = "flex";
+}
+
+export function stopLoadingAnimation() {
+  loadingAnimation.style.display = "none";
 }

@@ -13,6 +13,7 @@ export default class StatisticsBar extends Broker {
     this.hiddenInput = document.querySelector(".input-text");
     this.wordsAmount = document.querySelector(".words-amount");
     this.typoAmount = document.querySelector(".typo-amount");
+    this.correctCharsAmount = document.querySelector(".correct-chars-amount");
 
     this.stopTypingButton.addEventListener("click", () => this.stopTimer(true));
   }
@@ -57,6 +58,17 @@ export default class StatisticsBar extends Broker {
     this.leftTime.innerHTML = storage.totalTime;
     this.wordsAmount.innerHTML = storage.correctWordsAmount;
     this.typoAmount.innerHTML = storage.typoAmount;
+    this.correctCharsAmount.innerHTML = storage.correctCharsAmount;
+  }
+
+  increaseCorrectChars() {
+    this.correctCharsAmount.innerHTML++;
+  }
+
+  decreaseCorrectChars() {
+    if (+this.correctCharsAmount.innerHTML) {
+      this.correctCharsAmount.innerHTML--;
+    }
   }
 
   increaseCorrectWord() {

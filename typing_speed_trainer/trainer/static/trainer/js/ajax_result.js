@@ -1,6 +1,6 @@
 import Broker from "./broker.js";
 import Cookies from "https://cdn.skypack.dev/js-cookie";
-import statistics from "./statistics_data.js";
+import storage from "./data_storage.js";
 
 export default class AjaxResult extends Broker {
   constructor() {
@@ -33,7 +33,7 @@ export default class AjaxResult extends Broker {
         }
       });
 
-      xhr.send(JSON.stringify(statistics.getTypingStatistics()));
+      xhr.send(JSON.stringify(storage.typingStatistics));
     });
   }
 }

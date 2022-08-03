@@ -17,12 +17,8 @@ services:
   redis:
     image: 'redis'
   random_words_api:
-    image: borisplaton/random_words_api:test
+    image: borisplaton/random_words_api
     container_name: random_words_api_container
     ports:
       - "5050:5000"
-    environment:
-      - PYTHONUNBUFFERED=1
-      - PYTHONDONTWRITEBYTECODE=1
-      - FLASK_ENV=production
     command: flask run -h 0.0.0.0 -p 5000

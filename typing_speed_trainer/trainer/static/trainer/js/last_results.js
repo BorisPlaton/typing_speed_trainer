@@ -1,5 +1,5 @@
 import Broker from "./broker.js";
-import statistics from "./statistics_data.js";
+import storage from "./data_storage.js";
 
 export default class ResultsList extends Broker {
   constructor() {
@@ -117,7 +117,7 @@ export default class ResultsList extends Broker {
   }
 
   addLastResultFromStorage() {
-    const data = statistics.getTypingStatistics();
+    const data = storage.typingStatistics;
     this.addLastResult(data);
   }
 

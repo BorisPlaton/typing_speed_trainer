@@ -3,6 +3,7 @@ import json
 from django.contrib.auth.decorators import login_required
 from django.db.models import F
 from django.http import JsonResponse
+from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import TemplateView
@@ -12,7 +13,6 @@ from common.mixins import ResultsFormattingMixin
 from trainer.models import Statistic
 from trainer.utils.decorators import json_request_required
 from trainer.utils.cache_results import TrainerResultCache, AllUserResultsMixin
-from trainer.utils.shortcuts import get_correct_template_path
 
 
 class TypingTrainer(TemplateView, ResultsFormattingMixin, AllUserResultsMixin):
@@ -97,17 +97,7 @@ class ResultsList(View, AllUserResultsMixin, TrainerResultCache):
         Возвращает шаблоны результата и списка результатов в виде словаря
         с ключами `resultsListTemplate` и `resultTemplate`.
         """
-        with (
-            open(get_correct_template_path(
-                'trainer', 'includes', 'results_list.html'
-            )) as list_template_file,
-            open(get_correct_template_path(
-                'trainer', 'includes', 'last_result.html'
-            )) as res_template_file,
-        ):
-            results_list_template = list_template_file.read()
-            result_template = res_template_file.read()
         return {
-            'resultsListTemplate': results_list_template,
-            'resultTemplate': result_template,
+            'resultsListTemplate': render_to_string('trainer/includes/results_list.html'),
+            'resultTemplate': render_to_string('trainer/includes/last_result.html'),
         }

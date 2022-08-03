@@ -5,7 +5,6 @@ import TextField from "./text_field.js";
 import AjaxResult from "./ajax_result.js";
 import ResultsList from "./last_results.js";
 import storage from "./data_storage.js";
-import statistics from "./statistics_data.js";
 
 class BaseTextField {
   constructor() {
@@ -16,13 +15,25 @@ class BaseTextField {
   }
 
   setup() {
-    this.textField.addBrokerListener("correctWord", () =>
-      this.statisticsBar.increaseCorrectWord()
-    );
+    this.textField.addBrokerListener("correctWord", () => {
+      storage.increaseCorrectWordsAmount();
+      this.statisticsBar.increaseCorrectWord();
+    });
 
-    this.textField.addBrokerListener("invalidChar", () =>
-      this.statisticsBar.increaseWrongChar()
-    );
+    this.textField.addBrokerListener("invalidChar", () => {
+      storage.increaseTypoAmount();
+      this.statisticsBar.increaseWrongChar();
+    });
+
+    this.textField.addBrokerListener("correctChar", () => {
+      storage.increaseCorrectCharsAmount();
+      this.statisticsBar.increaseCorrectChars();
+    });
+
+    this.textField.addBrokerListener("decreaseCorrectChar", () => {
+      storage.decreaseCorrectCharsAmount();
+      this.statisticsBar.decreaseCorrectChars();
+    });
 
     this.settingsBar.addBrokerListener("languageChanged", (args) => {
       this.textField.updateTextField(args);
@@ -67,7 +78,6 @@ class AuthenticatedUserTextField extends BaseTextField {
 
     this.statisticsBar.addBrokerListener("typingTrainerStopped", () => {
       storage.setDateEndIsNow();
-      statistics.calculateTypingStatistics();
       this.textField.stopTyping();
       this.resultModalWindow.show();
       this.ajaxResult.sendResultToServer();
@@ -103,7 +113,6 @@ class AnonymousUserTextField extends BaseTextField {
 
     this.statisticsBar.addBrokerListener("typingTrainerStopped", () => {
       storage.setDateEndIsNow();
-      statistics.calculateTypingStatistics();
       this.textField.stopTyping();
 
       this.resultModalWindow.show();
