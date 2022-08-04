@@ -20,6 +20,10 @@
                         <a href="{% url 'trainer:typing_trainer' %}" class="link-light">Тренажер</a>
                     </div>
 
+                    <div class="col-auto">
+                        <a href="{% url 'account:users' %}" class="link-light">Другие люди</a>
+                    </div>
+
                     {% if user.is_authenticated %}
                     <div class="col-auto">
                         <a href="{{ user.get_absolute_url }}" class="link-light">Мой профиль</a>

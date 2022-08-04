@@ -74,11 +74,11 @@ class ResultsList(View, AllUserResultsMixin, TrainerResultCache):
         `user.attempts_amount` модели `User`.
         """
         statistic = Statistic.objects.get(user=self.request.user)
-        statistic.average_wpm = statistic.calculate_average_value_with(
-            'average_wpm', wpm
+        statistic.wpm = statistic.calculate_average_value_with(
+            'wpm', wpm
         )
-        statistic.average_accuracy = round(statistic.calculate_average_value_with(
-            'average_accuracy', typing_accuracy
+        statistic.accuracy = round(statistic.calculate_average_value_with(
+            'accuracy', typing_accuracy
         ), 2)
         statistic.attempts_amount = F('attempts_amount') + 1
         statistic.save()

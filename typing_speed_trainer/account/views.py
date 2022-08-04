@@ -1,5 +1,4 @@
-from datetime import datetime
-
+from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from sorl.thumbnail import delete
 from django.contrib.auth.decorators import login_required
@@ -8,8 +7,23 @@ from django.views.generic.edit import UpdateView
 
 from account.forms import ChangeProfilePhotoForm, ChangeProfileSettingsForm
 from account.models import Profile
+from account.services.mixins import ElidedPaginationMixin
+from account.services.models_utils import get_users_list_by_statistics
 from common.mixins import MultipleFormViewMixin, ResultsFormattingMixin
 from trainer.utils.cache_results import TrainerResultCache
+
+
+class UsersList(ElidedPaginationMixin, ListView):
+    """Страница со списком пользователей."""
+
+    template_name = 'account/users_list.html'
+    context_object_name = 'users'
+    queryset = get_users_list_by_statistics()
+    paginate_by = 1
+
+    pagination_on_ends = 1
+    pagination_on_each_side = 2
+    paginator_ellipsis = '...'
 
 
 class Account(DetailView, ResultsFormattingMixin, MultipleFormViewMixin, TrainerResultCache):
@@ -54,7 +68,7 @@ class Account(DetailView, ResultsFormattingMixin, MultipleFormViewMixin, Trainer
         """
         queryset = (self.model.objects
                     .select_related('user')
-                    .select_related('user__statistic'))
+                    .select_related('user__statistics'))
         return super().get_object(queryset)
 
     def get_formatted_results_from_cache(self) -> list[dict | None]:

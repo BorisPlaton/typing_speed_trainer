@@ -12,12 +12,12 @@ class Statistic(models.Model):
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
-        related_name='statistic',
+        related_name='statistics',
         verbose_name="Пользователь"
     )
     attempts_amount = models.PositiveIntegerField("Количество попыток", default=0)
-    average_wpm = models.PositiveIntegerField("Среднее количество слов в минуту", default=0)
-    average_accuracy = models.FloatField(
+    wpm = models.PositiveIntegerField("Среднее количество слов в минуту", default=0)
+    accuracy = models.FloatField(
         "Средняя точность набора текста",
         validators=[
             MinValueValidator(0),
@@ -36,12 +36,22 @@ class Statistic(models.Model):
         return new_field_value
 
     @property
-    def average_correct_chars_amount(self):
-        return math.floor(self.average_wpm * 5 * self.average_accuracy / 100)
+    def correct_chars_amount(self) -> int:
+        """
+        Возвращает количество правильных символов за одну
+        сессию набора текста. Значение есть производным от
+        других значений.
+        """
+        return math.floor(self.wpm * 5 * self.accuracy / 100)
 
     @property
-    def average_typo_amount(self):
-        return math.ceil(self.average_wpm * 5 * (100 - self.average_accuracy) / 100)
+    def typo_amount(self) -> int:
+        """
+        Возвращает количество опечаток. Значение является
+        приблизительным и высчитывается из значения скорости
+        набора текста и аккуратности печати.
+        """
+        return math.ceil(self.wpm * 5 * (100 - self.accuracy) / 100)
 
     def __str__(self):
-        return f"{self.attempts_amount} - {self.average_accuracy}"
+        return f"{self.attempts_amount} - {self.accuracy}"
