@@ -7,7 +7,7 @@ class WordsServer {
       xhr.responseType = "json";
 
       xhr.addEventListener("load", () => {
-        if (xhr.status == 200) {
+        if (xhr.status >= 200 && xhr.status < 300) {
           resolve(xhr.response);
         } else {
           reject(xhr.response);

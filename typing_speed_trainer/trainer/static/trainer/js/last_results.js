@@ -5,7 +5,7 @@ export default class ResultsList extends Broker {
   constructor() {
     super();
 
-    this.sendToUrl = "results/";
+    this.sendToUrl = "/trainer/api/";
     this.isResultBarCreated = false;
     this.otherUserResults = document.querySelector(".other-users-results");
 
@@ -20,20 +20,20 @@ export default class ResultsList extends Broker {
     this.setLastResultsList();
   }
 
-  setLastResultsList() {
-    this.getCurrentUserResultsDataFromServer()
-      .then((response) => {
-        this.saveServerResponse(response);
-        if (response.resultsData.length) {
-          this.setResultsBar(response.resultsData);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+  async setLastResultsList() {
+    try {
+      const results = await this.sendGetRequest(this.resultsUrl);
+      const templates = await this.sendGetRequest(this.templatesUrl);
+      this.saveResultTemplates(templates);
+      if (results.resultsData.length) {
+        this.setResultsBar(results.resultsData);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 
-  saveServerResponse(serverResponse) {
+  saveResultTemplates(serverResponse) {
     this.resultTemplate = serverResponse.resultTemplate;
     this.resultsListTemplate = serverResponse.resultsListTemplate;
   }
@@ -93,27 +93,32 @@ export default class ResultsList extends Broker {
     return div.firstChild;
   }
 
-  getCurrentUserResultsDataFromServer() {
+  /**
+   * @param {string} url
+   */
+  sendGetRequest(url) {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
-      xhr.open("GET", this.getUrlToTakeTemplates());
+      xhr.open("GET", url);
       xhr.setRequestHeader("Content-type", "application/json");
       xhr.responseType = "json";
-
       xhr.addEventListener("load", () => {
-        if (xhr.status == 200) {
+        if (xhr.status >= 200 && xhr.status < 300) {
           resolve(xhr.response);
         } else {
           reject(xhr.response);
         }
       });
-
       xhr.send();
     });
   }
 
-  getUrlToTakeTemplates() {
-    return this.sendToUrl + "?templates=true";
+  get templatesUrl() {
+    return this.sendToUrl + "result/template/?list=true";
+  }
+
+  get resultsUrl() {
+    return this.sendToUrl + "result/";
   }
 
   addLastResultFromStorage() {

@@ -6,7 +6,7 @@ export default class AjaxResult extends Broker {
   constructor() {
     super();
     this.csrfToken = Cookies.get("csrftoken");
-    this.sendToUrl = "results/";
+    this.sendToUrl = "/trainer/api/result/";
   }
 
   sendResultToServer() {

@@ -10,6 +10,6 @@ router = SimpleRouter()
 router.register('result', views.ResultsList, basename='result')
 
 urlpatterns = [
-    path('result/template', views.result_template, name='result_template'),
+    path('result/template/', views.result_template, name='result_template'),
     *router.urls,
 ]

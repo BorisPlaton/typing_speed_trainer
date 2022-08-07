@@ -5,20 +5,21 @@ services:
     image: typing_trainer_image
     container_name: typing_trainer_container
     environment:
-      - REDIS_LOCATION=redis://redis:6379
-    volumes:
-      - ./typing_speed_trainer/database/:/typing_speed_trainer/database/db.sqlite3
+      - REDIS_LOCATION=redis://redis:6377
     ports:
-      - "8080:8000"
+      - "8888:8000"
     depends_on:
       - redis
       - random_words_api
     command: python typing_speed_trainer/manage.py runserver 0.0.0.0:8000
   redis:
-    image: 'redis'
-  random_words_api:
-    image: borisplaton/random_words_api
-    container_name: random_words_api_container
+    image: redis
+    command: --port 6377
     ports:
-      - "5050:5000"
-    command: flask run -h 0.0.0.0 -p 5000
+      - "6377:6377"
+  random_words_api:
+    image: borisplaton/random_words
+    container_name: random_words_container
+    ports:
+      - "8080:8000"
+    command: python random_words/manage.py runserver 0.0.0.0:8000
