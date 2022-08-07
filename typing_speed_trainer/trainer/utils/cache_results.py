@@ -154,7 +154,7 @@ class CurrentUserCache(ResultCache):
         results: dict = self.result_cache.get_many(
             result_keynames, version=self.user_id
         )
-        return [result for result in results.values()]
+        return [result for result in results.values()][::-1]
 
     def delete_current_user_results(self) -> int:
         """
@@ -213,7 +213,7 @@ class AllUserResultsMixin(ResultCache):
     константой `MAX_LENGTH_LAST_CACHED_DEQUE`, что задаётся в файле конфигурации.
     """
 
-    user_model = None
+    user_models = None
 
     def add_to_last_cached_results(self, user_id, result_id):
         """
@@ -236,8 +236,12 @@ class AllUserResultsMixin(ResultCache):
         else:
             return self.get_raw_last_cached_results(amount)
 
-    def get_user_model(self):
-        return self.user_model
+    def get_user_models(self):
+        """
+        Возвращает модель пользователя, указанной в
+        атрибуте класса `user_model`.
+        """
+        return self.user_models
 
     def get_last_cached_results_with_users(self, amount: int) -> list[UserTypingResultWithUser]:
         """
@@ -260,7 +264,7 @@ class AllUserResultsMixin(ResultCache):
         if not users_pk_list:
             return []
 
-        users_instance = self.get_user_model().filter(pk__in=users_pk_list)
+        users_instance = self.get_user_models().filter(pk__in=users_pk_list)
         results_list_with_users = []
 
         for result_tuple in last_results_data:
@@ -300,10 +304,12 @@ class AllUserResultsMixin(ResultCache):
             'last_cached_results',
             deque(maxlen=settings.MAX_LENGTH_LAST_CACHED_DEQUE)
         )
-
         last_cached_list = [
-                               result for result in last_cached_deque
-                               if self.get_user_result(result.result_id, result.user_id)
-                           ][:amount]
+            result for result in last_cached_deque if
+            self.get_user_result(result.result_id, result.user_id)
+        ]
+        return last_cached_list[:amount]
 
-        return last_cached_list
+
+class CacheResultSet(AllUserResultsMixin, TrainerResultCache):
+    pass

@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'user_auth',
     'account',
     'trainer',
+    'trainer_api',
 ]
 
 MIDDLEWARE = [

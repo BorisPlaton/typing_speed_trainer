@@ -19,7 +19,7 @@ class UsersList(ElidedPaginationMixin, ListView):
     template_name = 'account/users_list.html'
     context_object_name = 'users'
     queryset = get_users_list_by_statistics()
-    paginate_by = 1
+    paginate_by = 50
 
     pagination_on_ends = 1
     pagination_on_each_side = 2

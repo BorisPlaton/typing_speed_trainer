@@ -19,14 +19,14 @@ class WordsServer {
   }
 
   getWordsServerUrl(wordsAmount, wordsLanguage) {
-    const serverUrl = new URL("http://127.0.0.1:5050/");
+    const serverUrl = new URL("http://127.0.0.1:8080/words/");
 
     if (wordsAmount) {
       serverUrl.searchParams.append("quantity", wordsAmount);
     }
 
     if (wordsLanguage) {
-      serverUrl.searchParams.append("lang", wordsLanguage);
+      serverUrl.searchParams.append("language", wordsLanguage);
     }
 
     return serverUrl.toString();

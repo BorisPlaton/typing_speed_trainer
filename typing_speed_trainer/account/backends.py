@@ -4,6 +4,10 @@ from account.models import User
 
 
 class EmailBackend(BaseBackend):
+    """
+    Кастомный `backend` аутентификации с помощью
+    почты.
+    """
 
     def authenticate(self, request, username=None, password=None):
         try:
