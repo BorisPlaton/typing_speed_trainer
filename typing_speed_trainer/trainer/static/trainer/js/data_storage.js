@@ -23,7 +23,11 @@ class DataStorage {
       correctWordsAmount: storage.correctWordsAmount,
       totalWordsAmount: storage.totalWordsAmount,
       typingAccuracy: Number(
-        (storage.correctCharsAmount / (storage.charsAmount + storage.typoAmount) * 100).toFixed(2)
+        (
+          (storage.correctCharsAmount /
+            (storage.charsAmount + storage.typoAmount)) *
+          100
+        ).toFixed(2)
       ),
       wpm: Math.ceil(storage.correctCharsAmount / 5),
       dateEnd: storage.dateEnd,

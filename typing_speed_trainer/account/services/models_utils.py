@@ -6,6 +6,5 @@ def get_users_list_by_statistics():
                 .select_related('statistics', 'profile')
                 .order_by('-statistics__attempts_amount',
                           '-statistics__wpm',
-                          '-statistics__accuracy')
-                )
+                          '-statistics__accuracy'))
     return queryset

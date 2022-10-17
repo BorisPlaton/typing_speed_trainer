@@ -3,15 +3,18 @@ from django.test import TestCase
 from account.models import User
 from account.services.models_utils import get_users_list_by_statistics
 from trainer.models import Statistic
+from trainer.utils.cache_results import ResultCache
 
 
 class TestServicesModelsUtils(TestCase):
 
     def setUp(self) -> None:
+        ResultCache.cache_base_name = 'test'
         self.first_user = User.objects.create_user('first@email.com', '1')
         self.second_user = User.objects.create_user('second@email.com', '1')
 
-    def set_user_statistic(self, user: User.objects, attempts_amount, wpm, accuracy):
+    @staticmethod
+    def set_user_statistic(user: User.objects, attempts_amount, wpm, accuracy):
         Statistic.objects.filter(pk=user.statistics.pk).update(
             attempts_amount=attempts_amount,
             wpm=wpm,

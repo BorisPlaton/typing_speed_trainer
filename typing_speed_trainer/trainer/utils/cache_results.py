@@ -2,6 +2,7 @@ from collections import deque
 from datetime import datetime
 
 from django.core.cache import caches
+from django.core.cache.backends.redis import RedisCache
 
 from common.utils import is_args_type
 from config import settings
@@ -22,15 +23,18 @@ class ResultCache:
     cache_base_name = 'default'
 
     @property
-    def result_cache(self):
+    def result_cache(self) -> RedisCache:
         if not self.cache_base_name:
             raise ValueError("Укажите атрибут `cache_base_name`.")
         if not isinstance(self.cache_base_name, str):
             raise ValueError(f"`cache_base_name` должен быть типа `str`, а не {type(self.cache_base_name)}.")
-
         cache = caches[self.cache_base_name]
-
         return cache
+
+    @classmethod
+    def clean_cache(cls):
+        """Удаляет все данные из кеша."""
+        cls().result_cache.clear()
 
     def get_user_result(self, result_id: int, user_id: int):
         """Возвращает данные из кеша."""
@@ -236,13 +240,6 @@ class AllUserResultsMixin(ResultCache):
         else:
             return self.get_raw_last_cached_results(amount)
 
-    def get_user_models(self):
-        """
-        Возвращает модель пользователя, указанной в
-        атрибуте класса `user_model`.
-        """
-        return self.user_models
-
     def get_last_cached_results_with_users(self, amount: int) -> list[UserTypingResultWithUser]:
         """
         Возвращает все последние записи результатов из кеша с их пользователями.
@@ -264,7 +261,7 @@ class AllUserResultsMixin(ResultCache):
         if not users_pk_list:
             return []
 
-        users_instance = self.get_user_models().filter(pk__in=users_pk_list)
+        users_instance = self.user_models.filter(pk__in=users_pk_list)
         results_list_with_users = []
 
         for result_tuple in last_results_data:

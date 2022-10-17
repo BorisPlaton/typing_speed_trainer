@@ -25,7 +25,7 @@ export default class SettingsBar extends Broker {
   }
 
   setTotalTime() {
-    storage.totalTime = 60;
+    storage.totalTime = 5;
   }
 
   showSettingsBar() {

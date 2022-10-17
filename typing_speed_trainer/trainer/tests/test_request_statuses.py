@@ -2,8 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from account.models import User
-from trainer.utils.cache_results import TrainerResultCache
-from trainer_api.views import ResultsList
+from trainer.utils.cache_results import ResultCache
 
 
 class TestRequestStatuses(TestCase):
@@ -16,12 +15,10 @@ class TestRequestStatuses(TestCase):
         self.user = User.objects.create_user(
             **self.credentials,
         )
-
-        self.user_cache_class = TrainerResultCache()
-        ResultsList.user_id = self.user_cache_class.user_id = self.user.pk
+        ResultCache.cache_base_name = 'test'
 
     def tearDown(self) -> None:
-        self.user_cache_class.delete_current_user_results()
+        ResultCache.clean_cache()
 
     def test_typing_trainer_page_200_status_code_with_unauthenticated_user(self):
         response = self.client.get(reverse('trainer:typing_trainer'))

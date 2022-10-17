@@ -15,11 +15,11 @@ class TestResultCache(TestCase):
         }
 
     def setUp(self) -> None:
+        ResultCache.cache_base_name = 'test'
         self.cache = ResultCache()
-        self.cache.cache_base_name = 'test'
 
     def tearDown(self) -> None:
-        self.cache.result_cache.clear()
+        ResultCache.clean_cache()
 
     def test_cache_base_name_is_necessarily(self):
         some_cache = ResultCache()
@@ -85,19 +85,9 @@ class TestResultCache(TestCase):
     @parameterized.expand([
         (1,),
         (22,),
-        (4,),
-        (5,),
-    ])
-    def test_get_user_current_result_id_without_cache_data(self, user_id):
-        self.assertFalse(
-            self.cache.get_user_current_result_id(user_id)
-        )
-
-    @parameterized.expand([
-        (12,),
-        (1,),
         (-55,),
         (0,),
+
     ])
     def test_get_user_current_result_id_without_cache_data(self, user_id):
         self.assertFalse(
@@ -143,8 +133,8 @@ class TestResultCache(TestCase):
 class TestCurrentUserCache(TestCase):
 
     def setUp(self) -> None:
+        ResultCache.cache_base_name = 'test'
         self.current_user_cache = CurrentUserCache()
-        self.current_user_cache.cache_base_name = 'test'
         self.current_user_cache.user_id = 1
         self.result_data = {
             'invalidKeystrokes': 55,
@@ -159,7 +149,7 @@ class TestCurrentUserCache(TestCase):
         }
 
     def tearDown(self) -> None:
-        self.current_user_cache.result_cache.clear()
+        ResultCache.clean_cache()
 
     def test_current_user_result_id(self):
         for i in range(5):

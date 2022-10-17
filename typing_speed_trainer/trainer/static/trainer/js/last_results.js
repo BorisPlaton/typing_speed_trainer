@@ -65,7 +65,6 @@ export default class ResultsList extends Broker {
   getResultTemplate(data) {
     const div = document.createElement("div");
     div.innerHTML = this.resultTemplate;
-
     const wpm = div.querySelector(".result-wpm");
     const correctWordsAmount = div.querySelector(
       ".result-correct-words-amount"

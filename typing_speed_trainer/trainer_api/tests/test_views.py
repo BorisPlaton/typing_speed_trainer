@@ -4,22 +4,24 @@ from rest_framework.test import APITestCase
 from rest_framework.utils import json
 
 from account.models import User
-from trainer.utils.cache_results import TrainerResultCache
+from trainer.utils.cache_results import ResultCache
 from trainer.utils.datastructures import UserTypingResult
 
 
 class TestTemplateFunctionView(APITestCase):
 
-    @classmethod
-    def setUpTestData(cls):
-        cls.credentials = {
+    def setUp(self) -> None:
+        ResultCache.cache_base_name = 'test'
+        self.credentials = {
             'email': 'test@test.com',
             'password': '12345',
         }
-
-        cls.user = User.objects.create_user(
-            **cls.credentials,
+        self.user = User.objects.create_user(
+            **self.credentials,
         )
+
+    def tearDown(self) -> None:
+        ResultCache.clean_cache()
 
     def test_result_template(self):
         response = self.client.get(reverse('trainer_api:result_template'))
@@ -51,7 +53,7 @@ class TestTemplateFunctionView(APITestCase):
 
     def test_result_template_list_query_parameter(self):
         self.client.login(**self.credentials)
-        response = self.client.get(reverse('trainer_api:result_template') + f'?list=true')
+        response = self.client.get(reverse('trainer_api:result_template') + '?list=true')
         self.assertEqual(response.status_code, 200)
         response = json.loads(response.content)
         self.assertTrue(response.get('resultTemplate'))
@@ -61,6 +63,7 @@ class TestTemplateFunctionView(APITestCase):
 class TestResultsListView(APITestCase):
 
     def setUp(self) -> None:
+        ResultCache.cache_base_name = 'test'
         self.result_data: UserTypingResult = {
             'invalidKeystrokes': 55,
             'correctKeystrokes': 55,
@@ -80,11 +83,8 @@ class TestResultsListView(APITestCase):
             **self.credentials,
         )
 
-        self.user_cache_class = TrainerResultCache()
-        self.user_cache_class.user_id = self.user.pk
-
     def tearDown(self) -> None:
-        self.user_cache_class.delete_current_user_results()
+        ResultCache.clean_cache()
 
     def test_request_to_result_page_403_status_code_with_unauthenticated_user(self):
         response = self.client.get(reverse('trainer_api:result-list'))
