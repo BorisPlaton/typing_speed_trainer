@@ -4,14 +4,12 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 from django.urls import reverse
 
-from trainer.utils.cache_results import CurrentUserCache
-
 
 class CustomUserManager(BaseUserManager):
+    """The manager class that swaps a username with an email."""
+
     def create_user(self, email, password=None, **extra_fields):
-        """
-        Создает обычного пользователя с его почтой и паролем.
-        """
+        """Creates an average user with his password and an email."""
         if not email:
             raise ValueError('Должна быть предоставлена почта пользователя.')
         email = self.normalize_email(email)
@@ -22,9 +20,7 @@ class CustomUserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password, **extra_fields):
-        """
-        Создает супер пользователя с его почтой и паролем.
-        """
+        """Creates a superuser with his password and an email."""
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)
@@ -37,7 +33,7 @@ class CustomUserManager(BaseUserManager):
 
 
 class User(AbstractUser):
-    """Модель пользователя."""
+    """The user model."""
 
     email = models.EmailField('Почта', unique=True)
     username = models.CharField('Имя пользователя', max_length=16, validators=[UnicodeUsernameValidator()])
@@ -48,24 +44,21 @@ class User(AbstractUser):
     objects = CustomUserManager()
 
     class Meta:
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
+        verbose_name = 'User'
+        verbose_name_plural = 'Users'
 
     def get_absolute_url(self):
         return reverse('account:profile', args=[self.pk])
 
     def delete_all_cached_results(self):
-        """
-        Удаляет все данные пользователя по результатам тренажера
-        из кеша.
-        """
+        """Deletes all user's cached results."""
         cache = CurrentUserCache()
         cache.user_id = self.pk
-        cache.delete_current_user_results()
+        cache.delete_all_user_results()
 
 
 class Profile(models.Model):
-    """Модель профиля пользователя."""
+    """The user's profile."""
 
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name='profile', verbose_name='Пользователь'
@@ -77,8 +70,8 @@ class Profile(models.Model):
     is_email_shown = models.BooleanField("Показывать почту", default=False)
 
     class Meta:
-        verbose_name = 'Профиль'
-        verbose_name_plural = 'Профили'
+        verbose_name = 'Profile'
+        verbose_name_plural = 'Profiles'
 
     def get_absolute_url(self):
         return reverse('account:profile', args=[self.user.pk])

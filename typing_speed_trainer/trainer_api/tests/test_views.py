@@ -5,7 +5,7 @@ from rest_framework.utils import json
 
 from account.models import User
 from trainer.utils.cache_results import ResultCache
-from trainer.utils.datastructures import UserTypingResult
+from trainer.utils.structs import UserTypingResult
 
 
 class TestTemplateFunctionView(APITestCase):

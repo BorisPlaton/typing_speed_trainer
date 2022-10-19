@@ -8,9 +8,7 @@ from django.views.generic.edit import UpdateView
 from account.forms import ChangeProfilePhotoForm, ChangeProfileSettingsForm
 from account.models import Profile
 from account.services.mixins import ElidedPaginationMixin
-from account.services.models_utils import get_users_list_by_statistics
-from common.mixins import MultipleFormViewMixin, ResultsFormattingMixin
-from trainer.utils.cache_results import TrainerResultCache
+from account.services.selectors import get_users_list_by_statistics
 
 
 class UsersList(ElidedPaginationMixin, ListView):
@@ -26,7 +24,7 @@ class UsersList(ElidedPaginationMixin, ListView):
     paginator_ellipsis = '...'
 
 
-class Account(DetailView, ResultsFormattingMixin, MultipleFormViewMixin, TrainerResultCache):
+class Account(DetailView):
     """Страница профиля пользователя."""
 
     model = Profile

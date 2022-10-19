@@ -1,19 +1,15 @@
 from django.views.generic import TemplateView
 
-from account.models import User
-from common.mixins import ResultsFormattingMixin
-from trainer.utils.cache_results import AllUserResultsMixin
+from trainer.services import get_last_cached_results_with_users
 
 
-class TypingTrainer(TemplateView, ResultsFormattingMixin, AllUserResultsMixin):
-    """Страница с тренажером скорости печати."""
+class TypingTrainer(TemplateView):
+    """The main page with the typing trainer."""
 
     template_name = 'trainer/typing_trainer.html'
-    user_models = User.objects.select_related('profile')
 
     def get_context_data(self, **kwargs):
+        """Populates a context with last cached typing results."""
         context = super().get_context_data(**kwargs)
-        context['other_users_results'] = self.get_formatted_date_end_results(
-            self.get_last_cached_results(10, with_users=True)
-        )[::-1]
+        context.update({'other_users_results': get_last_cached_results_with_users(10)})
         return context

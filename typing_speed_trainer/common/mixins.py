@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from django.conf import settings
 from django.contrib.auth.views import SuccessURLAllowedHostsMixin
 from django.core.exceptions import ImproperlyConfigured
@@ -8,8 +6,6 @@ from django.shortcuts import redirect, resolve_url
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views import View
 from django.views.generic.base import ContextMixin
-
-from trainer.utils.datastructures import UserTypingResult, UserTypingResultWithUser
 
 
 class UnauthenticatedMixin(View, SuccessURLAllowedHostsMixin):
@@ -104,17 +100,3 @@ class MultipleFormViewMixin(ContextMixin):
                     raise ImproperlyConfigured("`{0}` не имеет поля `{1}`.".format(model_name, field))
 
         return True
-
-
-class ResultsFormattingMixin:
-
-    @staticmethod
-    def get_formatted_date_end_results(results: list[UserTypingResult | UserTypingResultWithUser]) -> \
-            list[UserTypingResult | UserTypingResultWithUser]:
-        """
-        Форматирует значение ключа `dateEnd` в `datetime.datetime`
-        и возвращает список со всеми результатами пользователя.
-        """
-        for result in results:
-            result['dateEnd'] = datetime.strptime(result['dateEnd'], '%Y-%m-%dT%H:%M:%S.%fZ')
-        return results

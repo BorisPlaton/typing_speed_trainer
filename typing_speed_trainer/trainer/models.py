@@ -7,7 +7,7 @@ from account.models import User
 
 
 class Statistic(models.Model):
-    """Модель статистики пользователя"""
+    """The model of user's statistics."""
 
     user = models.OneToOneField(
         User,
@@ -27,29 +27,22 @@ class Statistic(models.Model):
     )
 
     class Meta:
-        verbose_name = "Статистика"
-        verbose_name_plural = "Статистики"
-
-    def calculate_average_value_with(self, field_name: str, value: float) -> float:
-        current_field_value = getattr(self, field_name)
-        new_field_value = (current_field_value * self.attempts_amount + value) / (self.attempts_amount + 1)
-        return new_field_value
+        verbose_name = "Statistics"
+        verbose_name_plural = "Statistics"
 
     @property
     def correct_chars_amount(self) -> int:
         """
-        Возвращает количество правильных символов за одну
-        сессию набора текста. Значение есть производным от
-        других значений.
+        Returns the average amount of correct chars per one trainer
+        attempt.
         """
         return math.floor(self.wpm * 5 * self.accuracy / 100)
 
     @property
     def typo_amount(self) -> int:
         """
-        Возвращает количество опечаток. Значение является
-        приблизительным и высчитывается из значения скорости
-        набора текста и аккуратности печати.
+        Returns the average amount of invalid chars per one trainer
+        attempt.
         """
         return math.ceil(self.wpm * 5 * (100 - self.accuracy) / 100)
 

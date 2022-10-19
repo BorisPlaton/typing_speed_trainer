@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from account.models import User
-from account.services.models_utils import get_users_list_by_statistics
+from account.services.selectors import get_users_list_by_statistics
 from trainer.models import Statistic
 from trainer.utils.cache_results import ResultCache
 
