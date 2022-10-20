@@ -1,6 +1,6 @@
 from django.views.generic import TemplateView
 
-from trainer.services import get_last_cached_results_with_users
+from type_results.services import get_last_cached_results_with_users
 
 
 class TypingTrainer(TemplateView):

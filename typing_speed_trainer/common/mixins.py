@@ -23,9 +23,7 @@ class UnauthenticatedMixin(View, SuccessURLAllowedHostsMixin):
     def get_redirect_url(self) -> str:
         """Возвращает ссылку для редиректа."""
         redirect_url = resolve_url(self.request.GET.get('next') or self.redirect_to or settings.LOGIN_REDIRECT_URL)
-
         self.validate_url(redirect_url)
-
         return redirect_url if self.is_safe_url(redirect_url) else None
 
     def validate_url(self, url: str):
@@ -65,38 +63,28 @@ class MultipleFormViewMixin(ContextMixin):
         """
         initialized_forms = {}
         self._validate_models_forms()
-
         for form_name, form in self.forms.items():
             initialized_forms.update({form_name: form(instance=self.object)})
-
         for model_name, model in self.forms_on_models.items():
             form = modelform_factory(model, fields=self.forms_on_models_fields.get(model_name))
             initialized_forms.update({model_name: form(instance=self.object)})
-
         return initialized_forms
 
     def _validate_models_forms(self) -> bool:
         """Проверяет правильность указания атрибутов `models` и `models_fields`."""
         if not (self.forms_on_models or self.forms):
             raise ImproperlyConfigured("Укажите `forms` или `forms_on_models`.")
-
         for model_name, model in self.forms_on_models.items():
-
             if model_name not in self.forms_on_models_fields:
                 raise ImproperlyConfigured("`{0}` нет в `models_fields`.".format(model_name))
-
             model_fields = self.forms_on_models_fields.get(model_name)
-
             if not model_fields:
                 raise ImproperlyConfigured("`{0}` не имеет полей в `models_fields`.".format(model_name))
-
             if not isinstance(model_fields, list | tuple):
                 raise ImproperlyConfigured(
                     "Неправильный тип `{0}` у {1} в `models_fields`.".format(type(model_fields), model_name)
                 )
-
             for field in model_fields:
                 if not hasattr(model, field):
                     raise ImproperlyConfigured("`{0}` не имеет поля `{1}`.".format(model_name, field))
-
         return True

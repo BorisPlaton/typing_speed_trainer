@@ -6,13 +6,14 @@ from django.utils.decorators import method_decorator
 from django.views.generic.edit import UpdateView
 
 from account.forms import ChangeProfilePhotoForm, ChangeProfileSettingsForm
+from account.mixins import ElidedPaginationMixin
 from account.models import Profile
-from account.services.mixins import ElidedPaginationMixin
-from account.services.selectors import get_users_list_by_statistics
+from account.selectors import get_users_list_by_statistics
+from type_results.services import get_all_user_results
 
 
 class UsersList(ElidedPaginationMixin, ListView):
-    """Страница со списком пользователей."""
+    """The page with all users of site."""
 
     template_name = 'account/users_list.html'
     context_object_name = 'users'
@@ -25,7 +26,7 @@ class UsersList(ElidedPaginationMixin, ListView):
 
 
 class Account(DetailView):
-    """Страница профиля пользователя."""
+    """The user profile page."""
 
     model = Profile
     context_object_name = 'user_profile'
@@ -42,46 +43,29 @@ class Account(DetailView):
         'delete_photo_form': ['photo'],
     }
 
-    def dispatch(self, request, *args, **kwargs):
-        """
-        Устанавливаем значение атрибута `user_pk` равным полю `id`
-        пользователя, для корректной работы миксина `TrainerResultCacheMixin`.
-        """
-        self.user_id = kwargs.get('pk')
-        return super().dispatch(request, *args, **kwargs)
-
     def get_context_data(self, **kwargs):
-        """Наполняем контекст шаблонов своими данными."""
+        """
+        Populates a context with last user's results and if he has
+        a default profile picture.
+        """
         context = super().get_context_data(**kwargs)
-        context['results'] = self.get_formatted_results_from_cache()
-        context['has_default_photo'] = (
-                self.object._meta.get_field('photo').default == self.object.photo
-        )
+        context['results'] = get_all_user_results(self.kwargs['pk'])
+        context['has_default_photo'] = self.object._meta.get_field('photo').default == self.object.photo
         return context
 
     def get_object(self, queryset=None):
         """
-        Подключает модели `trainer.models.Statistic`, `account.models.Profile`
-        и возвращает объект модели `User`.
+        Joins a `Statistic` and a `User` model.
         """
         queryset = (self.model.objects
                     .select_related('user')
                     .select_related('user__statistics'))
         return super().get_object(queryset)
 
-    def get_formatted_results_from_cache(self) -> list[dict | None]:
-        """
-        Форматирует значение ключа `dateEnd` в `datetime.datetime`
-        и возвращает список со всеми результатами пользователя.
-        """
-        return self.get_formatted_date_end_results(
-            self.get_all_current_user_results()
-        )
-
 
 @method_decorator(login_required, name='dispatch')
 class UpdateProfileSettings(UpdateView):
-    """View-класс для изменения настроек пользователя."""
+    """The view-class for the profile settings of user."""
 
     model = Profile
     fields = ['is_email_shown', 'are_results_shown']
@@ -92,7 +76,7 @@ class UpdateProfileSettings(UpdateView):
 
 @method_decorator(login_required, name='dispatch')
 class UpdateProfilePhoto(UpdateView):
-    """View-класс для загрузки нового фото пользователя."""
+    """Process uploading a user photo."""
 
     model = Profile
     fields = ['photo']
@@ -103,7 +87,7 @@ class UpdateProfilePhoto(UpdateView):
 
 @method_decorator(login_required, name='dispatch')
 class DeleteProfilePhoto(UpdateView):
-    """View-класс для удаления фото пользователя."""
+    """The view-class for a user photo deletion."""
 
     model = Profile
     fields = ['photo']

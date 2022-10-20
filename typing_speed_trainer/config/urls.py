@@ -8,7 +8,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('social_django.urls', namespace='social')),
     path('trainer/', include('trainer.urls')),
-    path('trainer/api/', include('trainer_api.urls')),
+    path('trainer/trainer_api/', include('trainer_api.urls')),
     path('account/', include('account.urls')),
     path('auth/', include('user_auth.urls')),
 ]

@@ -4,8 +4,8 @@ from django.db.models import QuerySet
 
 from account.models import User
 from config import settings
-from type_results.cache_handler import ResultCacheHandler
-from type_results.structs import UserTypingResult
+from type_results.handlers.cache_handler import ResultCacheHandler
+from type_results.structs import UserTypingResult, LastUserCachedResults, UserTypingResultWithUser
 
 
 class CurrentUserResults:
@@ -64,7 +64,7 @@ class CurrentUserResults:
 
     def __init__(self, user_id: int):
         self.user_id = user_id
-        self.cache_handler = ResultCacheHandler.get_handler()
+        self.cache_handler = ResultCacheHandler()
 
 
 class AllUserResults:

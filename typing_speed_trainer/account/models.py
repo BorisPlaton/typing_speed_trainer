@@ -48,13 +48,8 @@ class User(AbstractUser):
         verbose_name_plural = 'Users'
 
     def get_absolute_url(self):
+        """Returns a URL to the profile page of user."""
         return reverse('account:profile', args=[self.pk])
-
-    def delete_all_cached_results(self):
-        """Deletes all user's cached results."""
-        cache = CurrentUserCache()
-        cache.user_id = self.pk
-        cache.delete_all_user_results()
 
 
 class Profile(models.Model):
@@ -74,6 +69,7 @@ class Profile(models.Model):
         verbose_name_plural = 'Profiles'
 
     def get_absolute_url(self):
+        """Returns a URL to the profile page of user."""
         return reverse('account:profile', args=[self.user.pk])
 
     def __str__(self):

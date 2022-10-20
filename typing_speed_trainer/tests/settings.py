@@ -8,9 +8,9 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = "FAKE"
 
-DEBUG = os.getenv('DEBUG') == '1'
+DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -78,8 +78,8 @@ DATABASES = {
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': os.getenv('REDIS_LOCATION'),
-        'TIMEOUT': 600,
+        'LOCATION': 'redis://localhost:6379/2',
+        'TIMEOUT': 1,
     },
 }
 
@@ -135,11 +135,4 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MAX_LENGTH_LAST_CACHED_DEQUE = 15
 
-if DEBUG:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-else:
-    EMAIL_HOST = os.getenv('EMAIL_HOST')
-    EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-    EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-    EMAIL_PORT = os.getenv('EMAIL_PORT')
-    EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS') == '1'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

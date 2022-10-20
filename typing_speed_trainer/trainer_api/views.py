@@ -6,26 +6,27 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from trainer_api.services import get_all_user_results, update_and_cache_user_typing_result
-from type_results.results_handlers import UserTypingResult
+from trainer_api.services import update_and_cache_user_typing_result
+from type_results.services import get_all_user_results
+from type_results.structs import UserTypingResult
 
 
 class ResultsList(UpdateModelMixin, ListModelMixin, GenericViewSet):
     """
-    Принимает POST-запрос с результатами пользователя и кеширует их.
-    Также отдает данные в виде JSON о результатах пользователя.
+    Receives a POST-request with user's results and caches them.
+    Also, it can send user's statistics in the JSON format.
     """
 
     permission_classes = [IsAuthenticated]
 
     def list(self, request: Request, *args, **kwargs):
-        """Возвращает результаты пользователя из кэша."""
+        """Returns users statistics from the cache."""
         return Response({'resultsData': get_all_user_results(request.user.pk)})
 
     def create(self, request: Request):
         """
-        Кеширует данные из запроса и отправляет ответ в виде JSON
-        с этими же данными, если полученные данные корректны.
+        Caches received user's statistics if it is in the correct
+        form.
         """
         try:
             typing_statistics = UserTypingResult(**request.data)
@@ -39,8 +40,8 @@ class ResultsList(UpdateModelMixin, ListModelMixin, GenericViewSet):
 @permission_classes([IsAuthenticated])
 def result_template(request: Request):
     """
-    Возвращает шаблон результата и дополнительный шаблон
-    списка, если пользователь указал это в параметрах запроса.
+    Returns the template of result and an additional template
+    with results list if it is specified it the query parameters.
     """
     data = {'resultTemplate': render_to_string('trainer/includes/last_result.html')}
     if request.query_params.get('list') == 'true':
