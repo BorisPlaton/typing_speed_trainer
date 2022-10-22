@@ -1,5 +1,5 @@
 from type_results.results_repositories.base_repos import BaseCacheRepository
-from type_results.results_repositories.key_fields import KeyField
+from type_results.results_repositories.key_field import KeyField
 from type_results.structs import UserTypingResult
 
 
@@ -21,15 +21,12 @@ class UserCachedResults(BaseCacheRepository):
         Returns a list with all user statistics from cache. If none
         exist, returns an empty list.
         """
-        is_results_ids_given = results_ids is not None
-        results_keys = self._get_results_keynames(sorted(results_ids) if is_results_ids_given else None)
+        results_keys = self._get_results_keynames(results_ids or None)
         results = self.cache_db.get_many(results_keys, version=self.user_id)
         return [result for result in results.values()][::-1]
 
     def add_result(self, data: UserTypingResult) -> int:
         """Adds a result to the cache. The result's id is returned."""
-        if not isinstance(data, UserTypingResult):
-            raise ValueError(f"Only a `UserTypingResult` type can be added, not a `{type(data)}`.")
         result_id = self._increment_current_result_id()
         self.cache_db.set(self.type_result(result_id), data, version=self.user_id)
         return result_id
@@ -65,7 +62,7 @@ class UserCachedResults(BaseCacheRepository):
     def _get_results_keynames(self, results_ids: list[int] = None) -> list[str | None]:
         """Returns all keys of results from cache if they exist."""
         if results_ids:
-            pass
+            results_ids = sorted(results_ids, reverse=True)
         elif (current_id := self._current_result_id) is None:
             return []
         else:

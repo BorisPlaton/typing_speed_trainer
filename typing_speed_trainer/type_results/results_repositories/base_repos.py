@@ -1,4 +1,5 @@
 from django.core.cache import caches
+from django_redis.cache import RedisCache
 
 
 class BaseCacheRepository:
@@ -9,4 +10,4 @@ class BaseCacheRepository:
 
     def __init__(self, cache_db_name: str = 'default'):
         """Saves a cache instance which matches a given name."""
-        self.cache_db = caches[cache_db_name]
+        self.cache_db: RedisCache = caches[cache_db_name]
