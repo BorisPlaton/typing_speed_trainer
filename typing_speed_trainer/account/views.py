@@ -71,7 +71,7 @@ class UpdateProfileSettings(UpdateView):
     fields = ['is_email_shown', 'are_results_shown']
 
     def get_object(self, queryset=None):
-        return self.request.user.profile
+        return self.request.user_id.profile
 
 
 @method_decorator(login_required, name='dispatch')
@@ -82,7 +82,7 @@ class UpdateProfilePhoto(UpdateView):
     fields = ['photo']
 
     def get_object(self, queryset=None):
-        return self.request.user.profile
+        return self.request.user_id.profile
 
 
 @method_decorator(login_required, name='dispatch')
@@ -93,7 +93,7 @@ class DeleteProfilePhoto(UpdateView):
     fields = ['photo']
 
     def get_object(self, queryset=None):
-        return self.request.user.profile
+        return self.request.user_id.profile
 
     def form_valid(self, form):
         default_photo = self.object._meta.get_field('photo').default

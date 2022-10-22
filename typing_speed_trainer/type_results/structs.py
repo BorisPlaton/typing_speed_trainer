@@ -2,12 +2,9 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import NamedTuple
 
-from account.models import User
-
 
 class LastUserCachedResults(NamedTuple):
     """The last user result that was saved to the cache."""
-
     user_id: int
     result_id: int
 
@@ -15,7 +12,6 @@ class LastUserCachedResults(NamedTuple):
 @dataclass
 class UserTypingResult:
     """The user typing results."""
-
     invalidKeystrokes: int
     correctKeystrokes: int
     summaryKeystrokes: int
@@ -49,9 +45,8 @@ class UserTypingResult:
 
 
 @dataclass
-class UserTypingResultWithUser(UserTypingResult):
+class TypingResultWithUserID(UserTypingResult):
     """
     Has an additional field `user` which contains the owner of result.
     """
-
-    user: User
+    user_id: int

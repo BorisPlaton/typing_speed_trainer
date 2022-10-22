@@ -23,7 +23,7 @@ def test_results_in_cache_expires_during_some_time(expiration_time, cache_handle
     assert cache_handler.get_result(result_id, user_id) == data
     time.sleep(expiration_time)
     assert cache_handler.get_result(result_id, user_id) is None
-    assert cache_handler.get_current_result_id(user_id) is None
+    assert cache_handler._current_result_id(user_id) is None
 
 
 def test_delete_user_result_will_return_boolean_value(cache_handler, user_id):
@@ -44,7 +44,7 @@ def test_result_deletion_will_affect_only_one_record(cache_handler, user_id):
 
 
 def test_if_user_id_doesnt_exist_current_result_id_is_none(cache_handler):
-    assert cache_handler.get_current_result_id(0) is None
+    assert cache_handler._current_result_id(0) is None
 
 
 @pytest.mark.parametrize(
@@ -53,32 +53,32 @@ def test_if_user_id_doesnt_exist_current_result_id_is_none(cache_handler):
 )
 def test_only_positive_integer_can_be_result_id(cache_handler, result_id):
     with pytest.raises(ValueError):
-        cache_handler.set_current_result_id(result_id, 0)
+        cache_handler._set_current_result_id(result_id, 0)
 
 
 def test_if_result_id_doesnt_exist_increment_will_create_it(cache_handler, user_id):
-    assert cache_handler.get_current_result_id(user_id) is None
-    cache_handler.increment_current_result_id(user_id)
-    assert cache_handler.get_current_result_id(user_id) == 1
+    assert cache_handler._current_result_id(user_id) is None
+    cache_handler._increment_current_result_id(user_id)
+    assert cache_handler._current_result_id(user_id) == 1
 
 
 def test_increment_result_id_increases_it_on_one(cache_handler, user_id):
     result_id = 50
-    cache_handler.set_current_result_id(result_id, user_id)
-    assert cache_handler.get_current_result_id(user_id)
-    cache_handler.increment_current_result_id(user_id)
-    assert cache_handler.get_current_result_id(user_id) == result_id + 1
+    cache_handler._set_current_result_id(result_id, user_id)
+    assert cache_handler._current_result_id(user_id)
+    cache_handler._increment_current_result_id(user_id)
+    assert cache_handler._current_result_id(user_id) == result_id + 1
 
 
 def test_get_result_keynames_returns_all_keynames_from_cache(cache_handler, user_id):
     results_amount = 5
     for i in range(results_amount):
         cache_handler.add_result({}, user_id)
-    assert len(cache_handler.get_results_keynames(user_id)) == results_amount
+    assert len(cache_handler._get_results_keynames(user_id)) == results_amount
 
 
 def test_get_result_keynames_returns_empty_list_if_result_id_doesnt_exist(cache_handler, user_id):
-    assert cache_handler.get_results_keynames(user_id) == []
+    assert cache_handler._get_results_keynames(user_id) == []
 
 
 def test_get_result_keynames_returns_all_keynames_from_cache_that_have_not_expired(
@@ -89,7 +89,7 @@ def test_get_result_keynames_returns_all_keynames_from_cache_that_have_not_expir
     time.sleep(expiration_time)
     existed_data = {'one': 1}
     cache_handler.add_result(existed_data, user_id)
-    keynames = cache_handler.get_results_keynames(user_id)
+    keynames = cache_handler._get_results_keynames(user_id)
     assert len(keynames) == 1
     assert cache_handler.cache_db.get(keynames[0], version=user_id) == existed_data
 
@@ -102,7 +102,7 @@ def test_clean_cache_deletes_all_from_cache(cache_handler, user_id):
 
 
 def test_delete_result_id_will_clean_it_from_cache(cache_handler, user_id):
-    cache_handler.set_current_result_id(10, user_id)
-    cache_handler.delete_current_result_id(user_id)
-    assert cache_handler.get_current_result_id(user_id) is None
-    assert cache_handler.increment_current_result_id(user_id) == 1
+    cache_handler._set_current_result_id(10, user_id)
+    cache_handler._delete_current_result_id(user_id)
+    assert cache_handler._current_result_id(user_id) is None
+    assert cache_handler._increment_current_result_id(user_id) == 1

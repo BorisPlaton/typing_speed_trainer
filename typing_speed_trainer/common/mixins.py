@@ -16,7 +16,7 @@ class UnauthenticatedMixin(View, SuccessURLAllowedHostsMixin):
     redirect_to: str = None
 
     def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
+        if request.user_id.is_authenticated:
             return redirect(self.get_redirect_url())
         return super().dispatch(request, *args, **kwargs)
 
