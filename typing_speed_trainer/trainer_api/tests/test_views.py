@@ -72,17 +72,6 @@ class TestResultsListView(BaseTestCase):
         )
         assert response.status_code, 400
 
-    def test_post_request_to_results_page_400_status_code_with_authenticated_user_but_invalid_date_end_field(
-            self, user_statistics_dict, api_client, login
-    ):
-        user_statistics_dict.update({'dateEnd': '25-10-2003'})
-        invalid_json_data = json.dumps(user_statistics_dict)
-        response = api_client.post(
-            reverse('trainer_api:result-list'), invalid_json_data,
-            content_type="application/json"
-        )
-        assert response.status_code == 400
-
     def test_empty_results_list_from_results_page_if_no_data_exists(self, api_client, login):
         response = api_client.get(reverse('trainer_api:result-list'))
         assert response.status_code == 200

@@ -55,8 +55,3 @@ class TestUserTypingResult:
 
     def test_instance_created_if_passed_data_is_correct(self, results_dict):
         assert isinstance(UserTypingResult(**results_dict), UserTypingResult)
-
-    def test_exception_raised_if_initialized_data_is_wrong(self, results_dict):
-        results_dict.update({'dateEnd': 'sss'})
-        with pytest.raises(ValueError):
-            UserTypingResult(**results_dict)

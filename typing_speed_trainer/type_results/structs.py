@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from datetime import datetime
 from typing import NamedTuple
 
 
@@ -23,14 +22,11 @@ class UserTypingResult:
     dateEnd: str
 
     def __post_init__(self):
-        """Invokes the validation of values types and the time format."""
-        self._validate_initialized_data()
-
-    def _validate_initialized_data(self):
+        """Invokes the validation of values types."""
         self._validate_types()
-        self._validate_time_format(self.dateEnd, '%Y-%m-%dT%H:%M:%S.%fZ')
 
     def _validate_types(self):
+        """Ensures that all values have appropriate types."""
         for field_name, field_type in self.__annotations__.items():
             field_value = getattr(self, field_name)
             if not isinstance(field_value, field_type):
@@ -39,14 +35,11 @@ class UserTypingResult:
                         field_name, field_type, type(field_value)
                     ))
 
-    @staticmethod
-    def _validate_time_format(to_validate_time: str, time_format: str):
-        datetime.strptime(to_validate_time, time_format)
-
 
 @dataclass
 class TypingResultWithUserID(UserTypingResult):
     """
-    Has an additional field `user` which contains the owner of result.
+    Has an additional field `user` which contains the owner
+    of result.
     """
     user_id: int
