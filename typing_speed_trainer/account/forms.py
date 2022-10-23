@@ -5,7 +5,7 @@ from common.form_mixins import CrispyStyleModelFormMixin
 
 
 class ChangeProfilePhotoForm(CrispyStyleModelFormMixin):
-    """Форма изменения фото профиля пользователя."""
+    """The form for changing user's profile pic."""
 
     class Meta:
         model = Profile

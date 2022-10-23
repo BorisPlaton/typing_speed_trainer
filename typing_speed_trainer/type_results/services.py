@@ -1,17 +1,15 @@
-from account.selectors import get_user_with_profile
-
 from type_results.results_repositories.all_users_results import AllUserResults
 from type_results.results_repositories.user_cached_results import UserCachedResults
 from type_results.structs import TypingResultWithUserID, UserTypingResult
 
 
-def get_last_cached_results_with_users(results_amount: int) -> list[TypingResultWithUserID]:
+def get_last_cached_results_with_users_ids() -> list[TypingResultWithUserID]:
     """
     Returns the specified amount of last cached results with
     their users.
     """
     user_cache_results = AllUserResults()
-    return user_cache_results.get_cached_results_with_users_ids(results_amount, get_user_with_profile())
+    return user_cache_results.get_cached_results_with_users_ids()
 
 
 def cache_user_typing_result(user_id: int, typing_result: UserTypingResult):
@@ -30,7 +28,7 @@ def add_user_result_to_observed(user_id: int, result_id: int):
     all_results.add_user_result_to_observed(user_id, result_id)
 
 
-def get_all_user_results(user_id: int):
+def get_all_user_results(user_id: int) -> list[UserTypingResult | None]:
     """Returns all results data that are present in the cache."""
     user_cache_results = UserCachedResults(user_id)
     return user_cache_results.get_all_results()

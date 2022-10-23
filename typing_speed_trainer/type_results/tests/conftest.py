@@ -8,13 +8,18 @@ from type_results.structs import UserTypingResult
 
 
 @pytest.fixture
-def user_id():
-    return 1
+def result_id():
+    return 2
 
 
 @pytest.fixture
-def result_id():
-    return 2
+def expiration_time(settings) -> int:
+    return settings.CACHES['default']['TIMEOUT']
+
+
+@pytest.fixture
+def user_id():
+    return 1
 
 
 @pytest.fixture
@@ -32,18 +37,8 @@ def all_users_results():
 
 
 @pytest.fixture
-def expiration_time(settings) -> int:
-    return settings.CACHES['default']['TIMEOUT']
-
-
-@pytest.fixture
-def user_statistics(generate_user_statistics):
-    return generate_user_statistics()
-
-
-@pytest.fixture
-def generate_user_statistics():
-    return lambda: UserTypingResult(**{
+def user_statistics_dict():
+    return {
         'invalidKeystrokes': random.randint(5, 55),
         'correctKeystrokes': random.randint(5, 55),
         'summaryKeystrokes': random.randint(5, 55),
@@ -53,4 +48,14 @@ def generate_user_statistics():
         'typingAccuracy': random.randint(5, 55) + 0.1,
         'wpm': random.randint(5, 55),
         'dateEnd': '2022-07-03T16:07:32.225Z',
-    })
+    }
+
+
+@pytest.fixture
+def generate_user_statistics(user_statistics_dict):
+    return lambda: UserTypingResult(**user_statistics_dict)
+
+
+@pytest.fixture
+def user_statistics(generate_user_statistics):
+    return generate_user_statistics()

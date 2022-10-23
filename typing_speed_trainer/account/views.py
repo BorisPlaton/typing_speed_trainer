@@ -6,7 +6,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic.edit import UpdateView
 
 from account.forms import ChangeProfilePhotoForm, ChangeProfileSettingsForm
-from account.mixins import ElidedPaginationMixin
+from account.mixins import ElidedPaginationMixin, MultipleFormViewMixin
 from account.models import Profile
 from account.selectors import get_users_list_by_statistics
 from type_results.services import get_all_user_results
@@ -25,7 +25,7 @@ class UsersList(ElidedPaginationMixin, ListView):
     paginator_ellipsis = '...'
 
 
-class Account(DetailView):
+class Account(DetailView, MultipleFormViewMixin):
     """The user profile page."""
 
     model = Profile
@@ -49,14 +49,14 @@ class Account(DetailView):
         a default profile picture.
         """
         context = super().get_context_data(**kwargs)
-        context['results'] = get_all_user_results(self.kwargs['pk'])
-        context['has_default_photo'] = self.object._meta.get_field('photo').default == self.object.photo
+        context.update({
+            'results': get_all_user_results(self.kwargs['pk']),
+            'has_default_photo': self.object._meta.get_field('photo').default == self.object.photo,
+        })
         return context
 
     def get_object(self, queryset=None):
-        """
-        Joins a `Statistic` and a `User` model.
-        """
+        """Joins a `Statistic` and a `User` model."""
         queryset = (self.model.objects
                     .select_related('user')
                     .select_related('user__statistics'))
@@ -71,7 +71,7 @@ class UpdateProfileSettings(UpdateView):
     fields = ['is_email_shown', 'are_results_shown']
 
     def get_object(self, queryset=None):
-        return self.request.user_id.profile
+        return self.request.user.profile
 
 
 @method_decorator(login_required, name='dispatch')
@@ -82,7 +82,7 @@ class UpdateProfilePhoto(UpdateView):
     fields = ['photo']
 
     def get_object(self, queryset=None):
-        return self.request.user_id.profile
+        return self.request.user.profile
 
 
 @method_decorator(login_required, name='dispatch')
@@ -93,7 +93,7 @@ class DeleteProfilePhoto(UpdateView):
     fields = ['photo']
 
     def get_object(self, queryset=None):
-        return self.request.user_id.profile
+        return self.request.user.profile
 
     def form_valid(self, form):
         default_photo = self.object._meta.get_field('photo').default

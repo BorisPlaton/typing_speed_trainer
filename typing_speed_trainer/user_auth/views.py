@@ -9,7 +9,8 @@ from common.mixins import UnauthenticatedMixin
 
 
 class Registration(CreateView, UnauthenticatedMixin):
-    """Страница регистрации пользователя."""
+    """The register page."""
+
     template_name = 'user_auth/registration.html'
     form_class = RegistrationForm
 
@@ -20,17 +21,16 @@ class Registration(CreateView, UnauthenticatedMixin):
 
 
 class UserLogin(LoginView):
-    """Страница аутентификации пользователя."""
+    """The authentication page."""
+
     form_class = LoginForm
     template_name = 'user_auth/login.html'
     redirect_authenticated_user = True
 
 
 class UserPasswordReset(PasswordResetView, UnauthenticatedMixin):
-    """
-    Страница для сброса пароля пользователя. Использует
-    почту пользователя.
-    """
+    """The page for user's password recovery."""
+
     form_class = UserPasswordResetForm
     success_url = reverse_lazy('user_auth:login')
     email_template_name = 'user_auth/password_reset_email.html'
@@ -43,9 +43,10 @@ class UserPasswordReset(PasswordResetView, UnauthenticatedMixin):
 
 class UserPasswordResetConfirm(PasswordResetConfirmView, UnauthenticatedMixin):
     """
-    Страница для изменения пароля. Вызывается после того, как
-    пользователь перешел по ссылке, что была отправлена из `UserPasswordReset`.
+    The page for the password change. It is used via special link
+    that is sent on user's email.
     """
+
     form_class = UserPasswordResetConfirmForm
     template_name = 'user_auth/user_password_reset_confirm.html'
     success_url = reverse_lazy('user_auth:login')

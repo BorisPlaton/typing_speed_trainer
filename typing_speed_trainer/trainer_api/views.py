@@ -21,7 +21,9 @@ class ResultsList(UpdateModelMixin, ListModelMixin, GenericViewSet):
 
     def list(self, request: Request, *args, **kwargs):
         """Returns users statistics from the cache."""
-        return Response({'resultsData': get_all_user_results(request.user.pk)})
+        return Response(
+            {'resultsData': [vars(result) for result in get_all_user_results(request.user.pk)]}
+        )
 
     def create(self, request: Request):
         """
@@ -31,7 +33,7 @@ class ResultsList(UpdateModelMixin, ListModelMixin, GenericViewSet):
         try:
             typing_statistics = UserTypingResult(**request.data)
         except Exception as e:
-            return Response({'details': 'Некорректные данные', 'data': str(e)}, status=400)
+            return Response({'details': 'Invalid data', 'data': str(e)}, status=400)
         update_and_cache_user_typing_result(request.user.id, typing_statistics)
         return Response({'status': 'OK'})
 

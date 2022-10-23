@@ -1,34 +1,22 @@
-from django.test import TestCase
 from django.urls import reverse
 
-from account.models import User
+from tests.utils import BaseTestCase
 
 
-class TestRequestStatuses(TestCase):
+class TestRequestStatuses(BaseTestCase):
 
-    def setUp(self) -> None:
-        self.credentials = {
-            'email': 'test@test.com',
-            'password': '12345'
-        }
-        self.user = User.objects.create_user(
-            **self.credentials,
-        )
+    def test_profile_page_200_status_code_with_unauthenticated_user(self, api_client, user):
+        response = api_client.get(reverse('account:profile', args=[user.pk]))
+        assert response.status_code == 200
 
-    def test_profile_page_200_status_code_with_unauthenticated_user(self):
-        response = self.client.get(reverse('account:profile', args=[self.user.pk]))
-        self.assertEqual(response.status_code, 200)
+    def test_profile_page_200_status_code_with_authenticated_user(self, api_client, user, login):
+        response = api_client.get(reverse('account:profile', args=[user.pk]))
+        assert response.status_code == 200
 
-    def test_profile_page_200_status_code_with_authenticated_user(self):
-        self.assertTrue(self.client.login(**self.credentials))
-        response = self.client.get(reverse('account:profile', args=[self.user.pk]))
-        self.assertEqual(response.status_code, 200)
+    def test_delete_user_profile_photo_302_status_code_with_unauthenticated_user(self, api_client):
+        response = api_client.post(reverse('account:delete_profile_photo'))
+        assert response.status_code == 302
 
-    def test_delete_user_profile_photo_302_status_code_with_unauthenticated_user(self):
-        response = self.client.post(reverse('account:delete_profile_photo'))
-        self.assertEqual(response.status_code, 302)
-
-    def test_delete_user_profile_photo_302_status_code_with_authenticated_user(self):
-        self.assertTrue(self.client.login(**self.credentials))
-        response = self.client.post(reverse('account:delete_profile_photo'))
-        self.assertEqual(response.status_code, 302)
+    def test_delete_user_profile_photo_302_status_code_with_authenticated_user(self, api_client, user, login):
+        response = api_client.post(reverse('account:delete_profile_photo'))
+        assert response.status_code == 302
