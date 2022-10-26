@@ -1,8 +1,7 @@
-import Broker from "./broker.js";
 import Cookies from "https://cdn.skypack.dev/js-cookie";
 import storage from "./data_storage.js";
 
-export default class AjaxResult extends Broker {
+export default class AjaxResult {
   constructor() {
     super();
     this.csrfToken = Cookies.get("csrftoken");

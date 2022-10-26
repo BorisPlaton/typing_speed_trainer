@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'account',
     'trainer',
     'trainer_api',
+    'type_results',
 ]
 
 MIDDLEWARE = [

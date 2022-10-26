@@ -1,11 +1,12 @@
-import Broker from "./broker.js";
+import { Subscriber, Publisher } from "./mediator.js";
 import storage from "./data_storage.js";
 
-export default class StatisticsBar extends Broker {
-  constructor() {
-    super();
-
-    this.isRestarted;
+export default class StatisticsBar extends Subscriber {
+  /**
+   * @param {Publisher} publisher
+   */
+  constructor(publisher) {
+    super(publisher);
 
     this.statisticsBar = document.querySelector(".statistics-bar");
     this.stopTypingButton = document.querySelector(".stop-typing-trainer");
@@ -14,7 +15,6 @@ export default class StatisticsBar extends Broker {
     this.wordsAmount = document.querySelector(".words-amount");
     this.typoAmount = document.querySelector(".typo-amount");
     this.correctCharsAmount = document.querySelector(".correct-chars-amount");
-
     this.stopTypingButton.addEventListener("click", () => this.stopTimer(true));
   }
 

@@ -1,9 +1,11 @@
-import Broker from "./broker.js";
 import storage from "./data_storage.js";
 
-export default class ResultsList extends Broker {
-  constructor() {
-    super();
+export default class ResultsList {
+  /**
+   * @param {Publisher} publisher
+   */
+  constructor(publisher) {
+    super(publisher);
 
     this.sendToUrl = "/trainer/api/";
     this.isResultBarCreated = false;

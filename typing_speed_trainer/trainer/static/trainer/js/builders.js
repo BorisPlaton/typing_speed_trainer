@@ -14,6 +14,11 @@ class BaseTextField {
     this.textField = new TextField();
   }
 
+  configureBeforeTrainerStart() {
+    this.settingsBar.typingTrainerStarted();
+    this.statisticsBar.setup();
+  }
+
   setup() {
     this.textField.addBrokerListener("correctWord", () => {
       storage.increaseCorrectWordsAmount();
@@ -39,44 +44,39 @@ class BaseTextField {
       this.textField.updateTextField(args);
     });
 
+    this.resultModalWindow.addBrokerListener("typingTrainerStarted", () => {
+      console.log(1);
+      this.configureBeforeTrainerStart();
+    });
+
     this.textField.setup();
     this.settingsBar.setup();
-  }
-}
-
-export default class TextFieldFactory {
-  constructor(isUserAuthenticated) {
-    return isUserAuthenticated
-      ? new AuthenticatedUserTextField()
-      : new AnonymousUserTextField();
   }
 }
 
 class AuthenticatedUserTextField extends BaseTextField {
   constructor() {
     super();
-
     this.resultsList = new ResultsList();
     this.ajaxResult = new AjaxResult();
   }
 
   setup() {
     super.setup();
-
     this.resultsList.setup();
 
     this.settingsBar.addBrokerListener("typingTrainerStarted", () => {
+      this.configureBeforeTrainerStart();
       this.resultsList.hideResultsList();
-      this.statisticsBar.setup();
     });
 
     this.textField.addBrokerListener("typingTrainerStarted", () => {
-      this.settingsBar.typingTrainerStarted();
+      this.configureBeforeTrainerStart();
       this.resultsList.hideResultsList();
-      this.statisticsBar.setup();
     });
 
     this.statisticsBar.addBrokerListener("typingTrainerStopped", () => {
+      console.log(1);
       storage.setDateEndIsNow();
       this.textField.stopTyping();
       this.resultModalWindow.show();
@@ -103,32 +103,35 @@ class AnonymousUserTextField extends BaseTextField {
     super.setup();
 
     this.settingsBar.addBrokerListener("typingTrainerStarted", () => {
-      this.statisticsBar.setup();
+      this.configureBeforeTrainerStart();
     });
 
     this.textField.addBrokerListener("typingTrainerStarted", () => {
-      this.settingsBar.typingTrainerStarted();
-      this.statisticsBar.setup();
+      this.configureBeforeTrainerStart();
     });
 
     this.statisticsBar.addBrokerListener("typingTrainerStopped", () => {
       storage.setDateEndIsNow();
       this.textField.stopTyping();
-
       this.resultModalWindow.show();
-
       storage.cleanUpStorage();
-
       this.settingsBar.showSettingsBar();
       this.settingsBar.languageSelected();
     });
 
     this.statisticsBar.addBrokerListener("typingTrainerRestart", () => {
       storage.cleanUpStorage();
-
       this.settingsBar.showSettingsBar();
       this.textField.stopTyping();
       this.settingsBar.languageSelected();
     });
+  }
+}
+
+export default class TextFieldFactory {
+  constructor(isUserAuthenticated) {
+    return isUserAuthenticated
+      ? new AuthenticatedUserTextField()
+      : new AnonymousUserTextField();
   }
 }

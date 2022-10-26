@@ -1,6 +1,6 @@
 import storage from "./data_storage.js";
-import Broker from "./broker.js";
 import wordsStorage from "./words_storage.js";
+import { Subscriber, Publisher } from "./mediator.js";
 
 class Word {
   /**
@@ -86,9 +86,12 @@ class Word {
   }
 }
 
-export default class TextField extends Broker {
-  constructor() {
-    super();
+export default class TextField extends Subscriber {
+  /**
+   * @param {Publisher} publisher
+   */
+  constructor(publisher) {
+    super(publisher);
 
     this.backgroundText = document.querySelector(".background-text");
     this.hiddenInput = document.querySelector(".input-text");
@@ -371,7 +374,6 @@ export default class TextField extends Broker {
   getTextFieldSpanElement(word, wordNum) {
     const spanElement = document.createElement("span");
     spanElement.classList.add(`wrd-${wordNum}`);
-
     for (let i = 0; i < word.length; i++) {
       const charSpan = document.createElement("span");
       charSpan.classList.add(`chr-${i}`);

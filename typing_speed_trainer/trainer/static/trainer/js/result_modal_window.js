@@ -1,9 +1,16 @@
 import storage from "./data_storage.js";
+import { Subscriber, Publisher } from "./mediator.js";
 
-export default class ResultModalWindow {
-  constructor() {
+export default class ResultModalWindow extends Subscriber {
+  /**
+   * @param {Publisher} publisher
+   */
+  constructor(publisher) {
+    super(publisher);
+
     this.modalWindow = document.querySelector(".result-modal");
     this.closeButton = document.querySelector(".close-result-modal");
+    this.startAgainButton = document.querySelector(".start-trainer-again");
 
     this.wpm = this.modalWindow.querySelector(".modal-wpm");
     this.correctWordsAmount = this.modalWindow.querySelector(
@@ -25,6 +32,11 @@ export default class ResultModalWindow {
 
     this.closeButton.addEventListener("click", () => {
       this.hideWindow();
+    });
+
+    this.startAgainButton.addEventListener("click", () => {
+      this.hideWindow();
+      this.notify("typingTrainerStarted");
     });
   }
 

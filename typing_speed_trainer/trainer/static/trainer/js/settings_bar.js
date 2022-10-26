@@ -1,10 +1,12 @@
-import Broker from "./broker.js";
+import { Subscriber, Publisher } from "./mediator.js";
 import storage from "./data_storage.js";
 
-export default class SettingsBar extends Broker {
-  constructor() {
-    super();
-
+export default class SettingsBar extends Subscriber {
+  /**
+   * @param {Publisher} publisher
+   */
+  constructor(publisher) {
+    super(publisher);
     this.settingsBar = document.querySelector(".settings-bar");
     this.hiddenInput = document.querySelector(".input-text");
     this.startTrainerButton = document.querySelector(".start-typing-trainer");
@@ -13,9 +15,8 @@ export default class SettingsBar extends Broker {
   }
 
   setup() {
-    this.setEventListeners();
+    this.setEvents();
     this.showSettingsBar();
-    this.languageSelected();
   }
 
   typingTrainerStarted() {
@@ -28,23 +29,20 @@ export default class SettingsBar extends Broker {
     storage.totalTime = 5;
   }
 
+  setEvents() {
+    this.startTrainerButton.addEventListener("click", () => {
+      this.notify("typingTrainerStarted");
+    });
+    this.textLanguage.addEventListener("change", () =>
+      this.notify("languageChanged", this.textLanguage.value)
+    );
+  }
+
   showSettingsBar() {
     this.settingsBar.style.display = "flex";
   }
 
   hideSettingsBar() {
     this.settingsBar.style.display = "none";
-  }
-
-  languageSelected() {
-    this.notify("languageChanged", this.textLanguage.value);
-  }
-
-  setEventListeners() {
-    this.startTrainerButton.addEventListener("click", () => {
-      this.typingTrainerStarted();
-      this.notify("typingTrainerStarted");
-    });
-    this.textLanguage.addEventListener("change", () => this.languageSelected());
   }
 }
