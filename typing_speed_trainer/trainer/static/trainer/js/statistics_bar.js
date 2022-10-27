@@ -1,4 +1,4 @@
-import { Subscriber, Publisher } from "./mediator.js";
+import { Subscriber, Publisher } from "./publisher.js";
 import storage from "./data_storage.js";
 
 export default class StatisticsBar extends Subscriber {

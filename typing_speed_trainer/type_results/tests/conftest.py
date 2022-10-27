@@ -48,6 +48,7 @@ def user_statistics_dict():
         'typingAccuracy': random.randint(5, 55) + 0.1,
         'wpm': random.randint(5, 55),
         'dateEnd': '2022-07-03T16:07:32.225Z',
+        'language': 'English',
     }
 
 

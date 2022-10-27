@@ -1,6 +1,6 @@
 import storage from "./data_storage.js";
 import wordsStorage from "./words_storage.js";
-import { Subscriber, Publisher } from "./mediator.js";
+import { Subscriber, Publisher } from "./publisher.js";
 
 class Word {
   /**
@@ -98,7 +98,6 @@ export default class TextField extends Subscriber {
 
     this.currentWordNum = 0;
     this.currentWord = new Word();
-
     this.isTrainerStarted = false;
     this.isWordsUpdated = false;
     this.wordsIsAlreadyLonger = false;
@@ -110,6 +109,11 @@ export default class TextField extends Subscriber {
   }
 
   setup() {
+    this.configureEvents();
+    this.updateTextField();
+  }
+
+  configureEvents() {
     this.hiddenInput.addEventListener("input", () => {
       this.notifyTrainerStarted();
       this.updateWordsListIfNeeded();
@@ -134,10 +138,16 @@ export default class TextField extends Subscriber {
   stopTyping() {
     this.hiddenInput.blur();
     this.isTrainerStarted = false;
+    this.updateTextField();
+  }
+
+  trainerStarted() {
+    this.isTrainerStarted = true;
   }
 
   updateTextField(wordsLanguage = null) {
-    this.fieldWordsLanguage = wordsLanguage || this.fieldWordsLanguage;
+    this.fieldWordsLanguage =
+      storage.wordsLanguage.languageValue || this.fieldWordsLanguage;
     this.clearHiddenInput();
 
     if (!this.renderedTextHtml) {

@@ -5,133 +5,96 @@ import TextField from "./text_field.js";
 import AjaxResult from "./ajax_result.js";
 import ResultsList from "./last_results.js";
 import storage from "./data_storage.js";
+import { Publisher } from "./publisher.js";
 
-class BaseTextField {
+class BaseProjectBuilder {
   constructor() {
-    this.settingsBar = new SettingsBar();
-    this.statisticsBar = new StatisticsBar();
-    this.resultModalWindow = new ResultModalWindow();
-    this.textField = new TextField();
-  }
-
-  configureBeforeTrainerStart() {
-    this.settingsBar.typingTrainerStarted();
-    this.statisticsBar.setup();
+    this.publisher = new Publisher();
+    this.settingsBar = new SettingsBar(this.publisher);
+    this.statisticsBar = new StatisticsBar(this.publisher);
+    this.resultModalWindow = new ResultModalWindow(this.publisher);
+    this.textField = new TextField(this.publisher);
   }
 
   setup() {
-    this.textField.addBrokerListener("correctWord", () => {
+    this.configureEvents();
+    this.configureComponents();
+  }
+
+  configureComponents() {
+    this.settingsBar.setup();
+    this.textField.setup();
+  }
+
+  configureEvents() {
+    this.publisher.addSubscriber("correctWord", () => {
       storage.increaseCorrectWordsAmount();
       this.statisticsBar.increaseCorrectWord();
     });
-
-    this.textField.addBrokerListener("invalidChar", () => {
-      storage.increaseTypoAmount();
-      this.statisticsBar.increaseWrongChar();
-    });
-
-    this.textField.addBrokerListener("correctChar", () => {
+    this.publisher.addSubscriber("correctChar", () => {
       storage.increaseCorrectCharsAmount();
       this.statisticsBar.increaseCorrectChars();
     });
-
-    this.textField.addBrokerListener("decreaseCorrectChar", () => {
+    this.publisher.addSubscriber("invalidChar", () => {
+      storage.increaseTypoAmount();
+      this.statisticsBar.increaseWrongChar();
+    });
+    this.publisher.addSubscriber("decreaseCorrectChar", () => {
       storage.decreaseCorrectCharsAmount();
       this.statisticsBar.decreaseCorrectChars();
     });
-
-    this.settingsBar.addBrokerListener("languageChanged", (args) => {
-      this.textField.updateTextField(args);
+    this.publisher.addSubscriber("languageChanged", () => {
+      this.textField.updateTextField();
     });
-
-    this.resultModalWindow.addBrokerListener("typingTrainerStarted", () => {
-      console.log(1);
-      this.configureBeforeTrainerStart();
+    this.publisher.addSubscriber("typingTrainerStarted", () => {
+      storage.cleanUpStorage();
+      this.settingsBar.typingTrainerStarted();
+      this.statisticsBar.setup();
+      this.textField.trainerStarted();
     });
-
-    this.textField.setup();
-    this.settingsBar.setup();
+    this.publisher.addSubscriber("typingTrainerStopped", () => {
+      this.textField.stopTyping();
+      storage.setDateEndIsNow();
+      this.resultModalWindow.show();
+      this.settingsBar.showSettingsBar();
+    });
+    this.publisher.addSubscriber("typingTrainerRestart", () => {
+      this.textField.stopTyping();
+      this.settingsBar.showSettingsBar();
+    });
   }
 }
 
-class AuthenticatedUserTextField extends BaseTextField {
+class AuthenticatedUserProject extends BaseProjectBuilder {
   constructor() {
     super();
     this.resultsList = new ResultsList();
     this.ajaxResult = new AjaxResult();
   }
 
-  setup() {
-    super.setup();
+  configureComponents() {
+    super.configureComponents();
     this.resultsList.setup();
+  }
 
-    this.settingsBar.addBrokerListener("typingTrainerStarted", () => {
-      this.configureBeforeTrainerStart();
+  configureEvents() {
+    super.configureEvents();
+    this.publisher.addSubscriber("typingTrainerStarted", () => {
       this.resultsList.hideResultsList();
     });
-
-    this.textField.addBrokerListener("typingTrainerStarted", () => {
-      this.configureBeforeTrainerStart();
-      this.resultsList.hideResultsList();
+    this.publisher.addSubscriber("typingTrainerRestart", () => {
+      this.resultsList.showResultsList();
     });
-
-    this.statisticsBar.addBrokerListener("typingTrainerStopped", () => {
-      console.log(1);
-      storage.setDateEndIsNow();
-      this.textField.stopTyping();
-      this.resultModalWindow.show();
+    this.publisher.addSubscriber("typingTrainerStopped", () => {
       this.ajaxResult.sendResultToServer();
       this.resultsList.addLastResultFromStorage();
-      storage.cleanUpStorage();
-      this.settingsBar.showSettingsBar();
       this.resultsList.showResultsList();
-      this.settingsBar.languageSelected();
-    });
-
-    this.statisticsBar.addBrokerListener("typingTrainerRestart", () => {
-      storage.cleanUpStorage();
-      this.settingsBar.showSettingsBar();
-      this.resultsList.showResultsList();
-      this.textField.stopTyping();
-      this.settingsBar.languageSelected();
     });
   }
 }
 
-class AnonymousUserTextField extends BaseTextField {
-  setup() {
-    super.setup();
-
-    this.settingsBar.addBrokerListener("typingTrainerStarted", () => {
-      this.configureBeforeTrainerStart();
-    });
-
-    this.textField.addBrokerListener("typingTrainerStarted", () => {
-      this.configureBeforeTrainerStart();
-    });
-
-    this.statisticsBar.addBrokerListener("typingTrainerStopped", () => {
-      storage.setDateEndIsNow();
-      this.textField.stopTyping();
-      this.resultModalWindow.show();
-      storage.cleanUpStorage();
-      this.settingsBar.showSettingsBar();
-      this.settingsBar.languageSelected();
-    });
-
-    this.statisticsBar.addBrokerListener("typingTrainerRestart", () => {
-      storage.cleanUpStorage();
-      this.settingsBar.showSettingsBar();
-      this.textField.stopTyping();
-      this.settingsBar.languageSelected();
-    });
-  }
-}
-
-export default class TextFieldFactory {
-  constructor(isUserAuthenticated) {
-    return isUserAuthenticated
-      ? new AuthenticatedUserTextField()
-      : new AnonymousUserTextField();
-  }
+export default function getConfiguredProject(isUserAuthenticated) {
+  return isUserAuthenticated
+    ? new AuthenticatedUserProject()
+    : new BaseProjectBuilder();
 }

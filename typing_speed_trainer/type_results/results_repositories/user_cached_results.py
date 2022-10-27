@@ -52,7 +52,7 @@ class UserCachedResults(BaseCacheRepository):
         """Sets a current result id. It can't be less than zero."""
         if new_result_id <= 0:
             raise ValueError("`new_result_id` can't be less than zero.")
-        self.cache_db.set(self.last_result_id, new_result_id, version=self.user_id)
+        self.cache_db.set(self.last_result_id, new_result_id, version=self.user_id, timeout=None)
 
     @_current_result_id.deleter
     def _current_result_id(self):

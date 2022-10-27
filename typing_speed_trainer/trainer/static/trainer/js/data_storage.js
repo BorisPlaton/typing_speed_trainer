@@ -12,6 +12,7 @@ class DataStorage {
     this.correctWordsAmount = 0;
     this.totalWordsAmount = 0;
     this.charsAmount = 0;
+    this.wordsLanguage;
   }
 
   get typingStatistics() {
@@ -31,6 +32,7 @@ class DataStorage {
       ),
       wpm: Math.ceil(storage.correctCharsAmount / 5),
       dateEnd: storage.dateEnd,
+      language: storage.wordsLanguage.languageText,
     };
   }
 

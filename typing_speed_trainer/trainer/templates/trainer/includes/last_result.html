@@ -36,8 +36,9 @@
       <div class="bg-blue-500 px-2 rounded result-accuracy flex-fill fw-bold">{{ result.typingAccuracy }}%</div>
     </div>
 
-    <div class="result-date-end d-flex justify-content-end mt-2">
-      <small class="text-blue-100">{{ result.dateEnd|date:"H:i:s" }}</small>
+    <div class="d-flex justify-content-between mt-2">
+      <small class="text-blue-100 result-words-language">{{ result.language }} язык</small>
+      <small class="text-blue-100 result-date-end">{{ result.dateEnd|date:"H:i:s" }}</small>
     </div>
 
   </div>

@@ -16,9 +16,9 @@ export class Publisher {
   /**
    * @param {string} event
    */
-  notify(event, args = null) {
+  notify(event) {
     if (this.events.hasOwnProperty(event)) {
-      this.events[event].forEach((callback) => callback(args));
+      this.events[event].forEach((callback) => callback());
     }
   }
 }

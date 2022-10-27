@@ -1,5 +1,3 @@
-import random
-
 import pytest
 
 from type_results.results_repositories.key_field import KeyField
@@ -39,19 +37,5 @@ class TestKeyField:
 
 class TestUserTypingResult:
 
-    @pytest.fixture
-    def results_dict(self):
-        return {
-            'invalidKeystrokes': random.randint(5, 55),
-            'correctKeystrokes': random.randint(5, 55),
-            'summaryKeystrokes': random.randint(5, 55),
-            'invalidWordsAmount': random.randint(5, 55),
-            'correctWordsAmount': random.randint(5, 55),
-            'totalWordsAmount': random.randint(5, 55),
-            'typingAccuracy': random.randint(5, 55) + 0.1,
-            'wpm': random.randint(5, 55),
-            'dateEnd': '2022-07-03T16:07:32.225Z',
-        }
-
-    def test_instance_created_if_passed_data_is_correct(self, results_dict):
-        assert isinstance(UserTypingResult(**results_dict), UserTypingResult)
+    def test_instance_created_if_passed_data_is_correct(self, user_statistics_dict):
+        assert isinstance(UserTypingResult(**user_statistics_dict), UserTypingResult)

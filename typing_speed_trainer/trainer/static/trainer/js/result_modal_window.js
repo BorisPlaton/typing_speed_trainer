@@ -1,5 +1,5 @@
 import storage from "./data_storage.js";
-import { Subscriber, Publisher } from "./mediator.js";
+import { Subscriber, Publisher } from "./publisher.js";
 
 export default class ResultModalWindow extends Subscriber {
   /**

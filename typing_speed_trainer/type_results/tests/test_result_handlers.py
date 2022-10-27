@@ -64,7 +64,7 @@ def test_results_in_cache_expires_during_some_time(expiration_time, user_cached_
     assert user_cached_results.get_result(result_id) == data
     time.sleep(expiration_time)
     assert user_cached_results.get_result(result_id) is None
-    assert user_cached_results._current_result_id is None
+    assert user_cached_results._current_result_id
 
 
 def test_access_all_user_results_returns_list_with_data(user_cached_results, user_statistics):
@@ -111,7 +111,6 @@ def test_delete_all_user_result_clean_cache(user_cached_results, user_statistics
     assert user_cached_results._current_result_id
     assert user_cached_results.get_all_results()
     user_cached_results.delete_all_self_results()
-    assert user_cached_results._current_result_id is None
     assert user_cached_results.get_all_results() == []
 
 
@@ -123,7 +122,6 @@ def test_delete_all_user_results_affect_only_specific_user(user_cached_results, 
     assert user_cached_results._current_result_id
     assert user_cached_results.get_all_results()
 
-    assert second_user_results_handler._current_result_id is None
     assert second_user_results_handler.get_all_results() == []
     second_user_results_handler.add_result(user_statistics)
 

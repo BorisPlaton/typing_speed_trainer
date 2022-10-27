@@ -1,4 +1,4 @@
-import { Subscriber, Publisher } from "./mediator.js";
+import { Subscriber, Publisher } from "./publisher.js";
 import storage from "./data_storage.js";
 
 export default class SettingsBar extends Subscriber {
@@ -17,6 +17,7 @@ export default class SettingsBar extends Subscriber {
   setup() {
     this.setEvents();
     this.showSettingsBar();
+    this.setCurrentLanguage();
   }
 
   typingTrainerStarted() {
@@ -26,16 +27,25 @@ export default class SettingsBar extends Subscriber {
   }
 
   setTotalTime() {
-    storage.totalTime = 5;
+    storage.totalTime = 3;
+  }
+
+  setCurrentLanguage() {
+    storage.wordsLanguage = {
+      languageValue: this.textLanguage.value,
+      languageText:
+        this.textLanguage.options[this.textLanguage.selectedIndex].text,
+    };
   }
 
   setEvents() {
     this.startTrainerButton.addEventListener("click", () => {
       this.notify("typingTrainerStarted");
     });
-    this.textLanguage.addEventListener("change", () =>
-      this.notify("languageChanged", this.textLanguage.value)
-    );
+    this.textLanguage.addEventListener("change", () => {
+      this.setCurrentLanguage();
+      this.notify("languageChanged");
+    });
   }
 
   showSettingsBar() {

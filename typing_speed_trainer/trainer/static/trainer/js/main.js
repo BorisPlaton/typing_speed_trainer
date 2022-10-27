@@ -1,4 +1,4 @@
-import TextFieldFactory from "./project.js";
+import getConfiguredProject from "./builders.js";
 
 function getIsUserAuthenticated() {
   const element = document.querySelector("main");
@@ -6,6 +6,6 @@ function getIsUserAuthenticated() {
 }
 
 const isUserAuthenticated = getIsUserAuthenticated();
-const textField = new TextFieldFactory(isUserAuthenticated);
+const textField = getConfiguredProject(isUserAuthenticated);
 
 document.addEventListener("DOMContentLoaded", () => textField.setup());

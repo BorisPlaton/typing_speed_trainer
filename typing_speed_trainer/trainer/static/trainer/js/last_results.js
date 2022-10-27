@@ -1,12 +1,7 @@
 import storage from "./data_storage.js";
 
 export default class ResultsList {
-  /**
-   * @param {Publisher} publisher
-   */
-  constructor(publisher) {
-    super(publisher);
-
+  constructor() {
     this.sendToUrl = "/trainer/api/";
     this.isResultBarCreated = false;
     this.otherUserResults = document.querySelector(".other-users-results");
@@ -78,7 +73,8 @@ export default class ResultsList {
     const invalidKeystrokes = div.querySelector(".result-keystrokes .invalid");
     const summaryKeystrokes = div.querySelector(".result-keystrokes .summary");
     const keystrokesAccuracy = div.querySelector(".result-accuracy");
-    const dateEnd = div.querySelector(".result-date-end small");
+    const dateEnd = div.querySelector(".result-date-end");
+    const wordsLanguage = div.querySelector(".result-words-language");
 
     wpm.innerHTML = data.wpm;
     correctWordsAmount.innerHTML = data.correctWordsAmount;
@@ -87,6 +83,7 @@ export default class ResultsList {
     invalidKeystrokes.innerHTML = data.invalidKeystrokes;
     summaryKeystrokes.innerHTML = data.summaryKeystrokes;
     keystrokesAccuracy.innerHTML = data.typingAccuracy + "%";
+    wordsLanguage.innerHTML = data.language + " язык";
 
     const dateEndValue = new Date(data.dateEnd);
     dateEnd.innerHTML = dateEndValue.toISOString().substring(11, 19);

@@ -20,6 +20,7 @@ class UserTypingResult:
     typingAccuracy: float | int
     wpm: int
     dateEnd: str
+    language: str
 
     def __post_init__(self):
         """Invokes the validation of values types."""

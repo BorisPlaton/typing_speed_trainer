@@ -3,7 +3,6 @@ import storage from "./data_storage.js";
 
 export default class AjaxResult {
   constructor() {
-    super();
     this.csrfToken = Cookies.get("csrftoken");
     this.sendToUrl = "/trainer/api/result/";
   }
@@ -21,7 +20,6 @@ export default class AjaxResult {
 
       xhr.setRequestHeader("Content-type", "application/json");
       xhr.setRequestHeader("X-CSRFToken", this.csrfToken);
-
       xhr.responseType = "json";
 
       xhr.addEventListener("load", () => {
