@@ -81,7 +81,6 @@
                   </span> %
                   </small>
                   {% endwith %}
-
                 </div>
                 <div class="col">
                   <small>
@@ -96,6 +95,10 @@
         </div>
       </div>
 
+    </div>
+    {% empty %}
+    <div class="col-lg-6">
+      <p class="text-blue-100 h-6">Пока нет никаких пользователей. Станьте первым!</p>
     </div>
     {% endfor %}
   </div>

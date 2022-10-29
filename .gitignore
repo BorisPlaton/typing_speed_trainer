@@ -6,6 +6,7 @@ venv
 .coverage
 .pytest_cache
 htmlcov
+geckodriver
 
 typing_speed_trainer/media/*
 !typing_speed_trainer/media/profile_photos

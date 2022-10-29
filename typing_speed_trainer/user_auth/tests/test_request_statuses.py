@@ -1,6 +1,6 @@
 from django.urls import reverse
 
-from tests.utils import BaseTestCase
+from tests.case_classes.base_case import BaseTestCase
 
 
 class TestRequestStatuses(BaseTestCase):

@@ -2,7 +2,7 @@ import pytest
 from django.urls import reverse
 from rest_framework.utils import json
 
-from tests.utils import BaseTestCase
+from tests.case_classes.base_case import BaseTestCase
 
 
 class TestTemplateFunctionView(BaseTestCase):
