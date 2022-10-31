@@ -51,7 +51,17 @@
 
         <div class="p-3 bg-blue-800 rounded-bottom
         {% if request.GET.page == '1' or request.GET.page is None %}
-        border-{% if forloop.counter == 1 %}yellow-300{% elif forloop.counter == 2 %}main-600{% elif forloop.counter == 3 %}main-400{% else %}blue-800{% endif %}-bottom
+          {% if forloop.counter == 1 %}
+          border-yellow-300-bottom
+          {% elif forloop.counter == 2 %}
+          border-main-600-bottom
+          {% elif forloop.counter == 3 %}
+          border-main-400-bottom
+          {% else %}
+          border-blue-800-bottom
+          {% endif %}
+        {% else %}
+          border-blue-800-bottom
         {% endif %}">
           <a href="{{ current_user.get_absolute_url }}" class="link-light">
             <div class="border-blue-200-bottom pb-2">

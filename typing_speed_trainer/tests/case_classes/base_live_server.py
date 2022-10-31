@@ -21,10 +21,12 @@ class BaseTestLiveServer:
     @pytest.fixture(scope='class', autouse=True)
     def tmpdir_make(self):
         tmp_dir_path = Path(__file__).parent.parent / 'tmpdir'
-        os.mkdir(tmp_dir_path)
-        os.environ['TMPDIR'] = str(tmp_dir_path)
-        yield
-        shutil.rmtree(tmp_dir_path)
+        try:
+            os.mkdir(tmp_dir_path)
+            os.environ['TMPDIR'] = str(tmp_dir_path)
+            yield
+        finally:
+            shutil.rmtree(tmp_dir_path)
 
     @pytest.fixture
     def web_driver(self, _driver) -> WebDriver:
