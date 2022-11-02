@@ -1,3 +1,4 @@
+{% load trainer_tags %}
 <div class="last-result">
   <div class="last-result-content bg-blue-800 p-3 rounded shadow fw-light text-light">
 
@@ -38,7 +39,7 @@
 
     <div class="d-flex justify-content-between mt-2">
       <small class="text-blue-100 result-words-language">{{ result.language }} язык</small>
-      <small class="text-blue-100 result-date-end">{{ result.dateEnd|date:"H:i:s" }}</small>
+      <small class="text-blue-100 result-date-end">{{ result.dateEnd|to_datetime|date:"H:i:s" }}</small>
     </div>
 
   </div>

@@ -6,7 +6,7 @@ from common.form_mixins import CrispyStyleModelFormMixin, CrispyStyleFormMixin
 
 
 class RegistrationForm(CrispyStyleModelFormMixin):
-    """Форма регистрации пользователя."""
+    """The registration form."""
 
     repeat_password = forms.CharField(label="Повторите пароль", widget=forms.PasswordInput)
 
@@ -25,14 +25,20 @@ class RegistrationForm(CrispyStyleModelFormMixin):
         self.fields['username'].help_text = None
 
     def clean_repeat_password(self):
-        """Проверяет, что пароли совпадают."""
+        """Checks if passwords match each other."""
         if self.cleaned_data['repeat_password'] != self.cleaned_data['password']:
             raise forms.ValidationError("Пароли не совпадают")
         return self.cleaned_data['repeat_password']
 
+    def save(self, commit=True):
+        instance: User = super().save(commit=False)
+        instance.set_password(instance.password)
+        instance.save()
+        return instance
+
 
 class LoginForm(AuthenticationForm, CrispyStyleFormMixin):
-    """Форма аутентификации пользователя."""
+    """The authentication form."""
 
     username = forms.EmailField(label="Почта")
 

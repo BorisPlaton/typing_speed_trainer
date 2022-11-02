@@ -5,6 +5,8 @@ ENV PYTHONDONTWRITEBYTECODE=1
 
 WORKDIR /typing_speed_trainer
 
-COPY . .
-RUN pip install --no-cache-dir -r requirements/prod.txt && \
-    rm -rf requirements
+COPY ./typing_speed_trainer .
+ENTRYPOINT ["/typing_speed_trainer/entrypoint.sh"]
+
+COPY ./requirements/prod.txt .
+RUN pip install --no-cache-dir -r prod.txt && rm -f prod.txt

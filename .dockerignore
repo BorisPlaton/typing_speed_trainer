@@ -5,16 +5,17 @@ venv
 Dockerfile
 setup.cfg
 docker-compose.yml
+docker-compose.dev.yml
 requirements/*
 !requirements/prod.txt
 
 **/.coveragerc
+**/htmlcov
 **/.coverage
-**/.env.dist
 **/__pycache__
-**/migrations
 **/tests
 **/sass
+**/pytest.ini
 
 
 **/typing_speed_trainer/media/*
