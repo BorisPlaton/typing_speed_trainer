@@ -23,6 +23,7 @@ export default class ResultsList {
       const templates = await this.sendGetRequest(this.templatesUrl);
       this.saveResultTemplates(templates);
       if (results.resultsData.length) {
+        console.log(1);
         this.setResultsBar(results.resultsData);
       }
     } catch (error) {
@@ -87,8 +88,7 @@ export default class ResultsList {
 
     const dateEndValue = new Date(data.dateEnd);
     dateEnd.innerHTML = dateEndValue.toISOString().substring(11, 19);
-
-    return div.firstChild;
+    return div;
   }
 
   /**

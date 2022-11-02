@@ -27,7 +27,7 @@ export default class SettingsBar extends Subscriber {
   }
 
   setTotalTime() {
-    storage.totalTime = 3;
+    storage.totalTime = 60;
   }
 
   setCurrentLanguage() {

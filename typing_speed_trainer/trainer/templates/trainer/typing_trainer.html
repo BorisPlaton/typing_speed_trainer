@@ -1,6 +1,7 @@
 {% extends 'trainer/base_trainer.html' %}
 {% load static %}
 {% load thumbnail %}
+{% load trainer_tags %}
 
 {% block stylesheet %}
 <link rel="stylesheet" href="{% static 'trainer/css/style.css' %}">
@@ -103,8 +104,6 @@
             </div>
           </div>
 
-          <!--Last results list placed here-->
-
           <!--Last results other users-->
           <div class="mt-5 other-users-results fw-normal">
             <div>
@@ -153,7 +152,7 @@
 
                     <div class="d-flex justify-content-between mt-2">
                       <small class="text-blue-100 result-words-language">{{ result.language }} язык</small>
-                      <small class="text-blue-100 result-date-end">{{ result.dateEnd|date:"H:i:s" }}</small>
+                      <small class="text-blue-100 result-date-end">{{ result.dateEnd|to_datetime|date:"H:i:s" }}</small>
                     </div>
 
                   </div>

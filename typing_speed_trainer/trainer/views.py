@@ -1,6 +1,6 @@
 from django.views.generic import TemplateView
 
-from trainer.services import get_last_cached_results_with_users
+from trainer.services import get_last_cached_results_with_users, sort_results_by_time
 
 
 class TypingTrainer(TemplateView):
@@ -14,5 +14,5 @@ class TypingTrainer(TemplateView):
         their users.
         """
         context = super().get_context_data(**kwargs)
-        context.update({'other_users_results': get_last_cached_results_with_users(10)})
+        context.update({'other_users_results': sort_results_by_time(get_last_cached_results_with_users(10))})
         return context

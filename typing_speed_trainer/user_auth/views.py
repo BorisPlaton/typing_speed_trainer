@@ -8,7 +8,7 @@ from user_auth.forms import RegistrationForm, LoginForm, UserPasswordResetForm, 
 from common.mixins import UnauthenticatedMixin
 
 
-class Registration(CreateView, UnauthenticatedMixin):
+class UserRegistration(CreateView, UnauthenticatedMixin):
     """The register page."""
 
     template_name = 'user_auth/registration.html'

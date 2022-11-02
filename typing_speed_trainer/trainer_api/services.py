@@ -1,4 +1,4 @@
-from django.db.models import F
+from django.db.models import F, QuerySet
 
 from trainer.models import Statistic
 from type_results.services import cache_user_typing_result
@@ -13,7 +13,12 @@ def update_and_cache_user_typing_result(user_id: int, typing_result: UserTypingR
 
 def update_user_statistics(user_id: int, wpm: int, typing_accuracy: float):
     """Update a user's typing statistic."""
-    user_statistics: Statistic = Statistic.objects.get(user__pk=user_id)
+    user_statistics: QuerySet[Statistic] = Statistic.objects.filter(
+        user__pk=user_id, user__profile__are_results_shown=True
+    )
+    if not user_statistics.exists():
+        return
+    user_statistics: Statistic = user_statistics.first()
     user_statistics.wpm = calculate_average_value_with(user_statistics, 'wpm', wpm)
     user_statistics.accuracy = round(
         calculate_average_value_with(user_statistics, 'accuracy', typing_accuracy), 2

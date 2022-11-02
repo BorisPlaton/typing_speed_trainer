@@ -1,16 +1,35 @@
 version: "3.8"
+
 services:
-  redis:
+  dev_redis:
     image: redis
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT}:6379"
+    env_file:
+      - .env.dev
     volumes:
       - dev_redis:/data
-  random_words_api:
+  dev_random_words_api:
     image: borisplaton/random_words
-    container_name: random_words_container
     ports:
       - "8080:8000"
+    env_file:
+      - .env.dev
     command: python random_words/manage.py runserver 0.0.0.0:8000
+  dev_database:
+    image: postgres
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    env_file:
+      - .env.dev
+    environment:
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: $POSTGRES_DB
+      POSTGRES_INITDB_ARGS: "-A md5"
+    volumes:
+      - dev_database_data:/var/lib/postgresql/data/
+
 volumes:
   dev_redis:
+  dev_database_data:

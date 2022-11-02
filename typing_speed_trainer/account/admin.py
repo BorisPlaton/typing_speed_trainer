@@ -9,7 +9,7 @@ class UserAdmin(admin.ModelAdmin):
     list_editable = ('is_active', 'is_staff')
     list_filter = ('is_active', 'is_staff')
     list_display_links = ('email', 'username')
-    fields = ('email', 'username', 'is_active', 'is_staff')
+    fields = ('email', 'username', 'password', 'is_active', 'is_staff')
     search_fields = ('emails', 'username')
 
 

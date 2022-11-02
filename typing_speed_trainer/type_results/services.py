@@ -15,7 +15,8 @@ def get_last_cached_results_with_users_ids() -> list[TypingResultWithUserID]:
 def get_all_user_results(user_id: int) -> list[UserTypingResult | None]:
     """Returns all results data that are present in the cache."""
     user_cache_results = UserCachedResults(user_id)
-    return user_cache_results.get_all_results()
+    user_results = user_cache_results.get_all_results()
+    return user_results
 
 
 def cache_user_typing_result(user_id: int, typing_result: UserTypingResult):
