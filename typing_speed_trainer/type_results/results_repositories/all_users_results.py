@@ -1,6 +1,7 @@
 from collections import deque
 
-from config import settings
+from django.conf import settings
+
 from type_results.results_repositories.base_repos import BaseCacheRepository
 from type_results.results_repositories.key_field import KeyField
 from type_results.results_repositories.user_cached_results import UserCachedResults

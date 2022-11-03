@@ -1,53 +1,13 @@
-import os
 from pathlib import Path
 
-from dotenv import load_dotenv
+import os
 
 
-load_dotenv('../.env.dev')
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-
-CRISPY_TEMPLATE_PACK = "bootstrap5"
-
-SECRET_KEY = "FAKE"
-
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-
-    'crispy_forms',
-    'crispy_bootstrap5',
-    'social_django',
-    'sorl.thumbnail',
-
-    'user_auth',
-    'account',
-    'trainer',
-    'trainer_api',
-]
-
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 ROOT_URLCONF = 'config.urls'
+
+WSGI_APPLICATION = 'config.wsgi.application'
 
 TEMPLATES = [
     {
@@ -69,23 +29,6 @@ TEMPLATES = [
         },
     },
 ]
-
-WSGI_APPLICATION = 'config.wsgi.application'
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': f"redis://localhost:{os.getenv('REDIS_PORT')}/2",
-        'TIMEOUT': 1,
-    },
-}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -112,6 +55,10 @@ AUTHENTICATION_BACKENDS = [
 
 AUTH_USER_MODEL = 'account.User'
 
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
 SOCIAL_AUTH_GITHUB_KEY = os.getenv('SOCIAL_AUTH_GITHUB_KEY')
 SOCIAL_AUTH_GITHUB_SECRET = os.getenv('SOCIAL_AUTH_GITHUB_SECRET')
 
@@ -127,16 +74,5 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-]
-
-MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MAX_LENGTH_LAST_CACHED_DEQUE = 15
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

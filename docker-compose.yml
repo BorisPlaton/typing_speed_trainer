@@ -6,13 +6,16 @@ services:
     image: typing_trainer_image
     container_name: typing_trainer_container
     ports:
-      - "8000:8000"
+      - "${HOST}:${HOST}"
     env_file:
       - .env
     depends_on:
       - random_words_api
       - redis
       - database
+    volumes:
+      - staticfiles:/staticfiles
+      - media:/media
   random_words_api:
     image: borisplaton/random_words
     container_name: random_words_container
@@ -33,3 +36,5 @@ services:
 
 volumes:
   database_data:
+  staticfiles:
+  media:

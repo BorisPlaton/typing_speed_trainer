@@ -1,6 +1,8 @@
 .git
 .gitignore
 .idea
+.env.dev
+.env.prod
 venv
 Dockerfile
 setup.cfg
