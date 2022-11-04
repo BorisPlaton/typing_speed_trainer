@@ -6,7 +6,7 @@ services:
     ports:
       - "${REDIS_PORT}:6379"
     env_file:
-      - .env.dev
+      - typing_speed_trainer/.env.dev
     volumes:
       - dev_redis:/data
   dev_random_words_api:
@@ -19,7 +19,7 @@ services:
     ports:
       - "${POSTGRES_PORT}:5432"
     env_file:
-      - .env.dev
+      - typing_speed_trainer/.env.dev
     environment:
       POSTGRES_USER: $POSTGRES_USER
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD

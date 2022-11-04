@@ -5,8 +5,6 @@ services:
     build: .
     image: typing_trainer_image
     container_name: typing_trainer_container
-    ports:
-      - "${HOST}:${HOST}"
     env_file:
       - .env
     depends_on:
@@ -33,6 +31,15 @@ services:
       POSTGRES_DB: $POSTGRES_DB
     volumes:
       - database_data:/var/lib/postgresql/data/
+  nginx:
+    build: ./nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - staticfiles:/staticfiles
+      - media:/media
+    depends_on:
+      - typing_trainer
 
 volumes:
   database_data:
