@@ -1,7 +1,5 @@
 from pathlib import Path
 
-import os
-
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -30,11 +28,6 @@ TEMPLATES = [
     },
 ]
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-]
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -51,11 +44,15 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-
     'social_core.backends.github.GithubOAuth2',
-
+    'django.contrib.auth.backends.ModelBackend',
     'account.backends.EmailBackend',
+]
+
+MEDIA_URL = 'media/'
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
 ]
 
 AUTH_USER_MODEL = 'account.User'
@@ -64,16 +61,13 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
-SOCIAL_AUTH_GITHUB_KEY = os.getenv('SOCIAL_AUTH_GITHUB_KEY')
-SOCIAL_AUTH_GITHUB_SECRET = os.getenv('SOCIAL_AUTH_GITHUB_SECRET')
-
 LOGIN_URL = 'user_auth:login'
 LOGIN_REDIRECT_URL = 'trainer:typing_trainer'
 LOGOUT_REDIRECT_URL = 'user_auth:login'
 
 LANGUAGE_CODE = 'ru-ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Cairo'
 
 USE_I18N = True
 

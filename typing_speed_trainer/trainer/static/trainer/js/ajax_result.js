@@ -29,7 +29,6 @@ export default class AjaxResult {
           reject(xhr.response);
         }
       });
-
       xhr.send(JSON.stringify(storage.typingStatistics));
     });
   }

@@ -6,7 +6,7 @@ services:
     image: typing_trainer_image
     container_name: typing_trainer_container
     env_file:
-      - .env
+      - env/.env
     depends_on:
       - random_words_api
       - redis
@@ -22,13 +22,13 @@ services:
     command: python random_words/manage.py runserver 0.0.0.0:8000
   redis:
     image: redis
+    volumes:
+      - cache_data:/data
   database:
     image: postgres
     restart: always
-    environment:
-      POSTGRES_USER: $POSTGRES_USER
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-      POSTGRES_DB: $POSTGRES_DB
+    env_file:
+      - env/.env
     volumes:
       - database_data:/var/lib/postgresql/data/
   nginx:
@@ -43,5 +43,6 @@ services:
 
 volumes:
   database_data:
+  cache_data:
   staticfiles:
   media:

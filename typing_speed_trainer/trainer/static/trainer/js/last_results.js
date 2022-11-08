@@ -23,7 +23,6 @@ export default class ResultsList {
       const templates = await this.sendGetRequest(this.templatesUrl);
       this.saveResultTemplates(templates);
       if (results.resultsData.length) {
-        console.log(1);
         this.setResultsBar(results.resultsData);
       }
     } catch (error) {

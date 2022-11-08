@@ -1,8 +1,7 @@
 .git
 .gitignore
 .idea
-.env.dev
-.env.prod
+env
 venv
 Dockerfile
 setup.cfg
@@ -10,6 +9,7 @@ docker-compose.yml
 docker-compose.dev.yml
 requirements/*
 !requirements/prod.txt
+typing_speed_trainer/config/settings/development.py
 
 **/.coveragerc
 **/htmlcov
@@ -18,9 +18,3 @@ requirements/*
 **/tests
 **/sass
 **/pytest.ini
-
-
-**/typing_speed_trainer/media/*
-!**/typing_speed_trainer/media/profile_photos
-**/typing_speed_trainer/media/profile_photos/*
-!**/typing_speed_trainer/media/profile_photos/default.jpg
