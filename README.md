@@ -2,9 +2,9 @@
 
 Its is a typing speed trainer that is realised as a web-app via [Django](https://www.djangoproject.com/) and vanilla JavaScript.
 
-![Main page](https://postimg.cc/XG8G4PNc)
+![Main page](https://i.postimg.cc/XqMwcMTh/Screenshot-from-2022-11-09-09-19-22.png "Main page")
 
-![User page](https://postimg.cc/8JPkBzDM)
+![User page](https://i.postimg.cc/gJ3wpxTS/Screenshot-from-2022-11-09-09-19-12.png "User page")
 
 ## Setup
 
