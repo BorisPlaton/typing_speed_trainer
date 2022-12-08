@@ -1,4 +1,6 @@
 #!/bin/sh
+#
+# Performs setup operations for the project in the production mode.
 
 python manage.py migrate --no-input
 python manage.py collectstatic --no-input

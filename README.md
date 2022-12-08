@@ -1,6 +1,6 @@
 # Typing speed trainer
 
-Its is a typing speed trainer that is realised as a web-app via [Django](https://www.djangoproject.com/) and vanilla JavaScript.
+It is a typing speed trainer web application implemented via [Django](https://www.djangoproject.com/) and vanilla JavaScript.
 
 ![Main page](https://i.postimg.cc/XqMwcMTh/Screenshot-from-2022-11-09-09-19-22.png "Main page")
 
@@ -16,7 +16,7 @@ All environment variables that are used in development are specified in the `.en
 
 #### Virtual environment
 
-At first, you must install all necessarily dependencies. For this you should create a virtual environment. For instance, you may use a `virtualenv`:
+Firstly, you must install all necessary dependencies. For this, you should create a virtual environment. For instance, you may use a `virtualenv`:
 ```
 $ virtualenv --python 3.10 venv
 ```
@@ -35,23 +35,24 @@ $ pip install -r requirements/dev.txt
 
 #### Application server
 
-The application uses `Redis` and `Postgres` databases. Also, JavaScript at the frontend uses API for generating random words. To simplify the setup process of all this services you already have a `docker-compose.dev.yml` file that has done it for you. You can start them with all necessarily environment variables via shell script `start_dev_environment.sh` that is placed in the `scripts` folder. Type the following command to make it:
+The application uses `Redis` and `Postgres` databases. Also, JavaScript at the frontend uses API for generating random words. To simplify the setup process of all these services you already have a `docker-compose.dev.yml` file that has done it for you. You can start them with all necessary environment variables via shell script `start_environment.sh` that is placed in the `scripts` folder. Type the following command to make it:
 ```
-$ . scripts/start_dev_environment.sh
+$ . scripts/start_environment.sh
 Creating network "typing_speed_trainer_default" with the default driver
 Creating typing_speed_trainer_dev_random_words_api_1 ... done
 Creating typing_speed_trainer_dev_database_1         ... done
 Creating typing_speed_trainer_dev_redis_1            ... done
+Success
 ```
-Afterwards, make migrations and run an application server:
+Afterwards, make migrations and run the application server:
 ```
 $ cd typing_speed_trainer
 $ python manage.py migrate
 $ python manage.py runserver
 ```
-To stop all of them you may run a shell script `down_dev_environment.sh` that is in the `scripts` folder too.
+To stop all of them you may run a shell script `down_environment.sh` that is in the `scripts` folder too.
 ```
-$ . scripts/down_dev_environment.sh
+$ . scripts/down_environment.sh
 Stopping typing_speed_trainer_dev_database_1         ... done
 Stopping typing_speed_trainer_dev_redis_1            ... done
 Stopping typing_speed_trainer_dev_random_words_api_1 ... done
@@ -59,6 +60,7 @@ Removing typing_speed_trainer_dev_database_1         ... done
 Removing typing_speed_trainer_dev_redis_1            ... done
 Removing typing_speed_trainer_dev_random_words_api_1 ... done
 Removing network typing_speed_trainer_default
+Success
 ```
 
 #### Tests
@@ -72,7 +74,7 @@ $ pytest
 
 #### .env
 
-Before start the application you have to create `.env` in the `env` folder. You already have a `.env.dist` file which contains the template of the `.env` file and several default values. You may use it in the development.
+Before starting the application, you must create `.env` in the `env` folder. You already have a `.env.prod` file, which contains the template of the `.env` file and several default values. You may use it in the development.
 
 #### Start application
 
