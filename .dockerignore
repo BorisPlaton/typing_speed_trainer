@@ -2,6 +2,7 @@
 .gitignore
 .idea
 env
+!env/.env
 venv
 Dockerfile
 setup.cfg

@@ -1,7 +1,7 @@
 .idea
 db.sqlite3
 __pycache__
-.env
+env/.env
 venv
 .coverage
 .pytest_cache
@@ -13,9 +13,6 @@ typing_speed_trainer/media/*
 !typing_speed_trainer/media/profile_photos
 typing_speed_trainer/media/profile_photos/*
 !typing_speed_trainer/media/profile_photos/default.jpg
-
-env/*
-!env/.env.dist
 
 requirements/*
 

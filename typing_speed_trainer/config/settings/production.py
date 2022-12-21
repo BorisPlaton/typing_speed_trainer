@@ -4,7 +4,7 @@ from config.settings.base import *
 
 
 env = environ.Env()
-environ.Env.read_env(BASE_DIR.parent / 'env' / '.env')
+environ.Env.read_env(BASE_DIR / '.env')
 
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
